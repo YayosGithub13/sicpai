@@ -1,0 +1,546 @@
+﻿@{
+    ViewData["Title"] = "Áreas y Departamentos";
+}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Áreas y Departamentos
+            </h2>
+
+            <p class="text-muted mb-0">
+                Administración organizacional institucional
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <button class="btn btn-light">
+
+                <i class="bi bi-download"></i>
+                Exportar
+
+            </button>
+
+            <button class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalArea">
+
+                <i class="bi bi-plus-circle"></i>
+                Nueva Área
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- KPIS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Total Áreas</h6>
+
+                    <h2>24</h2>
+
+                    <span class="success-text">
+                        Institucionales
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon blue">
+
+                    <i class="bi bi-diagram-3-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Responsables</h6>
+
+                    <h2>58</h2>
+
+                    <span class="success-text">
+                        Activos
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon green">
+
+                    <i class="bi bi-people-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Bienes Asignados</h6>
+
+                    <h2>12,458</h2>
+
+                    <span class="warning-text">
+                        Inventario total
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon orange">
+
+                    <i class="bi bi-pc-display"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Ubicaciones</h6>
+
+                    <h2>42</h2>
+
+                    <span class="danger-text">
+                        Registradas
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon red">
+
+                    <i class="bi bi-geo-alt-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FILTROS -->
+
+    <div class="card-custom mb-4">
+
+        <div class="card-header-custom">
+
+            Filtros Organizacionales
+
+        </div>
+
+        <div class="p-4">
+
+            <div class="row g-3">
+
+                <div class="col-lg-4">
+
+                    <label class="form-label">
+                        Buscar Área
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Nombre del área">
+
+                </div>
+
+                <div class="col-lg-4">
+
+                    <label class="form-label">
+                        Responsable
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>Todos</option>
+                        <option>Juan Pérez</option>
+                        <option>María López</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-lg-4">
+
+                    <label class="form-label">
+                        Estado
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>Todas</option>
+                        <option>Activa</option>
+                        <option>Inactiva</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <div class="card-custom">
+
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+
+            <span>
+                Estructura Organizacional
+            </span>
+
+            <div class="d-flex gap-2">
+
+                <button class="btn btn-sm btn-outline-primary">
+
+                    Excel
+
+                </button>
+
+                <button class="btn btn-sm btn-outline-danger">
+
+                    PDF
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Área</th>
+                        <th>Responsable</th>
+                        <th>Ubicación</th>
+                        <th>Bienes</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+
+                            <div class="area-inline">
+
+                                <div class="area-icon">
+
+                                    <i class="bi bi-cpu-fill"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="fw-semibold">
+
+                                        Tecnologías de Información
+
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        Área tecnológica institucional
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>Juan Pérez</td>
+
+                        <td>Edificio A</td>
+
+                        <td>2,458</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                Activa
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-eye"></i>
+
+                                </button>
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-pencil"></i>
+
+                                </button>
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-diagram-3"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+
+                            <div class="area-inline">
+
+                                <div class="area-icon orange-bg">
+
+                                    <i class="bi bi-cash-stack"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="fw-semibold">
+
+                                        Finanzas
+
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        Gestión financiera institucional
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>María López</td>
+
+                        <td>Edificio B</td>
+
+                        <td>1,120</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                Activa
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-eye"></i>
+
+                                </button>
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-pencil"></i>
+
+                                </button>
+
+                                <button class="btn btn-sm btn-light">
+
+                                    <i class="bi bi-diagram-3"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL NUEVA ÁREA -->
+
+<div class="modal fade"
+     id="modalArea"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Nueva Área Institucional
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body p-4">
+
+                <div class="row g-4">
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label">
+                            Nombre del Área
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Ingrese nombre">
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label">
+                            Responsable
+                        </label>
+
+                        <select class="form-select">
+
+                            <option>Seleccione</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label">
+                            Ubicación
+                        </label>
+
+                        <input type="text"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label">
+                            Estado
+                        </label>
+
+                        <select class="form-select">
+
+                            <option>Activa</option>
+                            <option>Inactiva</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-lg-12">
+
+                        <label class="form-label">
+                            Descripción
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="4"></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-light"
+                        data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button class="btn btn-primary">
+
+                    Guardar Área
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

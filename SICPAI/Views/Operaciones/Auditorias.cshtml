@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Auditorías";
+}
+
+<div class="container-fluid">
+
+    <!-- KPIS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Bienes Auditados</h6>
+                    <h2>8,452</h2>
+
+                </div>
+
+                <div class="kpi-icon green">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Pendientes</h6>
+                    <h2>532</h2>
+
+                </div>
+
+                <div class="kpi-icon orange">
+
+                    <i class="bi bi-hourglass-split"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Extraviados</h6>
+                    <h2>12</h2>
+
+                </div>
+
+                <div class="kpi-icon red">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Diferencias</h6>
+                    <h2>35</h2>
+
+                </div>
+
+                <div class="kpi-icon blue">
+
+                    <i class="bi bi-clipboard-data-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <div class="card-custom">
+
+        <div class="card-header-custom">
+
+            Inventario de Auditoría
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Código</th>
+                        <th>Bien</th>
+                        <th>Estado físico</th>
+                        <th>Encontrado</th>
+                        <th>Observaciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>EQ-000125</td>
+
+                        <td>Laptop Dell</td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Bueno
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <i class="bi bi-check-circle-fill text-success"></i>
+
+                        </td>
+
+                        <td>
+                            Sin incidencias
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>EQ-000532</td>
+
+                        <td>Impresora HP</td>
+
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                Regular
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <i class="bi bi-exclamation-circle-fill text-warning"></i>
+
+                        </td>
+
+                        <td>
+                            Requiere mantenimiento
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

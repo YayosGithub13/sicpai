@@ -1,0 +1,437 @@
+﻿@* @{
+    ViewData["Title"] = "Responsables";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Responsables Institucionales
+            </h2>
+
+            <p class="text-muted">
+                Administración de responsables patrimoniales
+            </p>
+
+        </div>
+
+        <button class="btn btn-primary">
+
+            <i class="bi bi-person-plus-fill"></i>
+            Nuevo Responsable
+
+        </button>
+
+    </div>
+
+    <div class="card-custom">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Responsable</th>
+                        <th>Área</th>
+                        <th>Cargo</th>
+                        <th>Activos</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+
+                            <div class="user-inline">
+
+                                <div class="user-avatar">
+                                    JP
+                                </div>
+
+                                <div>
+
+                                    <div class="fw-semibold">
+                                        Juan Pérez
+                                    </div>
+
+                                    <small class="text-muted">
+                                        juan@institucion.gob.mx
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>TI</td>
+
+                        <td>Administrador de Sistemas</td>
+
+                        <td>125</td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Activo
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <button class="btn btn-sm btn-light">
+                                <i class="bi bi-eye"></i>
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div> *@
+
+@{
+    ViewData["Title"] = "Responsables";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Responsables Institucionales
+            </h2>
+
+            <p class="text-muted">
+                Administración de responsables patrimoniales y control de resguardo
+            </p>
+
+        </div>
+
+        <button class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalResponsable">
+            <i class="bi bi-person-plus-fill"></i>
+            Nuevo Responsable
+        </button>
+
+    </div>
+
+    <div class="card-custom">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>Responsable</th>
+                        <th>Encargado de Resguardo</th>
+                        <th>Área</th>
+                        <th>Cargo</th>
+                        <th>Activos</th>
+                        <th>Valor UMA</th>
+                        <th>Clasificación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <!-- RESPONSABLE -->
+                        <td>
+                            <div class="user-inline">
+
+                                <div class="user-avatar">JP</div>
+
+                                <div>
+                                    <div class="fw-semibold">Juan Pérez</div>
+                                    <small class="text-muted">juan@institucion.gob.mx</small>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <!-- ENCARGADO RESGUARDO -->
+                        <td>
+                            <div class="user-inline">
+
+                                <div class="user-avatar bg-secondary">AR</div>
+
+                                <div>
+                                    <div class="fw-semibold">Ana Ramírez</div>
+                                    <small class="text-muted">resguardo interno</small>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>TI</td>
+
+                        <td>Administrador de Sistemas</td>
+
+                        <td>125</td>
+
+                        <!-- UMA -->
+                        <td>
+                            <span class="fw-semibold">
+                                85 UMA
+                            </span>
+                        </td>
+
+                        <!-- CLASIFICACIÓN -->
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                Activo
+                            </span>
+
+                            <small class="text-muted d-block">
+                                Bien patrimonial (CG)
+                            </small>
+                        </td>
+
+                        <!-- ESTADO -->
+                        <td>
+                            <span class="badge bg-success">
+                                Activo
+                            </span>
+                        </td>
+
+                        <!-- ACCIONES -->
+                        <td>
+
+                            <button class="btn btn-sm btn-light">
+                                <i class="bi bi-eye"></i>
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    <!-- EJEMPLO GASTO -->
+                    <tr>
+
+                        <td>
+                            <div class="user-inline">
+
+                                <div class="user-avatar">LM</div>
+
+                                <div>
+                                    <div class="fw-semibold">Luis Martínez</div>
+                                    <small class="text-muted">luis@institucion.gob.mx</small>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="user-inline">
+
+                                <div class="user-avatar bg-secondary">CR</div>
+
+                                <div>
+                                    <div class="fw-semibold">Carlos Reyes</div>
+                                    <small class="text-muted">resguardo</small>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>Administración</td>
+
+                        <td>Auxiliar</td>
+
+                        <td>8</td>
+
+                        <!-- UMA -->
+                        <td>
+                            <span class="fw-semibold">
+                                45 UMA
+                            </span>
+                        </td>
+
+                        <!-- CLASIFICACIÓN -->
+                        <td>
+                            <span class="badge bg-info text-dark">
+                                Gasto
+                            </span>
+
+                            <small class="text-muted d-block">
+                                No activo patrimonial
+                            </small>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Activo
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="btn btn-sm btn-light">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalResponsable" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo Responsable Institucional</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row g-3">
+
+                    <!-- Responsable -->
+                    <div class="col-md-6">
+                        <label class="form-label">Responsable</label>
+                        <input type="text" class="form-control" id="responsableNombre">
+                    </div>
+
+                    <!-- Encargado resguardo -->
+                    <div class="col-md-6">
+                        <label class="form-label">Encargado de Resguardo</label>
+                        <input type="text" class="form-control" id="resguardoNombre">
+                    </div>
+
+                    <!-- Área -->
+                    <div class="col-md-6">
+                        <label class="form-label">Área</label>
+                        <select class="form-select" id="area">
+                            <option>TI</option>
+                            <option>Finanzas</option>
+                            <option>Administración</option>
+                        </select>
+                    </div>
+
+                    <!-- Cargo -->
+                    <div class="col-md-6">
+                        <label class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="cargo">
+                    </div>
+
+                    <!-- Tipo de registro (CLAVE para tu regla 70 UMAS) -->
+                    <div class="col-md-12">
+                        <label class="form-label">Clasificación del Responsable</label>
+                        <select class="form-select" id="clasificacion">
+                            <option value="activo">
+                                Bien Patrimonial (Activo > 70 UMAS)
+                            </option>
+                            <option value="gasto">
+                                Gasto (≤ 70 UMAS)
+                            </option>
+                        </select>
+
+                        <small class="text-muted">
+                            Si el valor del bien es menor o igual a 70 UMAS se registra como gasto.
+                            Si es mayor, se clasifica como activo.
+                        </small>
+                    </div>
+
+                    <!-- Contacto -->
+                    <div class="col-md-6">
+                        <label class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correo">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-light" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <button class="btn btn-primary" onclick="guardarResponsable()">
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        function guardarResponsable() {
+
+            const responsable = {
+                nombreResponsable: document.getElementById('responsableNombre').value,
+                nombreResguardo: document.getElementById('resguardoNombre').value,
+                area: document.getElementById('area').value,
+                cargo: document.getElementById('cargo').value,
+                clasificacion: document.getElementById('clasificacion').value,
+                correo: document.getElementById('correo').value,
+                telefono: document.getElementById('telefono').value
+            };
+
+            // Validación básica
+            if (!responsable.nombreResponsable || !responsable.area) {
+                alert("Completa los campos obligatorios");
+                return;
+            }
+
+            // Aquí llamarías tu API real
+            console.log("Responsable a guardar:", responsable);
+
+            // Simulación UI
+            alert("Responsable guardado correctamente");
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalResponsable'));
+            modal.hide();
+        }
+    </script>
+}

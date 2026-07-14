@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Analytics";
+}
+
+<div class="container-fluid">
+
+    <div class="analytics-header mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Analytics Institucional
+            </h2>
+
+            <p class="text-muted">
+                Inteligencia administrativa y operacional
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- KPI GRID -->
+
+    <div class="analytics-grid">
+
+        <div class="analytics-widget large">
+
+            <div class="widget-header">
+
+                <h5>
+                    Movimientos Patrimoniales
+                </h5>
+
+            </div>
+
+            <canvas id="movimientosChart"></canvas>
+
+        </div>
+
+        <div class="analytics-widget">
+
+            <div class="widget-header">
+
+                <h5>
+                    Auditorías
+                </h5>
+
+            </div>
+
+            <div class="metric-circle">
+
+                92%
+
+            </div>
+
+        </div>
+
+        <div class="analytics-widget">
+
+            <div class="widget-header">
+
+                <h5>
+                    Eficiencia Operativa
+                </h5>
+
+            </div>
+
+            <div class="metric-circle green">
+
+                87%
+
+            </div>
+
+        </div>
+
+        <div class="analytics-widget">
+
+            <div class="widget-header">
+
+                <h5>
+                    Incidencias
+                </h5>
+
+            </div>
+
+            <div class="metric-circle orange">
+
+                14
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        const movimientos = document.getElementById('movimientosChart');
+
+        new Chart(movimientos, {
+
+            type: 'bar',
+
+            data: {
+
+                labels: ['Altas','Bajas','Transferencias','Auditorías'],
+
+                datasets: [{
+
+                    label: 'Operaciones',
+
+                    data: [120,25,85,240],
+
+                    borderWidth: 1
+
+                }]
+
+            }
+
+        });
+
+    </script>
+
+}

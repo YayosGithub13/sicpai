@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "Demo";
+}
+
+<div class="container-fluid">
+
+    <div class="demo-header">
+
+        <div>
+
+            <h1 class="fw-bold">
+                Showroom SICPAI
+            </h1>
+
+            <p class="text-muted">
+                Plataforma institucional demostrativa
+            </p>
+
+        </div>
+
+        <div>
+
+            <button class="btn btn-primary btn-lg">
+
+                Solicitar Implementación
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- KPI SHOWCASE -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="showcase-card">
+
+                <small>Activos Totales</small>
+
+                <h2 class="counter"
+                    data-target="12458">
+
+                    0
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="showcase-card">
+
+                <small>Áreas</small>
+
+                <h2 class="counter"
+                    data-target="58">
+
+                    0
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="showcase-card">
+
+                <small>Auditorías</small>
+
+                <h2 class="counter"
+                    data-target="845">
+
+                    0
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="showcase-card">
+
+                <small>Usuarios</small>
+
+                <h2 class="counter"
+                    data-target="128">
+
+                    0
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SHOWCASE -->
+
+    <div class="card-custom p-5">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <h2 class="fw-bold mb-4">
+
+                    Plataforma lista para instituciones modernas
+
+                </h2>
+
+                <p class="text-muted mb-4">
+
+                    SICPAI centraliza inventarios, bienes patrimoniales,
+                    auditorías, responsables y reportes ejecutivos.
+
+                </p>
+
+                <div class="d-flex gap-3">
+
+                    <button class="btn btn-primary btn-lg">
+
+                        Iniciar Demo
+
+                    </button>
+
+                    <button class="btn btn-outline-primary btn-lg">
+
+                        Descargar PDF
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1400"
+                     class="img-fluid rounded-4 shadow">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        document.querySelectorAll('.counter').forEach(counter => {
+
+            const target = +counter.getAttribute('data-target');
+
+            let count = 0;
+
+            const updateCounter = () => {
+
+                const increment = target / 100;
+
+                if (count < target) {
+
+                    count += increment;
+
+                    counter.innerText = Math.ceil(count);
+
+                    setTimeout(updateCounter, 20);
+
+                } else {
+
+                    counter.innerText = target.toLocaleString();
+
+                }
+
+            };
+
+            updateCounter();
+
+        });
+
+    </script>
+
+}

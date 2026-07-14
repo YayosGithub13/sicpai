@@ -1,0 +1,75 @@
+﻿.asset-expediente-container {
+    padding: 10px;
+}
+
+.asset-header {
+    background: linear-gradient(135deg, #1f4d73, #17324d);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.asset-title {
+    font-weight: 700;
+}
+
+.asset-side-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    position: sticky;
+    top: 20px;
+}
+
+.asset-photo {
+    height: 160px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: #1f4d73;
+}
+
+.asset-mini-info .mini-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.qr-box,
+.barcode-box {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+    .kpi-card span {
+        display: block;
+        font-size: 11px;
+        color: #6c757d;
+    }
+
+    .kpi-card strong {
+        font-size: 16px;
+    }
+
+    .kpi-card.highlight {
+        background: #1f4d73;
+        color: white;
+    }
+
+.asset-tabs .nav-link {
+    font-weight: 500;
+}

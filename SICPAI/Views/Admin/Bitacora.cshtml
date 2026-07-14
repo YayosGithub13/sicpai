@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Bitácora";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Bitácora Institucional
+            </h2>
+
+            <p class="text-muted">
+                Registro histórico de actividades del sistema
+            </p>
+
+        </div>
+
+        <button class="btn btn-light">
+
+            <i class="bi bi-download"></i>
+            Exportar Logs
+
+        </button>
+
+    </div>
+
+    <div class="card-custom">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                        <th>Módulo</th>
+                        <th>IP</th>
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>28/05/2026 10:25</td>
+
+                        <td>Juan Pérez</td>
+
+                        <td>Alta de bien patrimonial</td>
+
+                        <td>Patrimonio</td>
+
+                        <td>192.168.1.10</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+                                Correcto
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>28/05/2026 09:50</td>
+
+                        <td>María López</td>
+
+                        <td>Inicio de sesión</td>
+
+                        <td>Autenticación</td>
+
+                        <td>192.168.1.14</td>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+                                Exitoso
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

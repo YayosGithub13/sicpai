@@ -1,0 +1,286 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+
+    <!-- Breadcrumb -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Dashboard Ejecutivo
+            </h2>
+
+            <nav>
+
+                <ol class="breadcrumb">
+
+                    <li class="breadcrumb-item">
+                        Inicio
+                    </li>
+
+                    <li class="breadcrumb-item active">
+                        Dashboard
+                    </li>
+
+                </ol>
+
+            </nav>
+
+        </div>
+
+        <button class="btn btn-primary">
+
+            <i class="bi bi-download"></i>
+            Exportar Reporte
+
+        </button>
+
+    </div>
+
+    <!-- KPIS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Total de Bienes</h6>
+
+                    <h2>12,458</h2>
+
+                    <span class="success-text">
+                        +12% este mes
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon blue">
+
+                    <i class="bi bi-pc-display"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Activos Operativos</h6>
+
+                    <h2>11,203</h2>
+
+                    <span class="success-text">
+                        Operando correctamente
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon green">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>En Reparación</h6>
+
+                    <h2>153</h2>
+
+                    <span class="warning-text">
+                        Requieren atención
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon orange">
+
+                    <i class="bi bi-tools"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>Extraviados</h6>
+
+                    <h2>12</h2>
+
+                    <span class="danger-text">
+                        Auditoría requerida
+                    </span>
+
+                </div>
+
+                <div class="kpi-icon red">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-8">
+
+            <div class="card-custom">
+
+                <div class="card-header-custom">
+
+                    Distribución de Bienes por Área
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="assetsChart"
+                            height="120"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card-custom">
+
+                <div class="card-header-custom">
+
+                    Estado de Activos
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="statusChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <div class="card-custom">
+
+        <div class="card-header-custom d-flex justify-content-between">
+
+            <span>
+                Movimientos Recientes
+            </span>
+
+            <button class="btn btn-sm btn-primary">
+                Ver todos
+            </button>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Código</th>
+                        <th>Activo</th>
+                        <th>Movimiento</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>EQ-00125</td>
+
+                        <td>Laptop Dell Latitude</td>
+
+                        <td>Transferencia</td>
+
+                        <td>Juan Pérez</td>
+
+                        <td>27/05/2026</td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Completado
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>EQ-00452</td>
+
+                        <td>Impresora HP</td>
+
+                        <td>Mantenimiento</td>
+
+                        <td>María López</td>
+
+                        <td>27/05/2026</td>
+
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                Pendiente
+                            </span>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

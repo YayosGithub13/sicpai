@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Panel Financiero";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Panel Financiero Institucional
+            </h2>
+
+            <p class="text-muted">
+                Análisis económico y patrimonial
+            </p>
+
+        </div>
+
+        <button class="btn btn-primary">
+
+            Exportar Consolidado
+
+        </button>
+
+    </div>
+
+    <!-- KPIS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="financial-card">
+
+                <small>Valor Patrimonial</small>
+
+                <h2>$ 58,245,852</h2>
+
+                <span class="positive">
+
+                    +12% este año
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="financial-card">
+
+                <small>Depreciación</small>
+
+                <h2>$ 2,850,000</h2>
+
+                <span class="negative">
+
+                    Actualizado
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="financial-card">
+
+                <small>Bienes Activos</small>
+
+                <h2>12,458</h2>
+
+                <span class="positive">
+
+                    Operativos
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="financial-card">
+
+                <small>En Reparación</small>
+
+                <h2>248</h2>
+
+                <span class="warning">
+
+                    Seguimiento
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GRAFICAS -->
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card-custom">
+
+                <div class="card-header-custom">
+
+                    Evolución Patrimonial
+
+                </div>
+
+                <div class="p-4">
+
+                    <canvas id="chartPatrimonio"
+                            height="120"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card-custom">
+
+                <div class="card-header-custom">
+
+                    Distribución de Bienes
+
+                </div>
+
+                <div class="p-4">
+
+                    <canvas id="chartDistribucion"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        const ctx = document.getElementById('chartPatrimonio');
+
+        new Chart(ctx, {
+
+            type: 'line',
+
+            data: {
+
+                labels: ['Ene','Feb','Mar','Abr','May','Jun'],
+
+                datasets: [{
+
+                    label: 'Valor Patrimonial',
+
+                    data: [12,19,14,25,22,31],
+
+                    borderWidth: 3,
+
+                    tension: .4
+
+                }]
+
+            }
+
+        });
+
+        const pie = document.getElementById('chartDistribucion');
+
+        new Chart(pie, {
+
+            type: 'doughnut',
+
+            data: {
+
+                labels: ['Computadoras','Vehículos','Mobiliario','Herramientas'],
+
+                datasets: [{
+
+                    data: [45,12,30,13]
+
+                }]
+
+            }
+
+        });
+
+    </script>
+
+}

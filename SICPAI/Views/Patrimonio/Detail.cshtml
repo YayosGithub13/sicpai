@@ -1,0 +1,1790 @@
+﻿@* @{
+    ViewData["Title"] = "Detalle del Bien";
+}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="detail-header mb-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2 class="fw-bold">
+                    Laptop Dell Latitude 5420
+                </h2>
+
+                <div class="d-flex gap-3 mt-2">
+
+                    <span class="badge bg-success">
+                        Activo
+                    </span>
+
+                    <span class="text-muted">
+                        Código: EQ-000125
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button class="btn btn-light">
+
+                    <i class="bi bi-printer"></i>
+
+                    Imprimir
+
+                </button>
+
+                <button class="btn btn-primary">
+
+                    <i class="bi bi-pencil"></i>
+
+                    Editar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+
+    <div class="row g-4">
+
+        <!-- LEFT -->
+
+        <div class="col-lg-4">
+
+            <div class="card-custom p-4">
+
+                <div class="asset-preview">
+
+                    <i class="bi bi-laptop"></i>
+
+                </div>
+
+                <div class="text-center mt-4">
+
+                    <button class="btn btn-outline-primary w-100 mb-2">
+
+                        Ver Código QR
+
+                    </button>
+
+                    <button class="btn btn-outline-secondary w-100">
+
+                        Descargar Etiqueta
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="col-lg-8">
+
+            <div class="card-custom">
+
+                <div class="card-header-custom">
+
+                    Información General
+
+                </div>
+
+                <div class="p-4">
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-6">
+
+                            <div class="info-box">
+
+                                <label>Marca</label>
+
+                                <h6>Dell</h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <div class="info-box">
+
+                                <label>Modelo</label>
+
+                                <h6>Latitude 5420</h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <div class="info-box">
+
+                                <label>Responsable</label>
+
+                                <h6>Juan Pérez</h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <div class="info-box">
+
+                                <label>Área</label>
+
+                                <h6>Tecnologías</h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TIMELINE -->
+
+            <div class="card-custom mt-4">
+
+                <div class="card-header-custom">
+
+                    Historial de Movimientos
+
+                </div>
+
+                <div class="p-4">
+
+                    <div class="timeline">
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <h6>
+                                    Transferencia de área
+                                </h6>
+
+                                <p class="text-muted mb-1">
+                                    Transferido al área TI
+                                </p>
+
+                                <small>
+                                    27 Mayo 2026
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <h6>
+                                    Alta institucional
+                                </h6>
+
+                                <p class="text-muted mb-1">
+                                    Registro inicial del bien
+                                </p>
+
+                                <small>
+                                    15 Enero 2026
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div> *@
+
+@{
+    ViewData["Title"] = "Expediente del Bien";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/detail_expedi_bien.css" asp-append-version="true" />
+}
+
+<div class="asset-expediente-container">
+
+    <!-- ================= HEADER EJECUTIVO ================= -->
+    <div class="asset-header shadow-sm">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <div>
+
+                <h2 class="asset-title mb-1">
+                    Laptop Dell Latitude 5420
+                </h2>
+
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                    <span class="badge bg-success px-3 py-2">
+                        Activo
+                    </span>
+
+                    <span class="text-muted">
+                        Código: <strong>EQ-000125</strong>
+                    </span>
+
+                    <span class="text-muted">
+                        Serie: <strong>DL-4455887</strong>
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button class="btn btn-light">
+                    <i class="bi bi-printer"></i> Imprimir
+                </button>
+
+                <button class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Editar
+                </button>
+
+                <button class="btn btn-outline-danger">
+                    <i class="bi bi-arrow-left-right"></i> Transferir
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= CONTENIDO PRINCIPAL ================= -->
+    <div class="row g-4 mt-1">
+
+        <!-- ============ PANEL IZQUIERDO (FICHA EJECUTIVA) ============ -->
+        <div class="col-lg-3">
+
+            <div class="asset-side-card shadow-sm">
+
+                <!-- FOTO -->
+                <div class="asset-photo">
+                    <i class="bi bi-laptop"></i>
+                </div>
+
+                <div class="text-center mt-3">
+
+                    <h5 class="mb-1">Dell Latitude 5420</h5>
+                    <small class="text-muted">Equipo de cómputo</small>
+
+                </div>
+
+                <hr>
+
+                <!-- DATOS CLAVE -->
+                <div class="asset-mini-info">
+
+                    <div class="mini-item">
+                        <span>Área</span>
+                        <strong>TI</strong>
+                    </div>
+
+                    <div class="mini-item">
+                        <span>Responsable</span>
+                        <strong>Juan Pérez</strong>
+                    </div>
+
+                    <div class="mini-item">
+                        <span>Valor</span>
+                        <strong>$28,500</strong>
+                    </div>
+
+                    <div class="mini-item">
+                        <span>Depreciación</span>
+                        <strong>34%</strong>
+                    </div>
+
+                    <div class="mini-item">
+                        <span>Garantía</span>
+                        <strong>Vigente</strong>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- QR / BARRAS -->
+                <div class="text-center">
+
+                    <div class="qr-box mb-2">
+                        QR
+                    </div>
+
+                    <div class="barcode-box">
+                        |||||||||||
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- ACCIONES -->
+                <div class="d-grid gap-2">
+
+                    <button class="btn btn-outline-primary btn-sm">
+                        Ver QR
+                    </button>
+
+                    <button class="btn btn-outline-secondary btn-sm">
+                        Etiqueta
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ============ PANEL DERECHO ============ -->
+        <div class="col-lg-9">
+
+            <!-- KPIs -->
+            <div class="row g-3 mb-3">
+
+                <div class="col-md-2">
+                    <div class="kpi-card">
+                        <span>Auditorías</span>
+                        <strong>12</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="kpi-card">
+                        <span>Mantenimientos</span>
+                        <strong>8</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="kpi-card">
+                        <span>Transferencias</span>
+                        <strong>5</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="kpi-card">
+                        <span>Documentos</span>
+                        <strong>16</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="kpi-card">
+                        <span>Fotos</span>
+                        <strong>7</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="kpi-card highlight">
+                        <span>Estado</span>
+                        <strong>Activo</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TABS PRINCIPALES -->
+            <div class="asset-tabs card shadow-sm">
+
+                <ul class="nav nav-tabs px-3 pt-2">
+
+                    <li class="nav-item">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#resumen">
+                            Resumen
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ubicacion">
+                            Ubicación
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#general">
+                            General
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tecnica">
+                            Técnica
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#financiero">
+                            Financiero
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#documentos">
+                            Documentos
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#evidencias">
+                            Evidencias
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#historial">
+                            Historial
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#auditorias">
+                            Auditorías
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#mantenimiento">
+                            Mantenimiento
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#transferencias">
+                            Transferencias
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#bitacora">
+                            Bitácora
+                        </button>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content p-4">
+
+                    <div class="tab-pane fade show active" id="resumen">
+                        <div class="row g-4">
+
+                            <!-- ================= KPI PRINCIPAL ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6 class="text-muted">Estado del Activo</h6>
+
+                                    <div class="d-flex align-items-center justify-content-between">
+
+                                        <h4 class="text-success mb-0">Activo</h4>
+
+                                        <span class="badge bg-success fs-6">
+                                            Operativo
+                                        </span>
+
+                                    </div>
+
+                                    <hr>
+
+                                    <small class="text-muted">
+                                        Nivel de riesgo: <strong>Bajo</strong>
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ================= VALOR ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6 class="text-muted">Valor del Activo</h6>
+
+                                    <h4 class="mb-0">$28,500.00</h4>
+
+                                    <small class="text-muted">
+                                        Valor actual en libros: <strong>$20,300.00</strong>
+                                    </small>
+
+                                    <div class="progress mt-2" style="height:8px;">
+                                        <div class="progress-bar bg-warning" style="width:35%"></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ================= VIDA ÚTIL ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6 class="text-muted">Vida Útil</h6>
+
+                                    <h4>10 años</h4>
+
+                                    <small class="text-muted">
+                                        Usado: <strong>3.5 años</strong>
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= GRÁFICA ================= -->
+                        <div class="row mt-4">
+
+                            <div class="col-lg-8">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6 class="mb-3">Depreciación del Activo</h6>
+
+                                    <canvas id="depreciacionChart" height="120"></canvas>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ================= SMART INFO ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3 mb-3">
+
+                                    <h6>Último Mantenimiento</h6>
+                                    <strong>03 Jun 2026</strong>
+
+                                </div>
+
+                                <div class="card shadow-sm p-3 mb-3">
+
+                                    <h6>Última Auditoría</h6>
+                                    <strong>10 Ago 2026</strong>
+
+                                </div>
+
+                                <div class="card shadow-sm p-3 mb-3">
+
+                                    <h6>Ubicación Actual</h6>
+                                    <strong>Edificio A - TI</strong>
+
+                                </div>
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6>Transferencias</h6>
+                                    <strong>5 movimientos</strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= TIMELINE RESUMIDO ================= -->
+                        <div class="card shadow-sm mt-4 p-3">
+
+                            <h6 class="mb-3">Actividad Reciente</h6>
+
+                            <ul class="list-group list-group-flush">
+
+                                <li class="list-group-item">
+                                    <strong>Auditoría completada</strong> - 10 Ago 2026
+                                </li>
+
+                                <li class="list-group-item">
+                                    <strong>Mantenimiento preventivo</strong> - 03 Jun 2026
+                                </li>
+
+                                <li class="list-group-item">
+                                    <strong>Transferencia de área</strong> - 27 May 2026
+                                </li>
+
+                                <li class="list-group-item">
+                                    <strong>Alta del activo</strong> - 15 Ene 2026
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="ubicacion">
+
+                        <div class="row g-4">
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Sede / Plantel</label>
+                                    <h6>Campus Centro</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Área / Departamento</label>
+                                    <h6>Tecnologías de la Información</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Responsable</label>
+                                    <h6>Juan Pérez</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Encargado de Resguardo</label>
+                                    <h6>Pedro Ramírez</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="info-box">
+                                    <label>Ubicación Física</label>
+                                    <h6>Edificio A - Planta Alta - Oficina 205</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="info-box">
+                                    <label>Observaciones de Ubicación</label>
+                                    <h6>Sin incidencias reportadas</h6>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tab-pane fade" id="general">
+
+                        <div class="row g-4">
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Código Patrimonial</label>
+                                    <h6>EQ-000125</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Número de Serie</label>
+                                    <h6>SN-4XH582114</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Estado del Bien</label>
+                                    <h6><span class="badge bg-success">Activo</span></h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Tipo de Activo</label>
+                                    <h6>Computadora</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Marca</label>
+                                    <h6>Dell</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Modelo</label>
+                                    <h6>Latitude 5420</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="info-box">
+                                    <label>Descripción</label>
+                                    <h6>Equipo asignado al área de TI para operación administrativa</h6>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="tecnica">
+
+                        <!-- ================= IDENTIFICACIÓN TÉCNICA ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Identificación Técnica</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-4">
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Fabricante</label>
+                                            <h6>Dell Technologies</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Proveedor</label>
+                                            <h6>Grupo Computación del Sureste</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>País de Origen</label>
+                                            <h6>Estados Unidos</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= GARANTÍA ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Garantía</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-4">
+
+                                    <div class="col-lg-3">
+                                        <div class="info-box">
+                                            <label>Inicio</label>
+                                            <h6>15/01/2026</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="info-box">
+                                            <label>Fin</label>
+                                            <h6>15/01/2029</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="info-box">
+                                            <label>Años de Garantía</label>
+                                            <h6>3 años</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="info-box">
+                                            <label>Estado</label>
+                                            <h6><span class="badge bg-success">Vigente</span></h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= MANTENIMIENTO ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Control de Mantenimiento</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-4">
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Último mantenimiento</label>
+                                            <h6>03/06/2026</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Próximo mantenimiento</label>
+                                            <h6>03/09/2026</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Periodicidad</label>
+                                            <h6>Trimestral</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= IDENTIFICADORES ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Identificadores Institucionales</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-4">
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Código de Barras</label>
+                                            <h6>750001258888</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Código QR</label>
+                                            <h6>QR-EQ-000125</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>RFID</label>
+                                            <h6>RF-88991234</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= SEGURO ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Seguro del Bien</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-4">
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Aseguradora</label>
+                                            <h6>AXA Seguros</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Número de Póliza</label>
+                                            <h6>AXA-2026-88921</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="info-box">
+                                            <label>Vencimiento</label>
+                                            <h6>15/01/2027</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= EVIDENCIA FOTOGRÁFICA ================= -->
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-header bg-light">
+                                <strong>Evidencia Fotográfica</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-3">
+
+                                    <div class="col-lg-3">
+                                        <div class="border rounded p-4 text-center">
+                                            <i class="bi bi-image fs-1 text-primary"></i>
+                                            <br><br>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                Agregar fotografía
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <img src="https://placehold.co/250x180" class="img-fluid rounded shadow-sm">
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <img src="https://placehold.co/250x180" class="img-fluid rounded shadow-sm">
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <img src="https://placehold.co/250x180" class="img-fluid rounded shadow-sm">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= OBSERVACIONES ================= -->
+                        <div class="card shadow-sm">
+
+                            <div class="card-header bg-light">
+                                <strong>Observaciones Técnicas</strong>
+                            </div>
+
+                            <div class="card-body">
+
+                                <h6>
+                                    Equipo en buenas condiciones. Uso exclusivo para tareas administrativas del área de TI.
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="financiero">
+
+                        <div class="row g-4">
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Valor del Bien</label>
+                                    <h6>$28,500.00</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Fecha de Adquisición</label>
+                                    <h6>15/01/2026</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>Cuenta Contable</label>
+                                    <h6>1241-01-001</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="info-box">
+                                    <label>% Depreciación</label>
+                                    <h6>10%</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Método Depreciación</label>
+                                    <h6>Línea Recta</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Valor Residual</label>
+                                    <h6>$0.00</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="info-box">
+                                    <label>Depreciación Acumulada</label>
+                                    <h6>$8,200.00</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="card shadow-sm p-3">
+                                    <h6>Control de Depreciación</h6>
+
+                                    <div class="progress" style="height:20px;">
+                                        <div class="progress-bar bg-warning" style="width:35%">
+                                            35%
+                                        </div>
+                                    </div>
+
+                                    <small class="text-muted mt-2 d-block">
+                                        Vida útil: 10 años · Uso: 3.5 años
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="info-box">
+                                    <label>Factura</label>
+                                    <h6>Factura adjunta (PDF)</h6>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="documentos">
+                        <div class="row g-4">
+
+                            <!-- ================= ZONA DE SUBIDA ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3 text-center h-100">
+
+                                    <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+
+                                    <h6 class="mt-3">Subir Documentos</h6>
+
+                                    <p class="text-muted small">
+                                        PDF, imágenes, facturas, pólizas
+                                    </p>
+
+                                    <input type="file"
+                                           class="form-control mt-2"
+                                           multiple
+                                           accept=".pdf,.jpg,.jpeg,.png">
+
+                                    <button class="btn btn-primary mt-3 w-100">
+                                        Cargar Archivos
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ================= LISTADO DE DOCUMENTOS ================= -->
+                            <div class="col-lg-8">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6 class="mb-3">Documentos del Activo</h6>
+
+                                    <table class="table table-hover align-middle">
+
+                                        <thead class="table-light">
+
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+                                                <td><span class="badge bg-danger">PDF</span></td>
+                                                <td>Factura Dell Latitude</td>
+                                                <td>15/01/2026</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-light">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-light">
+                                                        <i class="bi bi-download"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><span class="badge bg-warning text-dark">IMG</span></td>
+                                                <td>Resguardo firmado</td>
+                                                <td>16/01/2026</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-light">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-light">
+                                                        <i class="bi bi-download"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="evidencias">
+
+                        <div class="row g-4">
+
+                            <!-- ================= UPLOAD PREMIUM ================= -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-4 text-center h-100">
+
+                                    <i class="bi bi-camera fs-1 text-primary"></i>
+
+                                    <h6 class="mt-3">Subir Evidencias</h6>
+
+                                    <p class="text-muted small">
+                                        Fotografías del activo, estado físico, auditorías visuales
+                                    </p>
+
+                                    <input type="file"
+                                           class="form-control mt-2"
+                                           multiple
+                                           accept=".jpg,.jpeg,.png">
+
+                                    <button class="btn btn-primary mt-3 w-100">
+                                        Subir Evidencias
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- ================= GALERÍA ERP ================= -->
+                            <div class="col-lg-8">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                        <h6 class="mb-0">Galería de Evidencias</h6>
+
+                                        <span class="badge bg-primary">7 fotos</span>
+
+                                    </div>
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-4">
+
+                                            <div class="position-relative">
+
+                                                <img src="https://placehold.co/400x300"
+                                                     class="img-fluid rounded shadow-sm">
+
+                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
+                                                    Frente
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <div class="position-relative">
+
+                                                <img src="https://placehold.co/400x300"
+                                                     class="img-fluid rounded shadow-sm">
+
+                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
+                                                    Serie
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <div class="position-relative">
+
+                                                <img src="https://placehold.co/400x300"
+                                                     class="img-fluid rounded shadow-sm">
+
+                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
+                                                    Estado
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ================= HISTORIAL DE EVIDENCIAS ================= -->
+                        <div class="card shadow-sm mt-4 p-3">
+
+                            <h6 class="mb-3">Registro de Evidencias</h6>
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td><span class="badge bg-info">Foto</span></td>
+                                        <td>Estado físico general</td>
+                                        <td>10/08/2026</td>
+                                        <td>Juan Pérez</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-light">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-light">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span class="badge bg-info">Foto</span></td>
+                                        <td>Número de serie</td>
+                                        <td>10/08/2026</td>
+                                        <td>Auditor Interno</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-light">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-light">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="historial">
+
+                        <!-- ================= RESUMEN DE HISTORIAL ================= -->
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-lg-3">
+                                <div class="card shadow-sm p-3 text-center">
+                                    <h6 class="text-muted">Movimientos</h6>
+                                    <h3>5</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="card shadow-sm p-3 text-center">
+                                    <h6 class="text-muted">Auditorías</h6>
+                                    <h3>2</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="card shadow-sm p-3 text-center">
+                                    <h6 class="text-muted">Mantenimientos</h6>
+                                    <h3>2</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="card shadow-sm p-3 text-center">
+                                    <h6 class="text-muted">Eventos</h6>
+                                    <h3>4</h3>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- ================= TIMELINE UNIFICADO ================= -->
+                        <div class="card shadow-sm p-3">
+
+                            <h6 class="mb-3">Línea de Tiempo del Activo</h6>
+
+                            <div class="timeline">
+
+                                <!-- ALTA -->
+                                <div class="d-flex mb-4">
+
+                                    <div class="me-3">
+                                        <span class="badge bg-primary">Alta</span>
+                                    </div>
+
+                                    <div>
+                                        <h6 class="mb-1">Registro inicial del activo</h6>
+                                        <small class="text-muted">15/01/2026 · Usuario: Sistema</small>
+                                        <p class="mb-0 text-muted">
+                                            Se registró el bien en el sistema patrimonial.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <!-- TRANSFERENCIA -->
+                                <div class="d-flex mb-4">
+
+                                    <div class="me-3">
+                                        <span class="badge bg-warning text-dark">Transferencia</span>
+                                    </div>
+
+                                    <div>
+                                        <h6 class="mb-1">Cambio de área</h6>
+                                        <small class="text-muted">27/05/2026 · Usuario: Juan Pérez</small>
+                                        <p class="mb-0 text-muted">
+                                            Transferido de Finanzas a Tecnologías de la Información.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <!-- MANTENIMIENTO -->
+                                <div class="d-flex mb-4">
+
+                                    <div class="me-3">
+                                        <span class="badge bg-info">Mantenimiento</span>
+                                    </div>
+
+                                    <div>
+                                        <h6 class="mb-1">Mantenimiento preventivo</h6>
+                                        <small class="text-muted">03/06/2026 · Técnico: López</small>
+                                        <p class="mb-0 text-muted">
+                                            Limpieza interna, actualización de sistema y revisión de hardware.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <!-- AUDITORÍA -->
+                                <div class="d-flex mb-4">
+
+                                    <div class="me-3">
+                                        <span class="badge bg-success">Auditoría</span>
+                                    </div>
+
+                                    <div>
+                                        <h6 class="mb-1">Auditoría conforme</h6>
+                                        <small class="text-muted">10/08/2026 · Auditor: Interno</small>
+                                        <p class="mb-0 text-muted">
+                                            El activo fue verificado físicamente sin observaciones.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <!-- ACTUALIZACIÓN -->
+                                <div class="d-flex">
+
+                                    <div class="me-3">
+                                        <span class="badge bg-secondary">Actualización</span>
+                                    </div>
+
+                                    <div>
+                                        <h6 class="mb-1">Actualización de información técnica</h6>
+                                        <small class="text-muted">20/08/2026 · Usuario: Admin</small>
+                                        <p class="mb-0 text-muted">
+                                            Se actualizaron datos de garantía y depreciación.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="auditorias">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h5 class="mb-0">Auditorías del Activo</h5>
+
+                            <button class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle"></i> Nueva Auditoría
+                            </button>
+
+                        </div>
+
+                        <!-- FORM RESUMIDO -->
+                        <div class="card shadow-sm p-3 mb-4">
+
+                            <div class="row g-3">
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Fecha</label>
+                                    <input type="date" class="form-control">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Auditor</label>
+                                    <input type="text" class="form-control" placeholder="Nombre">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Resultado</label>
+                                    <select class="form-select">
+                                        <option>Conforme</option>
+                                        <option>No conforme</option>
+                                        <option>Observación</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Estado físico</label>
+                                    <select class="form-select">
+                                        <option>Óptimo</option>
+                                        <option>Regular</option>
+                                        <option>Dañado</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="mt-3">
+                                <textarea class="form-control" rows="2" placeholder="Observaciones"></textarea>
+                            </div>
+
+                        </div>
+
+                        <!-- HISTORIAL -->
+                        <div class="card shadow-sm p-3">
+
+                            <h6 class="mb-3">Historial de Auditorías</h6>
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Auditor</th>
+                                        <th>Resultado</th>
+                                        <th>Estado</th>
+                                        <th>Observaciones</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>10/08/2026</td>
+                                        <td>Auditor Interno</td>
+                                        <td><span class="badge bg-success">Conforme</span></td>
+                                        <td>Óptimo</td>
+                                        <td>Sin anomalías</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>12/02/2026</td>
+                                        <td>Contraloría</td>
+                                        <td><span class="badge bg-warning text-dark">Observación</span></td>
+                                        <td>Regular</td>
+                                        <td>Rayón en carcasa</td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="mantenimiento">
+
+                        <div class="row g-4">
+
+                            <!-- FORM -->
+                            <div class="col-lg-4">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6>Nuevo Mantenimiento</h6>
+
+                                    <label class="form-label mt-2">Tipo</label>
+                                    <select class="form-select">
+                                        <option>Preventivo</option>
+                                        <option>Correctivo</option>
+                                    </select>
+
+                                    <label class="form-label mt-2">Fecha</label>
+                                    <input type="date" class="form-control">
+
+                                    <label class="form-label mt-2">Técnico</label>
+                                    <input type="text" class="form-control">
+
+                                    <label class="form-label mt-2">Costo</label>
+                                    <input type="number" class="form-control">
+
+                                    <button class="btn btn-primary w-100 mt-3">
+                                        Registrar
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- HISTORIAL -->
+                            <div class="col-lg-8">
+
+                                <div class="card shadow-sm p-3">
+
+                                    <h6>Historial de Mantenimientos</h6>
+
+                                    <table class="table table-hover">
+
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Fecha</th>
+                                                <th>Técnico</th>
+                                                <th>Costo</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+                                                <td><span class="badge bg-primary">Preventivo</span></td>
+                                                <td>03/06/2026</td>
+                                                <td>Tec. López</td>
+                                                <td>$1,200</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><span class="badge bg-danger">Correctivo</span></td>
+                                                <td>10/03/2026</td>
+                                                <td>Tec. Ramírez</td>
+                                                <td>$3,500</td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="transferencias">
+
+                        <div class="card shadow-sm p-3 mb-4">
+
+                            <h6>Nueva Transferencia</h6>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Área origen</label>
+                                    <select class="form-select"></select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Área destino</label>
+                                    <select class="form-select"></select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Responsable nuevo</label>
+                                    <input type="text" class="form-control">
+                                </div>
+
+                            </div>
+
+                            <button class="btn btn-primary mt-3">
+                                Ejecutar transferencia
+                            </button>
+
+                        </div>
+
+                        <div class="card shadow-sm p-3">
+
+                            <h6>Historial de Transferencias</h6>
+
+                            <table class="table table-hover">
+
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Origen</th>
+                                        <th>Destino</th>
+                                        <th>Responsable</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>27/05/2026</td>
+                                        <td>Finanzas</td>
+                                        <td>TI</td>
+                                        <td>Juan Pérez</td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="bitacora">
+
+                        <div class="card shadow-sm p-3">
+
+                            <h6>Registro de Actividad del Sistema</h6>
+
+                            <ul class="list-group list-group-flush">
+
+                                <li class="list-group-item">
+                                    [10/08/2026 10:45] Usuario Juan Pérez actualizó estado a "Activo"
+                                </li>
+
+                                <li class="list-group-item">
+                                    [03/06/2026 09:10] Se registró mantenimiento preventivo
+                                </li>
+
+                                <li class="list-group-item">
+                                    [27/05/2026 14:30] Transferencia a área TI
+                                </li>
+
+                                <li class="list-group-item">
+                                    [15/01/2026 08:00] Alta del activo registrada
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        const ctx = document.getElementById('depreciacionChart');
+
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Año 0', 'Año 1', 'Año 2', 'Año 3', 'Año 4'],
+                    datasets: [{
+                        label: 'Valor del Activo',
+                        data: [28500, 24000, 21000, 19000, 18000],
+                        borderColor: '#1f4d73',
+                        backgroundColor: 'rgba(31,77,115,0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

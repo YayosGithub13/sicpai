@@ -1,0 +1,1063 @@
+﻿@{
+    ViewData["Title"] = "Nuevo Bien";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Alta de Nuevo Bien
+            </h2>
+
+            <p class="text-muted">
+                Registro institucional de activos patrimoniales
+            </p>
+
+        </div>
+
+        <div>
+
+            <button class="btn btn-light">
+                Cancelar
+            </button>
+
+            <button class="btn btn-primary">
+                Guardar Bien
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card-custom">
+
+        <div class="p-4">
+
+            <!-- TABS -->
+
+            <ul class="nav nav-tabs mb-4">
+
+                <li class="nav-item">
+                    <button class="nav-link active"
+                            data-bs-toggle="tab"
+                            data-bs-target="#general">
+
+                        General
+
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#ubicacion">
+
+                        Ubicación
+
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#documentos">
+
+                        Documentos
+
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#financiero">
+
+                        Financiero
+
+                    </button>
+                </li>
+
+                <li class="nav-item">
+
+                    <button class="nav-link"
+                            data-bs-toggle="tab"
+                            data-bs-target="#tecnica">
+
+                        Información Técnica
+
+                    </button>
+
+                </li>
+            </ul>
+
+            <!-- CONTENT -->
+
+            <div class="tab-content">
+
+                <!-- GENERAL -->
+
+                <div class="tab-pane fade show active"
+                     id="general">
+
+                    @* <div class="row g-4">
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Código Patrimonial
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="EQ-000125">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Tipo de Activo
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Computadora</option>
+                                <option>Impresora</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Estado
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Activo</option>
+                                <option>Reparación</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <label class="form-label">
+                                Marca
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Dell">
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <label class="form-label">
+                                Modelo
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Latitude 5420">
+
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <label class="form-label">
+                                Descripción
+                            </label>
+
+                            <textarea class="form-control"
+                                      rows="4"></textarea>
+
+                        </div>
+
+                    </div> *@
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Código Patrimonial
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="EQ-000125">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Tipo de Activo
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Computadora</option>
+                                <option>Impresora</option>
+                                <option>Escritorio</option>
+                                <option>Silla</option>
+                                <option>Vehículo</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Estado del Bien
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Activo</option>
+                                <option>En reparación</option>
+                                <option>Dañado</option>
+                                <option>Extraviado</option>
+                                <option>Baja definitiva</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Marca
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Dell">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Modelo
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="Latitude 5420">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Número de Serie
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="SN-4XH582114">
+
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <label class="form-label">
+                                Descripción
+                            </label>
+
+                            <textarea class="form-control"
+                                      rows="4"></textarea>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- UBICACION -->
+
+                <div class="tab-pane fade"
+                     id="ubicacion">
+
+                    @* <div class="row g-4">
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Área
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Tecnologías</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Responsable
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Juan Pérez</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Oficina
+                            </label>
+
+                            <input type="text"
+                                   class="form-control">
+
+                        </div>
+
+                    </div> *@
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Sede / Plantel
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Campus Centro</option>
+                                <option>Campus Norte</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Área / Departamento
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Tecnologías de la Información</option>
+                                <option>Administración</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Responsable
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Juan Pérez</option>
+                                <option>María López</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Encargado del Resguardo
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Pedro Ramírez</option>
+                                <option>Ana Torres</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <label class="form-label">
+                                Ubicación Física
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Edificio A - Planta Alta - Oficina 205">
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <label class="form-label">
+                                Observaciones de Ubicación
+                            </label>
+
+                            <textarea class="form-control"
+                                      rows="2"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DOCUMENTOS -->
+
+                <div class="tab-pane fade"
+                     id="documentos">
+
+                    <div class="upload-zone">
+
+                        <i class="bi bi-cloud-arrow-up"></i>
+
+                        <h5>
+                            Arrastre archivos aquí
+                        </h5>
+
+                        <p class="text-muted">
+                            PDF, imágenes y evidencias
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- FINANCIERO -->
+
+                <div class="tab-pane fade"
+                     id="financiero">
+
+                    @* <div class="row g-4">
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Valor del Bien
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="$28,500">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Fecha de adquisición
+                            </label>
+
+                            <input type="date"
+                                   class="form-control">
+
+                        </div>
+
+                    </div> *@
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Valor del Bien
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="$28,500.00">
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Fecha de Adquisición
+                            </label>
+
+                            <input type="date"
+                                   class="form-control">
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                Número de Cuenta Contable
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="1241-01-001">
+
+                        </div>
+
+                        <div class="col-lg-3">
+
+                            <label class="form-label">
+                                % Depreciación Anual
+                            </label>
+
+                            <input type="number"
+                                   class="form-control"
+                                   placeholder="10">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Método de Depreciación
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>Línea Recta</option>
+                                <option>Saldos Decrecientes</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Valor Residual
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="$0.00">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="form-label">
+                                Depreciación Acumulada
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="$0.00"
+                                   readonly>
+
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <div class="card border shadow-sm">
+
+                                <div class="card-header bg-light">
+
+                                    <strong>
+
+                                        Control de Depreciación
+
+                                    </strong>
+
+                                </div>
+
+                                <div class="card-body">
+
+                                    <div class="progress mb-3"
+                                         style="height:22px;">
+
+                                        <div class="progress-bar bg-success"
+                                             style="width:35%;">
+
+                                            35 %
+
+                                        </div>
+
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        Vida útil estimada:
+                                        <strong>10 años</strong>
+
+                                        ·
+
+                                        Años transcurridos:
+                                        <strong>3.5</strong>
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <label class="form-label">
+                                Factura de Compra
+                            </label>
+
+                            <input type="file"
+                                   class="form-control"
+                                   accept=".pdf,.jpg,.jpeg,.png">
+
+                            <small class="text-muted">
+
+                                Adjuntar factura, póliza o documento comprobatorio del bien.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                @* Información Técnica *@
+
+                <div class="tab-pane fade"
+                     id="tecnica">
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Identificación Técnica
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-4">
+
+                                <div class="col-lg-4">
+
+                                    <label class="form-label">
+
+                                        Fabricante
+
+                                    </label>
+
+                                    <input class="form-control"
+                                           value="Dell Technologies">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label class="form-label">
+
+                                        Proveedor
+
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>Grupo Computación del Sureste</option>
+                                        <option>Office Depot</option>
+                                        <option>HP México</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label class="form-label">
+
+                                        País de Origen
+
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>México</option>
+                                        <option>Estados Unidos</option>
+                                        <option>China</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Garantía
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-4">
+
+                                <div class="col-lg-3">
+
+                                    <label>
+
+                                        Inicio
+
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <label>
+
+                                        Fin
+
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <label>
+
+                                        Años de Garantía
+
+                                    </label>
+
+                                    <input class="form-control"
+                                           value="3">
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <label>
+
+                                        Estado
+
+                                    </label>
+
+                                    <span class="badge bg-success fs-6">
+
+                                        Vigente
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Control de Mantenimiento
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-4">
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Último mantenimiento
+
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Próximo mantenimiento
+
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Periodicidad
+
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>Mensual</option>
+                                        <option>Trimestral</option>
+                                        <option>Semestral</option>
+                                        <option>Anual</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Identificadores Institucionales
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-4">
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Código de Barras
+
+                                    </label>
+
+                                    <input class="form-control"
+                                           value="750001258888">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Código QR
+
+                                    </label>
+
+                                    <input class="form-control"
+                                           value="QR-EQ-000125">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        RFID
+
+                                    </label>
+
+                                    <input class="form-control">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Seguro del Bien
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-4">
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Aseguradora
+
+                                    </label>
+
+                                    <input class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Número de Póliza
+
+                                    </label>
+
+                                    <input class="form-control">
+
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <label>
+
+                                        Vencimiento
+
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Evidencia Fotográfica
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-lg-3">
+
+                                    <div class="border rounded text-center p-4">
+
+                                        <i class="bi bi-image fs-1 text-primary"></i>
+
+                                        <br><br>
+
+                                        <button class="btn btn-outline-primary">
+
+                                            Agregar fotografía
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <img src="https://placehold.co/250x180"
+                                         class="img-fluid rounded shadow">
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <img src="https://placehold.co/250x180"
+                                         class="img-fluid rounded shadow">
+
+                                </div>
+
+                                <div class="col-lg-3">
+
+                                    <img src="https://placehold.co/250x180"
+                                         class="img-fluid rounded shadow">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-header bg-light">
+
+                            <strong>
+
+                                Observaciones Técnicas
+
+                            </strong>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <textarea class="form-control"
+                                      rows="5"
+                                      placeholder="Características especiales, observaciones, accesorios incluidos, condiciones del bien, etc."></textarea>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

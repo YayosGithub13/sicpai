@@ -1,0 +1,108 @@
+﻿<nav class="topbar">
+
+    <div class="d-flex align-items-center gap-3">
+
+       @*  <button class="btn btn-light btn-sm shadow-sm" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+        </button> *@
+        <button class="btn btn-light btn-sm shadow-sm rounded-3 px-3"
+                id="sidebarToggle">
+        
+            <i class="bi bi-list fs-5"></i>
+        
+        </button>
+
+        <div>
+            <h5 class="mb-0 fw-bold">
+                Sistema Integral de Control Patrimonial e Inventario
+            </h5>
+
+            <small class="text-muted">
+                Plataforma Ejecutiva Institucional
+            </small>
+        </div>
+
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+
+     @*    <button class="btn btn-light" onclick="toggleDarkMode()">
+        
+            <i class="bi bi-moon-stars-fill"></i>
+        
+        </button> *@
+
+        <div class="dropdown">
+
+            <button class="btn btn-light position-relative"
+                    data-bs-toggle="dropdown">
+
+                <i class="bi bi-bell-fill"></i>
+
+                <span class="notification-badge">
+                    3
+                </span>
+
+            </button>
+
+            <div class="dropdown-menu dropdown-menu-end notification-menu">
+
+                <div class="notification-header">
+
+                    Notificaciones
+
+                </div>
+
+                <a class="dropdown-item">
+
+                    Nuevo activo registrado
+
+                </a>
+
+                <a class="dropdown-item">
+
+                    Auditoría pendiente
+
+                </a>
+
+                <a class="dropdown-item">
+
+                    Transferencia completada
+
+                </a>
+
+            </div>
+
+        </div>
+
+     @*    <button class="btn btn-light position-relative">
+
+            <i class="bi bi-bell-fill"></i>
+
+            <span class="notification-badge">
+                5
+            </span>
+
+        </button> *@
+
+        <div class="user-box">
+
+            <div class="avatar">
+                JP
+            </div>
+
+            <div>
+                <div class="fw-semibold">
+                    Juan Pérez
+                </div>
+
+                <small class="text-muted">
+                    Administrador General
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

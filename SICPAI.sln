@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SICPAI", "SICPAI\SICPAI.csproj", "{DBE0C7D4-3F2A-42FB-A80D-B02367286173}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBE0C7D4-3F2A-42FB-A80D-B02367286173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE0C7D4-3F2A-42FB-A80D-B02367286173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE0C7D4-3F2A-42FB-A80D-B02367286173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE0C7D4-3F2A-42FB-A80D-B02367286173}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FBA3203-B211-4755-A240-873795EED328}
+	EndGlobalSection
+EndGlobal
