@@ -26,11 +26,33 @@
 
 //app.Run();
 
+using Infrastructure;
+using Infrastructure.Seed;
+using Infrastructure.Data;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Add infrastructure (DbContext, services)
 builder.Services.AddControllersWithViews();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+// Seed initial data
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        DataSeeder.SeedInitialData(db);
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetService<ILoggerFactory>()?.CreateLogger("DataSeeder");
+        logger?.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 app.UseHttpsRedirection();
 

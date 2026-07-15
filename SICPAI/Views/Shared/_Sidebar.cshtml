@@ -1,5 +1,18 @@
 ﻿<aside class="sidebar" id="sidebar">
 
+@using System
+
+    @{
+        var currentPath = Context.Request.Path.Value ?? string.Empty;
+        Func<string, string> activeClass = (url) =>
+        {
+            if (string.IsNullOrEmpty(url)) return string.Empty;
+            return currentPath.Equals(url, StringComparison.OrdinalIgnoreCase)
+                   || currentPath.StartsWith(url + "/", StringComparison.OrdinalIgnoreCase)
+                   ? "active" : string.Empty;
+        };
+    }
+
     <div class="sidebar-header">
 
         <div class="logo-box">
@@ -19,62 +32,62 @@
 
     <ul class="sidebar-menu">
 
-        <li class="active">
+        <li class="@activeClass("/Home/Dashboard")">
             <a href="/Home/Dashboard">
                 <i class="bi bi-grid-fill"></i>
                 Dashboard
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Patrimonio")">
             <a href="/Patrimonio/Index">
                 <i class="bi bi-pc-display"></i>
                 Bienes Patrimoniales
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Operaciones/Transferencias")">
             <a href="/Operaciones/Transferencias">
                 <i class="bi bi-arrow-left-right"></i>
                 Transferencias
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Operaciones/Responsables")">
             <a href="/Operaciones/Responsables">
                 <i class="bi bi-people-fill"></i>
                 Responsables
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Operaciones/Areas")">
             <a href="/Operaciones/Areas">
                 <i class="bi bi-diagram-3-fill"></i>
                 Áreas y Departamentos
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Operaciones/Auditorias")">
             <a href="/Operaciones/Auditorias">
                 <i class="bi bi-clipboard-check-fill"></i>
                 Auditorías
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Reportes/Index")">
             <a href="/Reportes/Index">
                 <i class="bi bi-file-earmark-bar-graph-fill"></i>
                 Reportes
             </a>
         </li>
-        <li>
+        <li class="@activeClass("/Reportes/Financiero")">
             <a href="/Reportes/Financiero">
                 <i class="bi bi-cash-coin"></i>
                 Panel Financiero
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Reportes/Analytics")">
             <a href="/Reportes/Analytics">
                 <i class="bi bi-graph-up-arrow"></i>
                 Analytics
@@ -82,28 +95,28 @@
         </li>
 
 
-        <li>
+        <li class="@activeClass("/Admin/Usuarios")">
             <a href="/Admin/Usuarios">
                 <i class="bi bi-person-badge-fill"></i>
                 Usuarios
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Admin/Roles")">
             <a href="/Admin/Roles">
                 <i class="bi bi-shield-lock-fill"></i>
                 Roles y Permisos
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Admin/Bitacora")">
             <a href="/Admin/Bitacora">
                 <i class="bi bi-clock-history"></i>
                 Bitácora
             </a>
         </li>
 
-        <li>
+        <li class="@activeClass("/Admin/Configuracion")">
             <a href="/Admin/Configuracion">
                 <i class="bi bi-gear-fill"></i>
                 Configuración

@@ -425,19 +425,146 @@
                 <div class="tab-pane fade"
                      id="documentos">
 
-                    <div class="upload-zone">
+                    <div class="upload-zone" id="uploadZone">
+
+                        @Html.AntiForgeryToken()
 
                         <i class="bi bi-cloud-arrow-up"></i>
 
                         <h5>
-                            Arrastre archivos aquí
+                            Arrastre archivos aquí o use la cámara
                         </h5>
 
                         <p class="text-muted">
                             PDF, imágenes y evidencias
                         </p>
 
+                        <div class="mt-3">
+                            <input type="file" id="documentInput" accept="image/*,application/pdf" capture="environment" multiple style="display:none;" />
+                            <button type="button" class="btn btn-outline-primary me-2" id="btnSelect">Seleccionar / Cámara</button>
+                            <button type="button" class="btn btn-outline-secondary" id="btnClear">Limpiar</button>
+                        </div>
+
+                        <div class="mt-4" id="previewList"></div>
+
                     </div>
+
+                    <script>
+                        (function () {
+                            const uploadZone = document.getElementById('uploadZone');
+                            const input = document.getElementById('documentInput');
+                            const btnSelect = document.getElementById('btnSelect');
+                            const btnClear = document.getElementById('btnClear');
+                            const previewList = document.getElementById('previewList');
+
+                            // read antiforgery token rendered by @Html.AntiForgeryToken()
+                            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                            const antiforgeryToken = tokenElement ? tokenElement.value : null;
+
+                            btnSelect.addEventListener('click', () => input.click());
+                            btnClear.addEventListener('click', () => { previewList.innerHTML = ''; });
+
+                            uploadZone.addEventListener('dragover', (e) => {
+                                e.preventDefault();
+                                uploadZone.classList.add('dragover');
+                            });
+
+                            uploadZone.addEventListener('dragleave', (e) => {
+                                e.preventDefault();
+                                uploadZone.classList.remove('dragover');
+                            });
+
+                            uploadZone.addEventListener('drop', (e) => {
+                                e.preventDefault();
+                                uploadZone.classList.remove('dragover');
+                                const files = Array.from(e.dataTransfer.files);
+                                handleFiles(files);
+                            });
+
+                            input.addEventListener('change', (e) => {
+                                const files = Array.from(e.target.files || []);
+                                handleFiles(files);
+                                input.value = null;
+                            });
+
+                            function handleFiles(files) {
+                                files.forEach(uploadFile);
+                            }
+
+                            function uploadFile(file) {
+                                const formData = new FormData();
+                                formData.append('file', file, file.name);
+
+                                const card = document.createElement('div');
+                                card.className = 'card mb-2 p-2';
+                                card.innerHTML = `<div class="d-flex align-items-center">
+                                    <div style="width:72px; height:72px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                                        <i class="bi bi-file-earmark-arrow-up fs-1 text-secondary"></i>
+                                    </div>
+                                    <div class="ms-3 flex-grow-1">
+                                        <strong>${escapeHtml(file.name)}</strong>
+                                        <div class="text-muted small">Preparando...</div>
+                                    </div>
+                                </div>
+                                <div class="progress mt-2" style="height:8px;"><div class="progress-bar" role="progressbar" style="width:0%"></div></div>`;
+                                previewList.appendChild(card);
+
+                                const progressBar = card.querySelector('.progress-bar');
+                                const info = card.querySelector('.text-muted');
+
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('POST', '/Patrimonio/UploadDocument');
+                                // send antiforgery token in header
+                                if (antiforgeryToken) {
+                                    xhr.setRequestHeader('RequestVerificationToken', antiforgeryToken);
+                                }
+
+                                xhr.upload.onprogress = function (e) {
+                                    if (e.lengthComputable) {
+                                        const percent = Math.round((e.loaded / e.total) * 100);
+                                        progressBar.style.width = percent + '%';
+                                    }
+                                };
+
+                                xhr.onload = function () {
+                                    try {
+                                        const result = JSON.parse(xhr.responseText);
+                                        if (xhr.status === 200 && result && result.success) {
+                                            info.textContent = 'Subido';
+                                            progressBar.style.width = '100%';
+                                            // thumbnail for images
+                                            if (file.type.startsWith('image/')) {
+                                                const img = document.createElement('img');
+                                                img.src = result.url;
+                                                img.className = 'img-fluid rounded';
+                                                img.style.maxWidth = '120px';
+                                                const thumbContainer = card.querySelector('div');
+                                                thumbContainer.insertBefore(img, thumbContainer.firstChild);
+                                            }
+                                        } else {
+                                            info.textContent = result && result.error ? result.error : 'Error al subir';
+                                            progressBar.classList.add('bg-danger');
+                                        }
+                                    } catch (ex) {
+                                        info.textContent = 'Error al subir';
+                                        progressBar.classList.add('bg-danger');
+                                    }
+                                };
+
+                                xhr.onerror = function () {
+                                    info.textContent = 'Error al subir';
+                                    progressBar.classList.add('bg-danger');
+                                };
+
+                                xhr.send(formData);
+                            }
+
+                            function escapeHtml(text) {
+                                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                                return text.replace(/[&<>\"']/g, function(m) { return map[m]; });
+                            }
+                        })();
+                    </script>
 
                 </div>
 
