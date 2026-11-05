@@ -19,6 +19,21 @@
 
                 </div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/api/auditorias');
+            if (!response.ok) return;
+            const audits = await response.json();
+            const table = document.querySelector('table');
+            if (!table || !audits.length) return;
+            const body = table.querySelector('tbody');
+            body.innerHTML = audits.map(a => `<tr><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.area?.name || 'Todas')}</td><td>${new Date(a.scheduledDate).toLocaleDateString('es-MX')}</td><td><span class="badge bg-primary">${escapeHtml(a.status)}</span></td><td><a class="btn btn-sm btn-light" href="/Operaciones/Auditorias?id=${a.id}"><i class="bi bi-eye"></i></a></td></tr>`).join('');
+        });
+        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+    </script>
+}
+
                 <div class="kpi-icon green">
 
                     <i class="bi bi-check-circle-fill"></i>

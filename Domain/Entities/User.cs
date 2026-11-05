@@ -28,6 +28,8 @@ namespace Domain.Entities
         public string PasswordHash { get; set; } = default!;
         public DateTime LastUpdate { get; set; }
         public bool ActiveFlag { get; set; }
+        public int FailedLoginAttempts { get; set; }
+        public DateTime? LockoutEnd { get; set; }
 
         public string FullName => $"{Name} {LastName} {SecondLastName}".Trim();
 

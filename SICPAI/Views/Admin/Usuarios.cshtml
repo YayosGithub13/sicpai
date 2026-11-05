@@ -20,6 +20,21 @@
 
         </div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/api/admin/usuarios');
+            if (!response.ok) return;
+            const users = await response.json();
+            const body = document.querySelector('table tbody');
+            if (!body) return;
+            body.innerHTML = users.map(user => `<tr><td><strong>${escapeHtml(user.name)} ${escapeHtml(user.lastName)}</strong><br><small class="text-muted">${escapeHtml(user.userName)}</small></td><td>${escapeHtml(user.email)}</td><td>${user.roles.map(escapeHtml).join(', ') || 'Sin rol'}</td><td>—</td><td>—</td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" onclick="toggleUser(${user.id}, ${!user.activeFlag})"><i class="bi bi-power"></i></button></td></tr>`).join('');
+        });
+        async function toggleUser(id, active) { await fetch(`/api/admin/usuarios/${id}/estado`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active }) }); location.reload(); }
+        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+    </script>
+}
+
         <button class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#modalUsuario">

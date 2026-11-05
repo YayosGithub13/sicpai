@@ -30,13 +30,49 @@
                        class="form-control"
                        placeholder="Ingrese código patrimonial">
 
-                <button class="btn btn-primary">
+                <button id="scanButton" class="btn btn-primary" type="button">
 
                     Escanear
 
                 </button>
 
+                <button id="cameraButton" class="btn btn-outline-primary" type="button" title="Usar cámara">
+                    <i class="bi bi-camera"></i>
+                </button>
+
             </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const input = document.querySelector('.scan-box input');
+            const scanButton = document.getElementById('scanButton');
+            const cameraButton = document.getElementById('cameraButton');
+            const result = document.querySelector('.scan-result');
+            const lookup = async () => {
+                const code = input.value.trim();
+                if (!code) return;
+                const response = await fetch(`/api/assets/scan/${encodeURIComponent(code)}`);
+                if (!response.ok) { result.classList.add('d-none'); alert('No se encontró el bien.'); return; }
+                const asset = await response.json();
+                result.classList.remove('d-none');
+                result.querySelector('h5').textContent = asset.name;
+                result.querySelector('small').textContent = `Código: ${asset.assetCode}`;
+                result.querySelector('.badge').textContent = asset.status;
+            };
+            scanButton.addEventListener('click', lookup);
+            input.addEventListener('keydown', event => { if (event.key === 'Enter') lookup(); });
+            cameraButton.addEventListener('click', async () => {
+                if (!('BarcodeDetector' in window)) { alert('Este navegador no soporta escaneo de códigos. Use captura manual.'); return; }
+                const detector = new BarcodeDetector({ formats: ['code_128', 'code_39', 'ean_13', 'qr_code'] });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                const video = document.createElement('video'); video.srcObject = stream; video.setAttribute('playsinline', ''); await video.play();
+                document.body.appendChild(video); video.style.cssText = 'position:fixed;inset:10%;width:80%;z-index:2000;border:4px solid #0d47a1;';
+                const timer = setInterval(async () => { const codes = await detector.detect(video); if (codes.length) { input.value = codes[0].rawValue; clearInterval(timer); stream.getTracks().forEach(track => track.stop()); video.remove(); lookup(); } }, 250);
+            });
+        })();
+    </script>
+}
 
             <!-- RESULTADO -->
 

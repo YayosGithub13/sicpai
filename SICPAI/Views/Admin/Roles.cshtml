@@ -18,6 +18,22 @@
 
         </div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const [rolesResponse, permissionsResponse] = await Promise.all([fetch('/api/admin/roles'), fetch('/api/admin/permisos')]);
+            if (!rolesResponse.ok || !permissionsResponse.ok) return;
+            const roles = await rolesResponse.json(); const permissions = await permissionsResponse.json();
+            const body = document.querySelector('table tbody'); if (!body) return;
+            body.innerHTML = permissions.map(permission => `<tr><td>${escapeHtml(permission.module || permission.name)}<small class="d-block text-muted">${escapeHtml(permission.code)}</small></td><td colspan="5"><label class="d-flex gap-2 align-items-center"><input class="permission-check" type="checkbox" data-permission-id="${permission.id}" ${roles[0]?.rolePermissions.some(rp => rp.permissionCatalogId === permission.id || rp.permissionCatalog?.id === permission.id) ? 'checked' : ''}> ${escapeHtml(roles[0]?.name || 'Rol')}</label></td></tr>`).join('');
+            const save = document.createElement('button'); save.className = 'btn btn-success mt-3'; save.textContent = 'Guardar permisos'; document.querySelector('.card-custom').appendChild(save);
+            save.onclick = async () => { const ids = [...document.querySelectorAll('.permission-check:checked')].map(x => Number(x.dataset.permissionId)); const result = await fetch(`/api/admin/roles/${roles[0].id}/permisos`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ permissionIds: ids }) }); Swal.fire(result.ok ? 'Guardado' : 'Error', result.ok ? 'Permisos actualizados.' : 'No se pudieron guardar.', result.ok ? 'success' : 'error'); };
+            document.querySelector('.btn-primary')?.addEventListener('click', async () => { const name = prompt('Nombre del nuevo rol:'); if (!name) return; const result = await fetch('/api/admin/roles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) }); Swal.fire(result.ok ? 'Creado' : 'Error', result.ok ? 'Rol creado correctamente.' : 'No se pudo crear el rol.', result.ok ? 'success' : 'error').then(() => location.reload()); });
+        });
+        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+    </script>
+}
+
         <button class="btn btn-primary">
 
             <i class="bi bi-shield-plus"></i>

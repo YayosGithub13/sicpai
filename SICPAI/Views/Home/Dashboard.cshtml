@@ -53,7 +53,7 @@
 
                     <h6>Total de Bienes</h6>
 
-                    <h2>12,458</h2>
+                    <h2 id="kpiTotal">0</h2>
 
                     <span class="success-text">
                         +12% este mes
@@ -79,7 +79,7 @@
 
                     <h6>Activos Operativos</h6>
 
-                    <h2>11,203</h2>
+                    <h2 id="kpiActive">0</h2>
 
                     <span class="success-text">
                         Operando correctamente
@@ -105,7 +105,7 @@
 
                     <h6>En Reparación</h6>
 
-                    <h2>153</h2>
+                    <h2 id="kpiRepair">0</h2>
 
                     <span class="warning-text">
                         Requieren atención
@@ -131,13 +131,33 @@
 
                     <h6>Extraviados</h6>
 
-                    <h2>12</h2>
+                    <h2 id="kpiMissing">0</h2>
 
                     <span class="danger-text">
                         Auditoría requerida
                     </span>
 
                 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/api/dashboard/summary');
+            if (!response.ok) return;
+            const data = await response.json();
+            document.getElementById('kpiTotal').textContent = data.total.toLocaleString('es-MX');
+            document.getElementById('kpiActive').textContent = data.active.toLocaleString('es-MX');
+            document.getElementById('kpiRepair').textContent = data.repair.toLocaleString('es-MX');
+            document.getElementById('kpiMissing').textContent = data.missing.toLocaleString('es-MX');
+            if (window.Chart) {
+                const areaCanvas = document.getElementById('assetsChart');
+                const statusCanvas = document.getElementById('statusChart');
+                new Chart(areaCanvas, { type: 'bar', data: { labels: data.byArea.map(x => x.area), datasets: [{ label: 'Bienes', data: data.byArea.map(x => x.total), backgroundColor: '#0d47a1' }] }, options: { responsive: true, maintainAspectRatio: false } });
+                new Chart(statusCanvas, { type: 'doughnut', data: { labels: data.byStatus.map(x => x.status), datasets: [{ data: data.byStatus.map(x => x.total), backgroundColor: ['#198754', '#fd7e14', '#dc3545', '#6c757d', '#0d6efd'] }] } });
+            }
+        });
+    </script>
+}
 
                 <div class="kpi-icon red">
 

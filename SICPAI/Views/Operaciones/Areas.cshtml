@@ -20,6 +20,18 @@
 
         </div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/api/catalogos/areas'); if (!response.ok) return;
+            const areas = await response.json(); const table = document.querySelector('table'); if (!table) return;
+            const body = table.querySelector('tbody'); body.innerHTML = areas.map(area => `<tr><td>${escapeHtml(area.code)}</td><td>${escapeHtml(area.name)}</td><td>${escapeHtml(area.description || '-')}</td><td><span class="badge ${area.active ? 'bg-success' : 'bg-secondary'}">${area.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button></td></tr>`).join('');
+            const add = [...document.querySelectorAll('button')].find(button => button.textContent.includes('Nueva')); add?.addEventListener('click', async () => { const result = await Swal.fire({ title: 'Nueva área', html: '<input id="areaCode" class="swal2-input" placeholder="Código"><input id="areaName" class="swal2-input" placeholder="Nombre"><textarea id="areaDescription" class="swal2-textarea" placeholder="Descripción"></textarea>', showCancelButton: true, confirmButtonText: 'Guardar', preConfirm: () => ({ code: document.getElementById('areaCode').value, name: document.getElementById('areaName').value, description: document.getElementById('areaDescription').value }) }); if (result.isConfirmed) { const saved = await fetch('/api/catalogos/areas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result.value) }); Swal.fire(saved.ok ? 'Guardada' : 'Error', saved.ok ? 'Área creada.' : 'No se pudo crear.', saved.ok ? 'success' : 'error').then(() => location.reload()); } });
+        });
+        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+    </script>
+}
+
         <div class="d-flex gap-2">
 
             <button class="btn btn-light">

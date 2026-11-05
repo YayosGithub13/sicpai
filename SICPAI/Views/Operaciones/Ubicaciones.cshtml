@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Ubicaciones físicas";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h2 class="fw-bold mb-1">Ubicaciones físicas</h2><p class="text-muted mb-0">Sedes, edificios, pisos y espacios donde se encuentran los bienes</p></div>
+        <button class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Nueva ubicación</button>
+    </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/api/catalogos/ubicaciones'); if (!response.ok) return;
+            const locations = await response.json(); const body = document.querySelector('table tbody'); if (!body) return;
+            body.innerHTML = locations.map(location => `<tr><td><strong>${escapeHtml(location.code)}</strong></td><td>${escapeHtml(location.site)}</td><td>${escapeHtml(location.building || '-')}</td><td>${escapeHtml(location.floor || '-')}</td><td>—</td><td>—</td><td><span class="badge ${location.active ? 'bg-success' : 'bg-secondary'}">${location.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button></td></tr>`).join('');
+            const add = [...document.querySelectorAll('button')].find(button => button.textContent.includes('Nueva')); add?.addEventListener('click', async () => { const result = await Swal.fire({ title: 'Nueva ubicación', html: '<input id="locCode" class="swal2-input" placeholder="Código"><input id="locSite" class="swal2-input" placeholder="Sede"><input id="locName" class="swal2-input" placeholder="Espacio"><input id="locBuilding" class="swal2-input" placeholder="Edificio"><input id="locFloor" class="swal2-input" placeholder="Piso">', showCancelButton: true, confirmButtonText: 'Guardar', preConfirm: () => ({ code: document.getElementById('locCode').value, site: document.getElementById('locSite').value, name: document.getElementById('locName').value, building: document.getElementById('locBuilding').value, floor: document.getElementById('locFloor').value }) }); if (result.isConfirmed) { const saved = await fetch('/api/catalogos/ubicaciones', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result.value) }); Swal.fire(saved.ok ? 'Guardada' : 'Error', saved.ok ? 'Ubicación creada.' : 'No se pudo crear.', saved.ok ? 'success' : 'error').then(() => location.reload()); } });
+        });
+        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+    </script>
+}
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4"><div class="kpi-card"><div><h6>Sedes registradas</h6><h2>4</h2><span class="success-text">Todas activas</span></div><div class="kpi-icon blue"><i class="bi bi-buildings"></i></div></div></div>
+        <div class="col-md-4"><div class="kpi-card"><div><h6>Espacios controlados</h6><h2>86</h2><span class="success-text">+6 este año</span></div><div class="kpi-icon green"><i class="bi bi-geo-alt"></i></div></div></div>
+        <div class="col-md-4"><div class="kpi-card"><div><h6>Sin inventario asignado</h6><h2>3</h2><span class="warning-text">Requieren revisión</span></div><div class="kpi-icon orange"><i class="bi bi-exclamation-circle"></i></div></div></div>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom d-flex justify-content-between align-items-center"><span>Catálogo de ubicaciones</span><div class="input-group" style="max-width:280px"><span class="input-group-text"><i class="bi bi-search"></i></span><input class="form-control" placeholder="Buscar ubicación" /></div></div>
+        <div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>Clave</th><th>Sede / plantel</th><th>Edificio</th><th>Nivel</th><th>Espacios</th><th>Bienes asignados</th><th>Estado</th><th></th></tr></thead><tbody>
+            <tr><td><strong>UB-CEN-01</strong></td><td>Campus Centro</td><td>Edificio Administrativo</td><td>Planta baja</td><td>12</td><td>2,845</td><td><span class="badge bg-success">Activa</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-three-dots-vertical"></i></button></td></tr>
+            <tr><td><strong>UB-NOR-02</strong></td><td>Campus Norte</td><td>Laboratorios</td><td>Primer nivel</td><td>18</td><td>1,936</td><td><span class="badge bg-success">Activa</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-three-dots-vertical"></i></button></td></tr>
+            <tr><td><strong>UB-ADM-01</strong></td><td>Oficinas Administrativas</td><td>Archivo general</td><td>Sótano</td><td>4</td><td>0</td><td><span class="badge bg-warning text-dark">Revisión</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-three-dots-vertical"></i></button></td></tr>
+        </tbody></table></div>
+    </div>
+</div>

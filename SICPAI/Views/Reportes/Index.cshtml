@@ -22,19 +22,19 @@
 
         <div class="d-flex gap-2">
 
-            <button class="btn btn-outline-primary">
+            <a class="btn btn-outline-primary" href="/api/reportes/inventario/excel">
 
                 <i class="bi bi-file-earmark-excel"></i>
                 Exportar Excel
 
-            </button>
+            </a>
 
-            <button class="btn btn-outline-danger">
+            <a class="btn btn-outline-danger" href="/api/reportes/inventario/pdf">
 
                 <i class="bi bi-file-earmark-pdf"></i>
                 Exportar PDF
 
-            </button>
+            </a>
 
         </div>
 
@@ -118,13 +118,23 @@
                     Activos dañados o en mantenimiento
                 </p>
 
-                <button class="btn btn-warning w-100 text-white">
+                <a class="btn btn-warning w-100 text-white" href="/api/reportes/inventario/pdf?status=En%20reparación">
 
                     Generar Reporte
 
-                </button>
+                </a>
 
             </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.report-card .btn').forEach(button => {
+                if (!button.href) button.addEventListener('click', () => window.location.href = '/api/reportes/inventario/excel');
+            });
+        });
+    </script>
+}
 
         </div>
 

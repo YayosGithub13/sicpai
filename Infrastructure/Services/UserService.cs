@@ -43,11 +43,33 @@ namespace Infrastructure.Services
 
         public async Task<User?> ValidateUserAsync(string usernameOrEmail, string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.UserName == usernameOrEmail);
+            var user = await _dbContext.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.RoleCatalog)
+                .ThenInclude(rc => rc.RolePermissions)
+                .ThenInclude(rp => rp.PermissionCatalog)
+                .FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.UserName == usernameOrEmail);
             if (user == null) return null;
+            if (!user.ActiveFlag || user.LockoutEnd > DateTime.UtcNow) return null;
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-            return result == PasswordVerificationResult.Success ? user : null;
+            if (result == PasswordVerificationResult.Success)
+            {
+                user.FailedLoginAttempts = 0;
+                user.LockoutEnd = null;
+                user.LastUpdate = DateTime.UtcNow;
+                await _dbContext.SaveChangesAsync();
+                return user;
+            }
+
+            user.FailedLoginAttempts++;
+            if (user.FailedLoginAttempts >= 5)
+            {
+                user.LockoutEnd = DateTime.UtcNow.AddMinutes(15);
+                user.FailedLoginAttempts = 0;
+            }
+            await _dbContext.SaveChangesAsync();
+            return null;
         }
     }
 }
