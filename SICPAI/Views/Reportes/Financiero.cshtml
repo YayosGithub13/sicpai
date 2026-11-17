@@ -18,7 +18,7 @@
 
         </div>
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" id="exportFinancialConsolidated" type="button">
 
             Exportar Consolidado
 
@@ -264,6 +264,19 @@
                         }
                     });
                 }
+
+                document.getElementById('exportFinancialConsolidated')?.addEventListener('click', () => {
+                    Swal.fire({
+                        title: 'Exportar consolidado',
+                        text: 'Se descargarán inventario y movimientos en formato Excel.',
+                        showCancelButton: true,
+                        confirmButtonText: 'Descargar'
+                    }).then(result => {
+                        if (!result.isConfirmed) return;
+                        window.open('/api/reportes/inventario/excel', '_blank');
+                        window.open('/api/reportes/movimientos/excel', '_blank');
+                    });
+                });
             };
 
             if (document.readyState === 'loading') {

@@ -26,4 +26,6 @@ public interface ICatalogOperations
     Task<PhysicalLocation?> CreateLocationAsync(PhysicalLocation location, CancellationToken cancellationToken = default);
     Task<PhysicalLocation?> UpdateLocationAsync(int id, PhysicalLocation request, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<object>> GetResponsablesAsync(bool includeInactive, CancellationToken cancellationToken = default);
+    Task<object?> CreateResponsableAsync(string fullName, string userName, string email, bool active, CancellationToken cancellationToken = default);
+    Task<object?> UpdateResponsableAsync(int id, string fullName, string userName, string email, bool active, CancellationToken cancellationToken = default);
 }

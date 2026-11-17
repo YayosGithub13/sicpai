@@ -189,6 +189,7 @@
                     <!-- Responsable -->
                     <div class="col-md-6">
                         <label class="form-label">Responsable</label>
+                        <input type="hidden" id="responsableId">
                         <input type="text" class="form-control" id="responsableNombre">
                     </div>
 
@@ -265,47 +266,105 @@
 
 @section Scripts{
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        (() => {
+            let responsables = [];
             const rows = document.getElementById('responsablesRows');
             const areaSelect = document.getElementById('area');
+            const modalElement = document.getElementById('modalResponsable');
+            const modalTitle = modalElement?.querySelector('.modal-title');
             const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
             const initials = name => (name || '?').split(' ').filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
-            const response = await fetch('/api/catalogos/responsables');
-            if (!response.ok || !rows) return;
-            const users = await response.json();
 
-            rows.innerHTML = users.length
-                ? users.map(user => `<tr><td><div class="user-inline"><div class="user-avatar">${escapeHtml(initials(user.fullName))}</div><div><div class="fw-semibold">${escapeHtml(user.fullName)}</div><small class="text-muted">${escapeHtml(user.email)}</small></div></div></td><td>-</td><td>-</td><td>${escapeHtml(user.roles?.join(', ') || 'Responsable patrimonial')}</td><td>${Number(user.assetCount || 0).toLocaleString('es-MX')}</td><td>-</td><td><span class="badge bg-success-subtle text-success">${user.assetCount > 0 ? 'Con bienes asignados' : 'Sin bienes asignados'}</span></td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Consultar"><i class="bi bi-eye"></i></button></td></tr>`).join('')
-                : '<tr><td colspan="9" class="text-center text-muted py-4">No hay responsables registrados.</td></tr>';
-
-            if (areaSelect) {
-                const areaResponse = await fetch('/api/catalogos/areas');
-                if (areaResponse.ok) {
-                    const areas = await areaResponse.json();
-                    areaSelect.innerHTML = '<option value="">Seleccionar área</option>' + areas.map(area => `<option value="${escapeHtml(area.code)}">${escapeHtml(area.name)}</option>`).join('');
-                }
-            }
-        });
-
-        function guardarResponsable() {
-
-            const responsable = {
-                nombreResponsable: document.getElementById('responsableNombre').value,
-                nombreResguardo: document.getElementById('resguardoNombre').value,
-                area: document.getElementById('area').value,
-                cargo: document.getElementById('cargo').value,
-                clasificacion: document.getElementById('clasificacion').value,
-                correo: document.getElementById('correo').value,
-                telefono: document.getElementById('telefono').value
+            const resetForm = () => {
+                document.getElementById('responsableId').value = '';
+                document.getElementById('responsableNombre').value = '';
+                document.getElementById('resguardoNombre').value = '';
+                document.getElementById('area').value = '';
+                document.getElementById('cargo').value = '';
+                document.getElementById('clasificacion').value = 'activo';
+                document.getElementById('correo').value = '';
+                document.getElementById('telefono').value = '';
+                if (modalTitle) modalTitle.textContent = 'Nuevo Responsable Institucional';
             };
 
-            // Validación básica
-            if (!responsable.nombreResponsable || !responsable.area) {
-                alert("Completa los campos obligatorios");
-                return;
-            }
+            const renderRows = () => {
+                if (!rows) return;
+                rows.innerHTML = responsables.length
+                    ? responsables.map(user => `<tr><td><div class="user-inline"><div class="user-avatar">${escapeHtml(initials(user.fullName))}</div><div><div class="fw-semibold">${escapeHtml(user.fullName)}</div><small class="text-muted">${escapeHtml(user.email)}</small></div></div></td><td>-</td><td>-</td><td>${escapeHtml(user.roles?.join(', ') || 'Responsable patrimonial')}</td><td>${Number(user.assetCount || 0).toLocaleString('es-MX')}</td><td>-</td><td><span class="badge bg-success-subtle text-success">${user.assetCount > 0 ? 'Con bienes asignados' : 'Sin bienes asignados'}</span></td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Editar" data-action="edit" data-id="${user.id}"><i class="bi bi-pencil"></i></button></td></tr>`).join('')
+                    : '<tr><td colspan="9" class="text-center text-muted py-4">No hay responsables registrados.</td></tr>';
+            };
 
-            Swal.fire('Pendiente de integración', 'El registro de responsables aún no está conectado a un endpoint de creación en backend.', 'info');
-        }
+            const loadResponsables = async () => {
+                const response = await fetch('/api/catalogos/responsables');
+                if (!response.ok) return;
+                responsables = await response.json();
+                renderRows();
+            };
+
+            const loadAreas = async () => {
+                if (!areaSelect) return;
+                const areaResponse = await fetch('/api/catalogos/areas');
+                if (!areaResponse.ok) return;
+                const areas = await areaResponse.json();
+                areaSelect.innerHTML = '<option value="">Seleccionar área</option>' + areas.map(area => `<option value="${escapeHtml(area.code)}">${escapeHtml(area.name)}</option>`).join('');
+            };
+
+            const editResponsable = id => {
+                const responsable = responsables.find(item => Number(item.id) === Number(id));
+                if (!responsable) return;
+                document.getElementById('responsableId').value = responsable.id;
+                document.getElementById('responsableNombre').value = responsable.fullName || '';
+                document.getElementById('correo').value = responsable.email || '';
+                if (modalTitle) modalTitle.textContent = 'Editar Responsable Institucional';
+                const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                modal.show();
+            };
+
+            window.guardarResponsable = async () => {
+                const responsableId = Number(document.getElementById('responsableId').value || 0);
+                const fullName = document.getElementById('responsableNombre').value.trim();
+                const email = document.getElementById('correo').value.trim();
+
+                if (!fullName || !email) {
+                    Swal.fire('Datos incompletos', 'Nombre y correo son obligatorios.', 'warning');
+                    return;
+                }
+
+                const userName = email.includes('@@') ? email.split('@@')[0] : fullName.toLowerCase().replace(/\s+/g, '.');
+                const payload = { fullName, userName, email, active: true };
+                const url = responsableId > 0 ? `/api/catalogos/responsables/${responsableId}` : '/api/catalogos/responsables';
+                const method = responsableId > 0 ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    Swal.fire('Error', result.error || 'No se pudo guardar el responsable.', 'error');
+                    return;
+                }
+
+                Swal.fire('Guardado', responsableId > 0 ? 'Responsable actualizado.' : 'Responsable registrado.', 'success');
+                bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+                resetForm();
+                await loadResponsables();
+            };
+
+            rows?.addEventListener('click', event => {
+                const button = event.target.closest('button[data-action="edit"]');
+                if (!button) return;
+                editResponsable(button.dataset.id);
+            });
+
+            modalElement?.addEventListener('hidden.bs.modal', resetForm);
+            document.querySelector('[data-bs-target="#modalResponsable"]')?.addEventListener('click', resetForm);
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                await Promise.all([loadAreas(), loadResponsables()]);
+            });
+        })();
     </script>
 }

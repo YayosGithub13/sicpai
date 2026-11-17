@@ -22,16 +22,130 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const response = await fetch('/api/admin/usuarios');
-            if (!response.ok) return;
-            const users = await response.json();
-            const body = document.querySelector('table tbody');
-            if (!body) return;
-            body.innerHTML = users.map(user => `<tr><td><strong>${escapeHtml(user.name)} ${escapeHtml(user.lastName)}</strong><br><small class="text-muted">${escapeHtml(user.userName)}</small></td><td>${escapeHtml(user.email)}</td><td>${user.roles.map(escapeHtml).join(', ') || 'Sin rol'}</td><td>—</td><td>—</td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" onclick="toggleUser(${user.id}, ${!user.activeFlag})"><i class="bi bi-power"></i></button></td></tr>`).join('');
-        });
-        async function toggleUser(id, active) { await fetch(`/api/admin/usuarios/${id}/estado`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active }) }); location.reload(); }
-        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+        (() => {
+            const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+
+            const loadRoles = async () => {
+                const roleSelect = document.getElementById('userRoleId');
+                if (!roleSelect) return;
+                const response = await fetch('/api/admin/roles');
+                if (!response.ok) return;
+                const roles = await response.json();
+                roleSelect.innerHTML = '<option value="">Sin rol</option>' + roles.map(role => `<option value="${role.id}">${escapeHtml(role.name)}</option>`).join('');
+            };
+
+            const loadUsers = async () => {
+                const response = await fetch('/api/admin/usuarios');
+                if (!response.ok) return;
+                const users = await response.json();
+                const body = document.getElementById('usersRows');
+                if (!body) return;
+
+                body.innerHTML = users.length
+                    ? users.map(user => `<tr><td><strong>${escapeHtml(user.name)} ${escapeHtml(user.lastName)}</strong><br><small class="text-muted">${escapeHtml(user.userName)}</small></td><td>${escapeHtml(user.roles?.join(', ') || 'Sin rol')}</td><td>—</td><td>—</td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" data-action="toggle" data-id="${user.id}" data-next-active="${!user.activeFlag}" type="button" title="Cambiar estado"><i class="bi bi-power"></i></button></td></tr>`).join('')
+                    : '<tr><td colspan="6" class="text-center text-muted py-4">No hay usuarios registrados.</td></tr>';
+
+                document.getElementById('usersActiveKpi').textContent = users.filter(user => user.activeFlag).length.toLocaleString('es-MX');
+                document.getElementById('usersAdminsKpi').textContent = users.filter(user => (user.roles || []).some(role => role === 'Administrator' || role === 'Administrador')).length.toLocaleString('es-MX');
+                document.getElementById('usersAuditorsKpi').textContent = users.filter(user => (user.roles || []).some(role => role === 'Auditor')).length.toLocaleString('es-MX');
+                document.getElementById('usersBlockedKpi').textContent = users.filter(user => !user.activeFlag).length.toLocaleString('es-MX');
+            };
+
+            const createUser = async () => {
+                const fullName = (document.getElementById('userFullName')?.value || '').trim();
+                const email = (document.getElementById('userEmail')?.value || '').trim();
+                const password = (document.getElementById('userPassword')?.value || '').trim();
+                const roleIdValue = document.getElementById('userRoleId')?.value;
+                const saveButton = document.getElementById('saveUserButton');
+
+                if (!fullName || !email || !password) {
+                    Swal.fire('Datos incompletos', 'Nombre completo, correo y contraseña son obligatorios.', 'warning');
+                    return;
+                }
+
+                if (password.length < 8) {
+                    Swal.fire('Contraseña inválida', 'La contraseña temporal debe tener al menos 8 caracteres.', 'warning');
+                    return;
+                }
+
+                const nameParts = fullName.split(' ').filter(Boolean);
+                const name = nameParts[0] || fullName;
+                const lastName = nameParts.slice(1).join(' ') || '-';
+                const userName = email.includes('@@') ? email.split('@@')[0] : fullName.toLowerCase().replace(/\s+/g, '.');
+
+                saveButton?.setAttribute('disabled', 'disabled');
+                try {
+                    const response = await fetch('/api/admin/usuarios', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userName,
+                            email,
+                            name,
+                            lastName,
+                            password,
+                            roleId: roleIdValue ? Number(roleIdValue) : null
+                        })
+                    });
+
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        Swal.fire('Error', result.error || 'No se pudo crear el usuario.', 'error');
+                        return;
+                    }
+
+                    Swal.fire('Creado', 'Usuario creado correctamente.', 'success');
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalUsuario')).hide();
+                    document.getElementById('userFullName').value = '';
+                    document.getElementById('userEmail').value = '';
+                    document.getElementById('userPassword').value = '';
+                    document.getElementById('userRoleId').value = '';
+                    await loadUsers();
+                } finally {
+                    saveButton?.removeAttribute('disabled');
+                }
+            };
+
+            const toggleUser = async (id, active) => {
+                const response = await fetch(`/api/admin/usuarios/${id}/estado`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active })
+                });
+                if (!response.ok) {
+                    Swal.fire('Error', 'No se pudo actualizar el estado del usuario.', 'error');
+                    return;
+                }
+                await loadUsers();
+            };
+
+            const bindEvents = () => {
+                document.getElementById('saveUserButton')?.addEventListener('click', createUser);
+                document.getElementById('usersRows')?.addEventListener('click', async event => {
+                    const button = event.target.closest('button[data-action="toggle"]');
+                    if (!button) return;
+                    await toggleUser(Number(button.dataset.id), button.dataset.nextActive === 'true');
+                });
+
+                document.getElementById('modalUsuario')?.addEventListener('hidden.bs.modal', () => {
+                    document.getElementById('userFullName').value = '';
+                    document.getElementById('userEmail').value = '';
+                    document.getElementById('userPassword').value = '';
+                    document.getElementById('userRoleId').value = '';
+                });
+            };
+
+            const init = async () => {
+                bindEvents();
+                await Promise.all([loadRoles(), loadUsers()]);
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
+            }
+        })();
     </script>
 }
 
@@ -57,7 +171,7 @@
                 <div>
 
                     <h6>Usuarios Activos</h6>
-                    <h2>128</h2>
+                    <h2 id="usersActiveKpi">0</h2>
 
                 </div>
 
@@ -78,7 +192,7 @@
                 <div>
 
                     <h6>Administradores</h6>
-                    <h2>8</h2>
+                    <h2 id="usersAdminsKpi">0</h2>
 
                 </div>
 
@@ -99,7 +213,7 @@
                 <div>
 
                     <h6>Auditores</h6>
-                    <h2>12</h2>
+                    <h2 id="usersAuditorsKpi">0</h2>
 
                 </div>
 
@@ -120,7 +234,7 @@
                 <div>
 
                     <h6>Bloqueados</h6>
-                    <h2>3</h2>
+                    <h2 id="usersBlockedKpi">0</h2>
 
                 </div>
 
@@ -165,7 +279,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="usersRows">
                     <tr>
                         <td colspan="6" class="text-center text-muted py-4">Cargando usuarios...</td>
                     </tr>
@@ -210,6 +324,7 @@
                         </label>
 
                         <input type="text"
+                               id="userFullName"
                                class="form-control">
 
                     </div>
@@ -221,6 +336,7 @@
                         </label>
 
                         <input type="email"
+                               id="userEmail"
                                class="form-control">
 
                     </div>
@@ -231,10 +347,9 @@
                             Rol
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" id="userRoleId">
 
-                            <option>Administrador</option>
-                            <option>Supervisor</option>
+                            <option value="">Sin rol</option>
 
                         </select>
 
@@ -246,11 +361,24 @@
                             Área
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" disabled>
 
                             <option>TI</option>
 
                         </select>
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label">
+                            Contraseña temporal
+                        </label>
+
+                        <input type="password"
+                               id="userPassword"
+                               class="form-control"
+                               placeholder="Mínimo 8 caracteres">
 
                     </div>
 
@@ -267,7 +395,7 @@
 
                 </button>
 
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="saveUserButton" type="button">
 
                     Guardar Usuario
 

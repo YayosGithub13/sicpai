@@ -221,32 +221,73 @@ public sealed class AssetService : IAssetService
     {
         var imported = 0;
         var rejected = new List<AssetImportRejectedRowDto>();
+        var codesInFile = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var pendingAssets = new List<Asset>();
+
+        static string Normalize(string? value) => value?.Trim() ?? string.Empty;
 
         foreach (var row in rows)
         {
-            if (string.IsNullOrWhiteSpace(row.Code) || string.IsNullOrWhiteSpace(row.Name) || await _assetRepository.ExistsCodeAsync(row.Code, cancellationToken: cancellationToken))
+            var code = Normalize(row.Code);
+            var name = Normalize(row.Name);
+            var assetType = Normalize(row.AssetType);
+            var serialNumber = Normalize(row.SerialNumber);
+            var area = Normalize(row.Area);
+            var responsible = Normalize(row.Responsible);
+            var location = Normalize(row.Location);
+            var status = Normalize(row.Status);
+
+            if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(name))
             {
-                rejected.Add(new AssetImportRejectedRowDto(row.Row, row.Code, "Código o nombre inválido, o código duplicado."));
+                rejected.Add(new AssetImportRejectedRowDto(row.Row, code, "Código y nombre son obligatorios."));
                 continue;
             }
 
-            await _assetRepository.AddAsync(new Asset
+            if (!codesInFile.Add(code))
             {
-                AssetCode = row.Code.Trim(),
-                Name = row.Name.Trim(),
-                AssetType = row.AssetType.Trim(),
-                SerialNumber = row.SerialNumber.Trim(),
-                Area = row.Area.Trim(),
-                Responsible = row.Responsible.Trim(),
-                Location = row.Location.Trim(),
-                Status = string.IsNullOrWhiteSpace(row.Status) ? "Activo" : row.Status.Trim(),
+                rejected.Add(new AssetImportRejectedRowDto(row.Row, code, "Código duplicado dentro del archivo de importación."));
+                continue;
+            }
+
+            if (await _assetRepository.ExistsCodeAsync(code, cancellationToken: cancellationToken))
+            {
+                rejected.Add(new AssetImportRejectedRowDto(row.Row, code, "El código ya existe en el sistema."));
+                continue;
+            }
+
+            if (row.AcquisitionValue < 0)
+            {
+                rejected.Add(new AssetImportRejectedRowDto(row.Row, code, "El valor de adquisición no puede ser negativo."));
+                continue;
+            }
+
+            pendingAssets.Add(new Asset
+            {
+                AssetCode = code,
+                Barcode = code,
+                Name = name,
+                AssetType = string.IsNullOrWhiteSpace(assetType) ? "General" : assetType,
+                SerialNumber = string.IsNullOrWhiteSpace(serialNumber) ? null : serialNumber,
+                Area = string.IsNullOrWhiteSpace(area) ? null : area,
+                Responsible = string.IsNullOrWhiteSpace(responsible) ? null : responsible,
+                Location = string.IsNullOrWhiteSpace(location) ? null : location,
+                Status = string.IsNullOrWhiteSpace(status) ? "Activo" : status,
                 AcquisitionValue = row.AcquisitionValue,
                 UpdatedAt = DateTime.UtcNow
-            }, cancellationToken);
+            });
+        }
+
+        foreach (var asset in pendingAssets)
+        {
+            await _assetRepository.AddAsync(asset, cancellationToken);
             imported++;
         }
 
-        await _assetRepository.SaveChangesAsync(cancellationToken);
+        if (imported > 0)
+        {
+            await _assetRepository.SaveChangesAsync(cancellationToken);
+        }
+
         return (imported, rejected);
     }
 

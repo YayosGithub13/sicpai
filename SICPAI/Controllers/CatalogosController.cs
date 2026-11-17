@@ -52,6 +52,42 @@ public class CatalogosController : ControllerBase
     [HttpGet("responsables")]
     public async Task<IActionResult> Responsables([FromQuery] bool includeInactive = false) => Ok(await _catalogOperations.GetResponsablesAsync(includeInactive, HttpContext.RequestAborted));
 
+    [HttpPost("responsables")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateResponsable([FromBody] ResponsableRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.FullName) || string.IsNullOrWhiteSpace(request.Email))
+            return BadRequest(new { error = "Nombre completo y correo son obligatorios." });
+
+        try
+        {
+            var responsable = await _catalogOperations.CreateResponsableAsync(request.FullName, request.UserName, request.Email, request.Active, HttpContext.RequestAborted);
+            return Created("/api/catalogos/responsables", responsable);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Conflict(new { error = exception.Message });
+        }
+    }
+
+    [HttpPut("responsables/{id:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateResponsable(int id, [FromBody] ResponsableRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.FullName) || string.IsNullOrWhiteSpace(request.Email))
+            return BadRequest(new { error = "Nombre completo y correo son obligatorios." });
+
+        try
+        {
+            var responsable = await _catalogOperations.UpdateResponsableAsync(id, request.FullName, request.UserName, request.Email, request.Active, HttpContext.RequestAborted);
+            return responsable is null ? NotFound() : Ok(responsable);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Conflict(new { error = exception.Message });
+        }
+    }
+
     [HttpPost("ubicaciones")]
     public async Task<IActionResult> CreateLocation([FromBody] LocationRequest request)
     {
@@ -77,4 +113,5 @@ public class CatalogosController : ControllerBase
 
     public sealed class AreaRequest { public string Code { get; set; } = string.Empty; public string Name { get; set; } = string.Empty; public string? Description { get; set; } public int? ParentAreaId { get; set; } public bool Active { get; set; } = true; }
     public sealed class LocationRequest { public string Code { get; set; } = string.Empty; public string Site { get; set; } = string.Empty; public string? Building { get; set; } public string? Floor { get; set; } public string Name { get; set; } = string.Empty; public string? Description { get; set; } public bool Active { get; set; } = true; }
+    public sealed class ResponsableRequest { public string FullName { get; set; } = string.Empty; public string UserName { get; set; } = string.Empty; public string Email { get; set; } = string.Empty; public bool Active { get; set; } = true; }
 }

@@ -20,21 +20,134 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const [rolesResponse, permissionsResponse] = await Promise.all([fetch('/api/admin/roles'), fetch('/api/admin/permisos')]);
-            if (!rolesResponse.ok || !permissionsResponse.ok) return;
-            const roles = await rolesResponse.json(); const permissions = await permissionsResponse.json();
-            const body = document.querySelector('table tbody'); if (!body) return;
-            body.innerHTML = permissions.map(permission => `<tr><td>${escapeHtml(permission.module || permission.name)}<small class="d-block text-muted">${escapeHtml(permission.code)}</small></td><td colspan="5"><label class="d-flex gap-2 align-items-center"><input class="permission-check" type="checkbox" data-permission-id="${permission.id}" ${roles[0]?.rolePermissions.some(rp => rp.permissionCatalogId === permission.id || rp.permissionCatalog?.id === permission.id) ? 'checked' : ''}> ${escapeHtml(roles[0]?.name || 'Rol')}</label></td></tr>`).join('');
-            const save = document.createElement('button'); save.className = 'btn btn-success mt-3'; save.textContent = 'Guardar permisos'; document.querySelector('.card-custom').appendChild(save);
-            save.onclick = async () => { const ids = [...document.querySelectorAll('.permission-check:checked')].map(x => Number(x.dataset.permissionId)); const result = await fetch(`/api/admin/roles/${roles[0].id}/permisos`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ permissionIds: ids }) }); Swal.fire(result.ok ? 'Guardado' : 'Error', result.ok ? 'Permisos actualizados.' : 'No se pudieron guardar.', result.ok ? 'success' : 'error'); };
-            document.querySelector('.btn-primary')?.addEventListener('click', async () => { const name = prompt('Nombre del nuevo rol:'); if (!name) return; const result = await fetch('/api/admin/roles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) }); Swal.fire(result.ok ? 'Creado' : 'Error', result.ok ? 'Rol creado correctamente.' : 'No se pudo crear el rol.', result.ok ? 'success' : 'error').then(() => location.reload()); });
-        });
-        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+        (() => {
+            const state = { roles: [], permissions: [] };
+
+            const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+
+            const getSelectedRole = () => {
+                const select = document.getElementById('rolesSelect');
+                if (!select) return null;
+                const id = Number(select.value);
+                return state.roles.find(role => role.id === id) ?? null;
+            };
+
+            const renderRoles = (selectedRoleId) => {
+                const select = document.getElementById('rolesSelect');
+                if (!select) return;
+                select.innerHTML = state.roles.length
+                    ? state.roles.map(role => `<option value="${role.id}">${escapeHtml(role.name)}</option>`).join('')
+                    : '<option value="">Sin roles</option>';
+
+                if (selectedRoleId && state.roles.some(role => role.id === selectedRoleId)) {
+                    select.value = String(selectedRoleId);
+                }
+            };
+
+            const renderPermissions = () => {
+                const body = document.getElementById('rolesPermissionsRows');
+                if (!body) return;
+
+                const role = getSelectedRole();
+                if (!role) {
+                    body.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">No hay roles disponibles.</td></tr>';
+                    return;
+                }
+
+                const assigned = new Set((role.rolePermissions || []).map(permission => permission.permissionCatalogId ?? permission.permissionCatalog?.id));
+                body.innerHTML = state.permissions.length
+                    ? state.permissions.map(permission => `
+                        <tr>
+                            <td>${escapeHtml(permission.module || '-')}</td>
+                            <td>
+                                <div class="fw-semibold">${escapeHtml(permission.name)}</div>
+                                <small class="text-muted">${escapeHtml(permission.code)}</small>
+                            </td>
+                            <td>
+                                <input class="form-check-input permission-check" type="checkbox" data-permission-id="${permission.id}" ${assigned.has(permission.id) ? 'checked' : ''}>
+                            </td>
+                        </tr>`).join('')
+                    : '<tr><td colspan="3" class="text-center text-muted py-4">No hay permisos registrados.</td></tr>';
+            };
+
+            const loadData = async (selectedRoleId) => {
+                const [rolesResponse, permissionsResponse] = await Promise.all([fetch('/api/admin/roles'), fetch('/api/admin/permisos')]);
+                if (!rolesResponse.ok || !permissionsResponse.ok) return;
+
+                state.roles = await rolesResponse.json();
+                state.permissions = await permissionsResponse.json();
+                renderRoles(selectedRoleId ?? state.roles[0]?.id);
+                renderPermissions();
+            };
+
+            const bindEvents = () => {
+                document.getElementById('rolesSelect')?.addEventListener('change', renderPermissions);
+
+                document.getElementById('saveRolePermissions')?.addEventListener('click', async () => {
+                    const role = getSelectedRole();
+                    if (!role) {
+                        Swal.fire('Error', 'Selecciona un rol.', 'error');
+                        return;
+                    }
+
+                    const permissionIds = [...document.querySelectorAll('#rolesPermissionsRows .permission-check:checked')]
+                        .map(element => Number(element.dataset.permissionId))
+                        .filter(Number.isFinite);
+
+                    const response = await fetch(`/api/admin/roles/${role.id}/permisos`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ permissionIds })
+                    });
+
+                    Swal.fire(response.ok ? 'Guardado' : 'Error', response.ok ? 'Permisos actualizados.' : 'No se pudieron guardar.', response.ok ? 'success' : 'error');
+                    if (response.ok) await loadData(role.id);
+                });
+
+                document.getElementById('createRoleButton')?.addEventListener('click', async () => {
+                    const result = await Swal.fire({
+                        title: 'Nuevo rol',
+                        input: 'text',
+                        inputLabel: 'Nombre del rol',
+                        showCancelButton: true,
+                        confirmButtonText: 'Crear'
+                    });
+
+                    const name = result.value?.trim();
+                    if (!result.isConfirmed || !name) return;
+
+                    const response = await fetch('/api/admin/roles', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name })
+                    });
+
+                    if (!response.ok) {
+                        Swal.fire('Error', 'No se pudo crear el rol.', 'error');
+                        return;
+                    }
+
+                    const createdRole = await response.json();
+                    Swal.fire('Creado', 'Rol creado correctamente.', 'success');
+                    await loadData(createdRole?.id);
+                });
+            };
+
+            const init = async () => {
+                bindEvents();
+                await loadData();
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
+            }
+        })();
     </script>
 }
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" id="createRoleButton" type="button">
 
             <i class="bi bi-shield-plus"></i>
             Nuevo Rol
@@ -58,44 +171,15 @@
                 <thead class="table-light">
 
                     <tr>
-
                         <th>Módulo</th>
-                        <th>Ver</th>
-                        <th>Crear</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                        <th>Exportar</th>
-
+                        <th>Permiso</th>
+                        <th>Asignado</th>
                     </tr>
 
                 </thead>
 
-                <tbody>
-
-                    <tr>
-
-                        <td>Bienes Patrimoniales</td>
-
-                        <td><input type="checkbox" checked></td>
-                        <td><input type="checkbox" checked></td>
-                        <td><input type="checkbox" checked></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox" checked></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>Auditorías</td>
-
-                        <td><input type="checkbox" checked></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox" checked></td>
-
-                    </tr>
-
+                <tbody id="rolesPermissionsRows">
+                    <tr><td colspan="3" class="text-center text-muted py-4">Cargando permisos...</td></tr>
                 </tbody>
 
             </table>

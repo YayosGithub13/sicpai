@@ -62,11 +62,11 @@
                     Reporte completo de bienes institucionales
                 </p>
 
-                <button class="btn btn-primary w-100">
+                <a class="btn btn-primary w-100" href="/api/reportes/inventario/excel">
 
                     Generar Reporte
 
-                </button>
+                </a>
 
             </div>
 
@@ -129,8 +129,20 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.report-card .btn').forEach(button => {
-                if (!button.href) button.addEventListener('click', () => window.location.href = '/api/reportes/inventario/excel');
+            const responsibleButton = document.querySelector('a[href^="/api/reportes/inventario/excel?responsible="]');
+            responsibleButton?.addEventListener('click', event => {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Bienes por responsable',
+                    input: 'text',
+                    inputLabel: 'Nombre del responsable',
+                    showCancelButton: true,
+                    confirmButtonText: 'Generar'
+                }).then(result => {
+                    if (!result.isConfirmed) return;
+                    const responsible = encodeURIComponent((result.value || '').trim());
+                    window.location.href = `/api/reportes/inventario/excel?responsible=${responsible}`;
+                });
             });
         });
     </script>

@@ -141,21 +141,104 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const response = await fetch('/api/dashboard/summary');
-            if (!response.ok) return;
-            const data = await response.json();
-            document.getElementById('kpiTotal').textContent = data.total.toLocaleString('es-MX');
-            document.getElementById('kpiActive').textContent = data.active.toLocaleString('es-MX');
-            document.getElementById('kpiRepair').textContent = data.repair.toLocaleString('es-MX');
-            document.getElementById('kpiMissing').textContent = data.missing.toLocaleString('es-MX');
-            if (window.Chart) {
-                const areaCanvas = document.getElementById('assetsChart');
-                const statusCanvas = document.getElementById('statusChart');
-                new Chart(areaCanvas, { type: 'bar', data: { labels: data.byArea.map(x => x.area), datasets: [{ label: 'Bienes', data: data.byArea.map(x => x.total), backgroundColor: '#0d47a1' }] }, options: { responsive: true, maintainAspectRatio: false } });
-                new Chart(statusCanvas, { type: 'doughnut', data: { labels: data.byStatus.map(x => x.status), datasets: [{ data: data.byStatus.map(x => x.total), backgroundColor: ['#198754', '#fd7e14', '#dc3545', '#6c757d', '#0d6efd'] }] } });
+        (() => {
+            const renderRecentMovements = movements => {
+                const body = document.getElementById('dashboardRecentMovementsRows');
+                if (!body) return;
+
+                body.innerHTML = movements.length
+                    ? movements.map(movement => {
+                        const occurredAt = movement?.occurredAt ? new Date(movement.occurredAt) : null;
+                        const occurredText = occurredAt && !Number.isNaN(occurredAt.getTime())
+                            ? occurredAt.toLocaleString('es-MX')
+                            : '-';
+                        const type = movement?.movementType || '-';
+                        const assetCode = movement?.asset?.assetCode || '-';
+                        const assetName = movement?.asset?.name || '-';
+                        const userName = movement?.user?.fullName || '-';
+                        const statusBadge = type.toLowerCase().includes('baja')
+                            ? 'bg-danger'
+                            : type.toLowerCase().includes('transfer')
+                                ? 'bg-info text-dark'
+                                : type.toLowerCase().includes('manten')
+                                    ? 'bg-warning text-dark'
+                                    : 'bg-success';
+
+                        return `<tr>
+                            <td>${assetCode}</td>
+                            <td>${assetName}</td>
+                            <td>${type}</td>
+                            <td>${userName}</td>
+                            <td>${occurredText}</td>
+                            <td><span class="badge ${statusBadge}">${type}</span></td>
+                        </tr>`;
+                    }).join('')
+                    : '<tr><td colspan="6" class="text-center text-muted py-4">Sin movimientos recientes para mostrar.</td></tr>';
+            };
+
+            const init = async () => {
+                const [summaryResponse, movementsResponse] = await Promise.all([
+                    fetch('/api/dashboard/summary'),
+                    fetch('/api/assets/movements?page=1&pageSize=10')
+                ]);
+
+                if (!summaryResponse.ok) return;
+                const data = await summaryResponse.json();
+
+                document.getElementById('kpiTotal').textContent = Number(data.total || 0).toLocaleString('es-MX');
+                document.getElementById('kpiActive').textContent = Number(data.active || 0).toLocaleString('es-MX');
+                document.getElementById('kpiRepair').textContent = Number(data.repair || 0).toLocaleString('es-MX');
+                document.getElementById('kpiMissing').textContent = Number(data.missing || 0).toLocaleString('es-MX');
+
+                if (window.Chart) {
+                    const areaCanvas = document.getElementById('assetsChart');
+                    const statusCanvas = document.getElementById('statusChart');
+
+                    if (window.sicpaiDashboardAreaChart) window.sicpaiDashboardAreaChart.destroy();
+                    if (window.sicpaiDashboardStatusChart) window.sicpaiDashboardStatusChart.destroy();
+
+                    window.sicpaiDashboardAreaChart = new Chart(areaCanvas, {
+                        type: 'bar',
+                        data: {
+                            labels: (data.byArea || []).map(x => x.area),
+                            datasets: [{
+                                label: 'Bienes',
+                                data: (data.byArea || []).map(x => x.total),
+                                backgroundColor: '#0d47a1'
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+
+                    window.sicpaiDashboardStatusChart = new Chart(statusCanvas, {
+                        type: 'doughnut',
+                        data: {
+                            labels: (data.byStatus || []).map(x => x.status),
+                            datasets: [{
+                                data: (data.byStatus || []).map(x => x.total),
+                                backgroundColor: ['#198754', '#fd7e14', '#dc3545', '#6c757d', '#0d6efd']
+                            }]
+                        }
+                    });
+                }
+
+                if (movementsResponse.ok) {
+                    const movementsData = await movementsResponse.json();
+                    renderRecentMovements(Array.isArray(movementsData?.items) ? movementsData.items : []);
+                }
+
+                document.getElementById('dashboardViewAllMovements')?.addEventListener('click', event => {
+                    event.preventDefault();
+                    window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: '/Operaciones/Historial' } }));
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
             }
-        });
+        })();
     </script>
 }
 
@@ -228,7 +311,7 @@
                 Movimientos Recientes
             </span>
 
-            <button class="btn btn-sm btn-primary">
+            <button class="btn btn-sm btn-primary" id="dashboardViewAllMovements" type="button">
                 Ver todos
             </button>
 
@@ -253,7 +336,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="dashboardRecentMovementsRows">
                     <tr>
                         <td colspan="6" class="text-center text-muted py-4">Sin movimientos recientes para mostrar.</td>
                     </tr>

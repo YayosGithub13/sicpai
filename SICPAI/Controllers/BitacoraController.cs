@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
+using SICPAI.Security;
 
 namespace SICPAI.Controllers;
 
 [Authorize]
+[PermissionAuthorize("users.manage")]
 [ApiController]
 [Route("api/bitacora")]
 public class BitacoraController : ControllerBase

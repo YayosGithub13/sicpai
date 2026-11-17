@@ -23,7 +23,41 @@
 @section Scripts {
     <script>
         (() => {
+            const state = { areas: [] };
             const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+
+            const getFilters = () => ({
+                search: (document.getElementById('areaSearchInput')?.value || '').trim().toLowerCase(),
+                status: document.getElementById('areaStatusFilter')?.value || ''
+            });
+
+            const renderKpis = areas => {
+                document.getElementById('areasTotalKpi').textContent = areas.length.toLocaleString('es-MX');
+                document.getElementById('areasActiveKpi').textContent = areas.filter(area => area.active).length.toLocaleString('es-MX');
+                document.getElementById('areasAssetsKpi').textContent = '-';
+                document.getElementById('areasLocationsKpi').textContent = '-';
+            };
+
+            const openEditModal = areaId => {
+                const area = state.areas.find(item => Number(item.id) === Number(areaId));
+                if (!area) return;
+                document.getElementById('areaId').value = area.id;
+                document.getElementById('areaCode').value = area.code || '';
+                document.getElementById('areaName').value = area.name || '';
+                document.getElementById('areaDescription').value = area.description || '';
+                document.getElementById('areaActive').value = area.active ? 'true' : 'false';
+                document.getElementById('areaModalTitle').textContent = 'Editar Área Institucional';
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('modalArea')).show();
+            };
+
+            const resetModal = () => {
+                document.getElementById('areaId').value = '';
+                document.getElementById('areaCode').value = '';
+                document.getElementById('areaName').value = '';
+                document.getElementById('areaDescription').value = '';
+                document.getElementById('areaActive').value = 'true';
+                document.getElementById('areaModalTitle').textContent = 'Nueva Área Institucional';
+            };
 
             const renderAreas = async () => {
                 const body = document.getElementById('areasRows');
@@ -32,10 +66,19 @@
                 const response = await fetch('/api/catalogos/areas');
                 if (!response.ok) return;
 
-                const areas = await response.json();
-                body.innerHTML = areas.length
-                    ? areas.map(area => `<tr><td><div class="area-inline"><div class="area-icon"><i class="bi bi-diagram-3-fill"></i></div><div><div class="fw-semibold">${escapeHtml(area.name)}</div><small class="text-muted">${escapeHtml(area.code)}</small></div></div></td><td>-</td><td>-</td><td>-</td><td><span class="badge ${area.active ? 'bg-success' : 'bg-secondary'}">${area.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Editar"><i class="bi bi-pencil"></i></button></td></tr>`).join('')
+                state.areas = await response.json();
+                const filters = getFilters();
+                const filtered = state.areas.filter(area => {
+                    const matchesSearch = !filters.search || (area.name || '').toLowerCase().includes(filters.search) || (area.code || '').toLowerCase().includes(filters.search);
+                    const matchesStatus = !filters.status || String(area.active) === filters.status;
+                    return matchesSearch && matchesStatus;
+                });
+
+                body.innerHTML = filtered.length
+                    ? filtered.map(area => `<tr><td><div class="area-inline"><div class="area-icon"><i class="bi bi-diagram-3-fill"></i></div><div><div class="fw-semibold">${escapeHtml(area.name)}</div><small class="text-muted">${escapeHtml(area.code)}</small></div></div></td><td>-</td><td>-</td><td>-</td><td><span class="badge ${area.active ? 'bg-success' : 'bg-secondary'}">${area.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Editar" data-action="edit" data-id="${area.id}"><i class="bi bi-pencil"></i></button></td></tr>`).join('')
                     : '<tr><td colspan="6" class="text-center text-muted py-4">No hay áreas registradas.</td></tr>';
+
+                renderKpis(state.areas);
             };
 
             const bindCreateArea = () => {
@@ -43,10 +86,12 @@
                 if (!saveButton) return;
 
                 saveButton.addEventListener('click', async () => {
+                    const areaId = Number(document.getElementById('areaId')?.value || 0);
                     const payload = {
                         code: document.getElementById('areaCode')?.value?.trim() ?? '',
                         name: document.getElementById('areaName')?.value?.trim() ?? '',
-                        description: document.getElementById('areaDescription')?.value?.trim() ?? ''
+                        description: document.getElementById('areaDescription')?.value?.trim() ?? '',
+                        active: (document.getElementById('areaActive')?.value ?? 'true') === 'true'
                     };
 
                     if (!payload.code || !payload.name) {
@@ -54,26 +99,67 @@
                         return;
                     }
 
-                    const saved = await fetch('/api/catalogos/areas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                    saveButton.setAttribute('disabled', 'disabled');
+                    try {
+                        const saved = await fetch(areaId > 0 ? `/api/catalogos/areas/${areaId}` : '/api/catalogos/areas', {
+                            method: areaId > 0 ? 'PUT' : 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
 
-                    if (!saved.ok) {
-                        Swal.fire('Error', 'No se pudo crear el área.', 'error');
-                        return;
+                        if (!saved.ok) {
+                            const error = await saved.json().catch(() => null);
+                            Swal.fire('Error', error?.error || 'No se pudo guardar el área.', 'error');
+                            return;
+                        }
+
+                        const modalElement = document.getElementById('modalArea');
+                        const modal = modalElement ? bootstrap.Modal.getOrCreateInstance(modalElement) : null;
+                        modal?.hide();
+                        resetModal();
+                        Swal.fire('Guardada', areaId > 0 ? 'Área actualizada correctamente.' : 'Área creada correctamente.', 'success');
+                        await renderAreas();
+                    } finally {
+                        saveButton.removeAttribute('disabled');
                     }
-
-                    const modalElement = document.getElementById('modalArea');
-                    const modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
-                    modal?.hide();
-                    Swal.fire('Guardada', 'Área creada correctamente.', 'success');
-                    await renderAreas();
                 });
             };
 
+            const bindFilters = () => {
+                document.getElementById('areaSearchInput')?.addEventListener('input', renderAreas);
+                document.getElementById('areaStatusFilter')?.addEventListener('change', renderAreas);
+            };
+
+            const bindActions = () => {
+                document.getElementById('areasRows')?.addEventListener('click', event => {
+                    const button = event.target.closest('button[data-action="edit"]');
+                    if (!button) return;
+                    openEditModal(button.dataset.id);
+                });
+
+                document.getElementById('exportAreasCsv')?.addEventListener('click', () => {
+                    const lines = ['Codigo,Nombre,Descripcion,Estado'];
+                    for (const area of state.areas) {
+                        lines.push(`"${(area.code || '').replaceAll('"', '""')}","${(area.name || '').replaceAll('"', '""')}","${(area.description || '').replaceAll('"', '""')}","${area.active ? 'Activa' : 'Inactiva'}"`);
+                    }
+                    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `areas-${new Date().toISOString().slice(0, 10)}.csv`;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                });
+
+                document.getElementById('exportAreasPdf')?.addEventListener('click', () => window.print());
+                document.getElementById('exportAreasTopButton')?.addEventListener('click', () => document.getElementById('exportAreasCsv')?.click());
+                document.getElementById('openAreaModal')?.addEventListener('click', resetModal);
+                document.getElementById('modalArea')?.addEventListener('hidden.bs.modal', resetModal);
+            };
+
             const init = async () => {
+                bindFilters();
+                bindActions();
                 await renderAreas();
                 bindCreateArea();
             };
@@ -89,7 +175,7 @@
 
         <div class="d-flex gap-2">
 
-            <button class="btn btn-light">
+            <button class="btn btn-light" id="exportAreasTopButton" type="button">
 
                 <i class="bi bi-download"></i>
                 Exportar
@@ -97,6 +183,7 @@
             </button>
 
             <button class="btn btn-primary"
+                    id="openAreaModal"
                     data-bs-toggle="modal"
                     data-bs-target="#modalArea">
 
@@ -121,7 +208,7 @@
 
                     <h6>Total Áreas</h6>
 
-                    <h2>24</h2>
+                <h2 id="areasTotalKpi">0</h2>
 
                     <span class="success-text">
                         Institucionales
@@ -147,7 +234,7 @@
 
                     <h6>Responsables</h6>
 
-                    <h2>58</h2>
+                    <h2 id="areasActiveKpi">0</h2>
 
                     <span class="success-text">
                         Activos
@@ -173,7 +260,7 @@
 
                     <h6>Bienes Asignados</h6>
 
-                    <h2>—</h2>
+                    <h2 id="areasAssetsKpi">—</h2>
 
                     <span class="warning-text">
                         Inventario total
@@ -199,7 +286,7 @@
 
                     <h6>Ubicaciones</h6>
 
-                    <h2>42</h2>
+                    <h2 id="areasLocationsKpi">—</h2>
 
                     <span class="danger-text">
                         Registradas
@@ -240,6 +327,7 @@
                     </label>
 
                     <input type="text"
+                           id="areaSearchInput"
                            class="form-control"
                            placeholder="Nombre del área">
 
@@ -251,7 +339,7 @@
                         Responsable
                     </label>
 
-                    <select class="form-select">
+                    <select class="form-select" disabled>
 
                         <option>Todos</option>
 
@@ -265,11 +353,11 @@
                         Estado
                     </label>
 
-                    <select class="form-select">
+                    <select class="form-select" id="areaStatusFilter">
 
-                        <option>Todas</option>
-                        <option>Activa</option>
-                        <option>Inactiva</option>
+                        <option value="">Todas</option>
+                        <option value="true">Activa</option>
+                        <option value="false">Inactiva</option>
 
                     </select>
 
@@ -293,13 +381,13 @@
 
             <div class="d-flex gap-2">
 
-                <button class="btn btn-sm btn-outline-primary">
+                <button class="btn btn-sm btn-outline-primary" id="exportAreasCsv" type="button">
 
                     Excel
 
                 </button>
 
-                <button class="btn btn-sm btn-outline-danger">
+                <button class="btn btn-sm btn-outline-danger" id="exportAreasPdf" type="button">
 
                     PDF
 
@@ -328,160 +416,8 @@
 
                 </thead>
 
-                <tbody>
-
-                    <tr>
-
-                        <td>
-
-                            <div class="area-inline">
-
-                                <div class="area-icon">
-
-                                    <i class="bi bi-cpu-fill"></i>
-
-                                </div>
-
-                                <div>
-
-                                    <div class="fw-semibold">
-
-                                        Tecnologías de Información
-
-                                    </div>
-
-                                    <small class="text-muted">
-
-                                        Área tecnológica institucional
-
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>Juan Pérez</td>
-
-                        <td>Edificio A</td>
-
-                        <td>2,458</td>
-
-                        <td>
-
-                            <span class="badge bg-success">
-
-                                Activa
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="d-flex gap-2">
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-eye"></i>
-
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-pencil"></i>
-
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-diagram-3"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>
-
-                            <div class="area-inline">
-
-                                <div class="area-icon orange-bg">
-
-                                    <i class="bi bi-cash-stack"></i>
-
-                                </div>
-
-                                <div>
-
-                                    <div class="fw-semibold">
-
-                                        Finanzas
-
-                                    </div>
-
-                                    <small class="text-muted">
-
-                                        Gestión financiera institucional
-
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>María López</td>
-
-                        <td>Edificio B</td>
-
-                        <td>1,120</td>
-
-                        <td>
-
-                            <span class="badge bg-success">
-
-                                Activa
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="d-flex gap-2">
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-eye"></i>
-
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-pencil"></i>
-
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-diagram-3"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
+                <tbody id="areasRows">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Cargando áreas...</td></tr>
                 </tbody>
 
             </table>
@@ -506,7 +442,7 @@
 
                 <h5 class="modal-title">
 
-                    Nueva Área Institucional
+                    <span id="areaModalTitle">Nueva Área Institucional</span>
 
                 </h5>
 
@@ -553,6 +489,7 @@
                             Ubicación
                         </label>
 
+                        <input type="hidden" id="areaId">
                         <input type="text"
                                id="areaCode"
                                class="form-control"
@@ -566,10 +503,10 @@
                             Estado
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" id="areaActive">
 
-                            <option>Activa</option>
-                            <option>Inactiva</option>
+                            <option value="true">Activa</option>
+                            <option value="false">Inactiva</option>
 
                         </select>
 

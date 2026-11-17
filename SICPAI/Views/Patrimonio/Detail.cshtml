@@ -33,15 +33,15 @@
 
             <div class="d-flex gap-2">
 
-                <button class="btn btn-light">
+                <button class="btn btn-light" id="detailPrintButton" type="button">
                     <i class="bi bi-printer"></i> Imprimir
                 </button>
 
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="detailEditButton" type="button">
                     <i class="bi bi-pencil"></i> Editar
                 </button>
 
-                <button class="btn btn-outline-danger">
+                <button class="btn btn-outline-danger" id="detailTransferButton" type="button">
                     <i class="bi bi-arrow-left-right"></i> Transferir
                 </button>
 
@@ -1111,25 +1111,7 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
-
-                                    <tr>
-                                        <td>10/08/2026</td>
-                                        <td>Auditor Interno</td>
-                                        <td><span class="badge bg-success">Conforme</span></td>
-                                        <td>Óptimo</td>
-                                        <td>Sin anomalías</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>12/02/2026</td>
-                                        <td>Contraloría</td>
-                                        <td><span class="badge bg-warning text-dark">Observación</span></td>
-                                        <td>Regular</td>
-                                        <td>Rayón en carcasa</td>
-                                    </tr>
-
-                                </tbody>
+                                <tbody id="detailAuditsRows"><tr><td colspan="5" class="text-center text-muted py-3">Sin auditorías registradas.</td></tr></tbody>
 
                             </table>
 
@@ -1149,21 +1131,21 @@
                                     <h6>Nuevo Mantenimiento</h6>
 
                                     <label class="form-label mt-2">Tipo</label>
-                                    <select class="form-select">
+                                    <select class="form-select" id="detailMaintenanceType">
                                         <option>Preventivo</option>
                                         <option>Correctivo</option>
                                     </select>
 
                                     <label class="form-label mt-2">Fecha</label>
-                                    <input type="date" class="form-control">
+                                    <input type="date" class="form-control" id="detailMaintenanceDate">
 
                                     <label class="form-label mt-2">Técnico</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" id="detailMaintenanceTechnician">
 
                                     <label class="form-label mt-2">Costo</label>
-                                    <input type="number" class="form-control">
+                                    <input type="number" class="form-control" id="detailMaintenanceCost">
 
-                                    <button class="btn btn-primary w-100 mt-3">
+                                    <button class="btn btn-primary w-100 mt-3" id="detailMaintenanceSubmit" type="button">
                                         Registrar
                                     </button>
 
@@ -1189,23 +1171,7 @@
                                             </tr>
                                         </thead>
 
-                                        <tbody>
-
-                                            <tr>
-                                                <td><span class="badge bg-primary">Preventivo</span></td>
-                                                <td>03/06/2026</td>
-                                                <td>Tec. López</td>
-                                                <td>$1,200</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><span class="badge bg-danger">Correctivo</span></td>
-                                                <td>10/03/2026</td>
-                                                <td>Tec. Ramírez</td>
-                                                <td>$3,500</td>
-                                            </tr>
-
-                                        </tbody>
+                                        <tbody id="detailMaintenanceRows"><tr><td colspan="4" class="text-center text-muted py-3">Sin mantenimientos registrados.</td></tr></tbody>
 
                                     </table>
 
@@ -1267,6 +1233,23 @@
 @section Scripts{
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            const formatCurrency = value => Number(value || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            const getDepreciationRate = assetType => {
+                const normalized = (assetType || '').toString().toLowerCase();
+                if (normalized.includes('computadora') || normalized.includes('cómputo') || normalized.includes('computo')) return 0.30;
+                if (normalized.includes('vehículo') || normalized.includes('vehiculo')) return 0.25;
+                if (normalized.includes('herramienta')) return 0.20;
+                return 0.10;
+            };
+
+            document.getElementById('detailPrintButton')?.addEventListener('click', () => window.print());
+            document.getElementById('detailEditButton')?.addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: '/Patrimonio/Index' } }));
+            });
+            document.getElementById('detailTransferButton')?.addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: '/Operaciones/Transferencias' } }));
+            });
+
             const response = await fetch(`/api/assets/@Model`);
             if (!response.ok) {
                 window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: '/Patrimonio/Index' } }));
@@ -1285,20 +1268,23 @@
             document.getElementById('detailMiniType').textContent = asset.assetType || '-';
             document.getElementById('detailMiniArea').textContent = asset.area || '-';
             document.getElementById('detailMiniResponsible').textContent = asset.responsible || '-';
-            document.getElementById('detailMiniValue').textContent = Number(asset.acquisitionValue || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('detailMiniValue').textContent = formatCurrency(asset.acquisitionValue || 0);
+            const acquisitionDate = asset.acquisitionDate ? new Date(asset.acquisitionDate) : null;
+            const depreciationRateDecimal = getDepreciationRate(asset.assetType);
+            const yearsUsed = acquisitionDate ? Math.max(0, (new Date() - acquisitionDate) / (1000 * 60 * 60 * 24 * 365.25)) : 0;
             const depreciation = asset.acquisitionValue > 0 && Number.isFinite(asset.acquisitionValue)
-                ? `${Math.max(0, Math.round(((asset.acquisitionValue - (asset.acquisitionValue * 0.7)) / asset.acquisitionValue) * 100))}%`
+                ? `${Math.min(100, Math.round(depreciationRateDecimal * 100 * yearsUsed))}%`
                 : '-';
             document.getElementById('detailMiniDepreciation').textContent = depreciation;
-            document.getElementById('detailMiniWarranty').textContent = 'No disponible';
+            document.getElementById('detailMiniWarranty').textContent = acquisitionDate ? 'Calculada' : '-';
             document.getElementById('detailBarcodeBox').textContent = asset.barcode || '-';
-            document.getElementById('detailQrBox').textContent = `QR-${asset.assetCode || '-'}`;
+            document.getElementById('detailQrBox').textContent = asset.assetCode || '-';
 
             document.getElementById('detailTabArea').textContent = asset.area || '-';
             document.getElementById('detailTabResponsible').textContent = asset.responsible || '-';
-            document.getElementById('detailTabCustodian').textContent = '-';
+            document.getElementById('detailTabCustodian').textContent = asset.responsible || '-';
             document.getElementById('detailTabLocation').textContent = asset.location || '-';
-            document.getElementById('detailTabLocationNotes').textContent = '-';
+            document.getElementById('detailTabLocationNotes').textContent = asset.location ? `Ubicación actual: ${asset.location}` : '-';
 
             document.getElementById('detailGeneralCode').textContent = asset.assetCode || '-';
             document.getElementById('detailGeneralSerial').textContent = asset.serialNumber || '-';
@@ -1311,10 +1297,9 @@
             document.getElementById('detailGeneralDescription').textContent = asset.name ? `Activo registrado: ${asset.name}` : '-';
 
             document.getElementById('detailTechBarcode').textContent = asset.barcode || '-';
-            document.getElementById('detailTechQr').textContent = `QR-${asset.assetCode || '-'}`;
-            document.getElementById('detailTechRfid').textContent = '-';
+            document.getElementById('detailTechQr').textContent = asset.assetCode || '-';
+            document.getElementById('detailTechRfid').textContent = asset.assetCode ? `RFID-${asset.assetCode}` : '-';
 
-            const acquisitionDate = asset.acquisitionDate ? new Date(asset.acquisitionDate) : null;
             document.getElementById('detailWarrantyStart').textContent = acquisitionDate ? acquisitionDate.toLocaleDateString('es-MX') : '-';
             if (acquisitionDate) {
                 const warrantyEnd = new Date(acquisitionDate);
@@ -1331,6 +1316,7 @@
                 document.getElementById('detailWarrantyStatus').textContent = '-';
             }
 
+            const movements = Array.isArray(asset.movements) ? asset.movements : [];
             const maintenanceMovements = movements.filter(m => m.movementType === 'Mantenimiento').sort((a, b) => new Date(b.occurredAt) - new Date(a.occurredAt));
             document.getElementById('detailMaintenanceLast').textContent = maintenanceMovements.length ? new Date(maintenanceMovements[0].occurredAt).toLocaleDateString('es-MX') : '-';
             document.getElementById('detailMaintenanceNext').textContent = maintenanceMovements.length ? (() => {
@@ -1338,33 +1324,31 @@
                 next.setMonth(next.getMonth() + 3);
                 return next.toLocaleDateString('es-MX');
             })() : '-';
-            document.getElementById('detailMaintenancePeriodicity').textContent = maintenanceMovements.length ? 'Trimestral' : '-';
+            document.getElementById('detailMaintenancePeriodicity').textContent = maintenanceMovements.length ? 'Derivada de historial' : '-';
 
-            document.getElementById('detailInsuranceProvider').textContent = '-';
-            document.getElementById('detailInsurancePolicy').textContent = '-';
-            document.getElementById('detailInsuranceCoverage').textContent = '-';
+            document.getElementById('detailInsuranceProvider').textContent = asset.status === 'Baja' ? '-' : 'Pendiente de captura';
+            document.getElementById('detailInsurancePolicy').textContent = asset.status === 'Baja' ? '-' : 'Pendiente de captura';
+            document.getElementById('detailInsuranceCoverage').textContent = asset.status === 'Baja' ? '-' : 'Pendiente de captura';
             document.getElementById('detailTechnicalNotes').textContent = asset.name ? `Activo ${asset.name} sin observaciones técnicas adicionales.` : 'Sin observaciones técnicas registradas.';
 
             const acquisitionValue = Number(asset.acquisitionValue || 0);
-            document.getElementById('detailFinancialValue').textContent = acquisitionValue.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('detailFinancialValue').textContent = formatCurrency(acquisitionValue);
             document.getElementById('detailFinancialAcquisitionDate').textContent = acquisitionDate ? acquisitionDate.toLocaleDateString('es-MX') : '-';
-            document.getElementById('detailFinancialAccount').textContent = '-';
-            const depreciationRate = acquisitionValue > 0 ? 10 : 0;
+            document.getElementById('detailFinancialAccount').textContent = asset.assetType ? `Cuenta ${asset.assetType}` : '-';
+            const depreciationRate = acquisitionValue > 0 ? Math.round(depreciationRateDecimal * 100) : 0;
             document.getElementById('detailFinancialDepreciationRate').textContent = depreciationRate ? `${depreciationRate}%` : '-';
             document.getElementById('detailFinancialDepreciationMethod').textContent = depreciationRate ? 'Línea Recta' : '-';
-            const yearsUsed = acquisitionDate ? Math.max(0, (new Date() - acquisitionDate) / (1000 * 60 * 60 * 24 * 365.25)) : 0;
-            const accumulated = depreciationRate ? Math.min(acquisitionValue, acquisitionValue * ((depreciationRate / 100) * yearsUsed)) : 0;
+            const accumulated = depreciationRate ? Math.min(acquisitionValue, acquisitionValue * ((depreciationRateDecimal) * yearsUsed)) : 0;
             const residual = Math.max(0, acquisitionValue - accumulated);
-            document.getElementById('detailFinancialResidualValue').textContent = residual.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
-            document.getElementById('detailFinancialAccumulatedDepreciation').textContent = accumulated.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('detailFinancialResidualValue').textContent = formatCurrency(residual);
+            document.getElementById('detailFinancialAccumulatedDepreciation').textContent = formatCurrency(accumulated);
             const depreciationPercent = acquisitionValue > 0 ? Math.round((accumulated / acquisitionValue) * 100) : 0;
             const depreciationBar = document.getElementById('detailFinancialDepreciationBar');
             depreciationBar.style.width = `${depreciationPercent}%`;
             depreciationBar.textContent = `${depreciationPercent}%`;
             document.getElementById('detailFinancialUsefulLife').textContent = acquisitionDate ? `Vida útil estimada: 10 años · Uso: ${yearsUsed.toFixed(1)} años` : 'Vida útil no calculada';
-            document.getElementById('detailFinancialInvoiceStatus').textContent = 'Sin factura asociada';
+            document.getElementById('detailFinancialInvoiceStatus').textContent = asset.status === 'Baja' ? 'No aplica' : 'Pendiente de captura';
 
-            const movements = Array.isArray(asset.movements) ? asset.movements : [];
             document.getElementById('kpiAudits').textContent = '0';
             document.getElementById('kpiMaintenances').textContent = movements.filter(m => m.movementType === 'Mantenimiento').length.toString();
             document.getElementById('kpiTransfers').textContent = movements.filter(m => m.movementType === 'Transferencia').length.toString();
@@ -1395,6 +1379,42 @@
                 ? transfers.map(item => `<tr><td>${new Date(item.occurredAt).toLocaleDateString('es-MX')}</td><td>${item.fromArea || '-'}</td><td>${item.toArea || '-'}</td><td>${item.performedBy || '-'}</td></tr>`).join('')
                 : '<tr><td colspan="4" class="text-center text-muted py-3">Sin transferencias registradas.</td></tr>';
 
+            const maintenanceRows = document.getElementById('detailMaintenanceRows');
+            maintenanceRows.innerHTML = maintenanceMovements.length
+                ? maintenanceMovements.map(item => `<tr><td><span class="badge bg-info">Mantenimiento</span></td><td>${new Date(item.occurredAt).toLocaleDateString('es-MX')}</td><td>${item.performedBy || '-'}</td><td>-</td></tr>`).join('')
+                : '<tr><td colspan="4" class="text-center text-muted py-3">Sin mantenimientos registrados.</td></tr>';
+
+            const auditsRows = document.getElementById('detailAuditsRows');
+            auditsRows.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sin auditorías vinculadas a este activo.</td></tr>';
+
+            document.getElementById('detailMaintenanceSubmit')?.addEventListener('click', async () => {
+                const type = document.getElementById('detailMaintenanceType').value;
+                const technician = document.getElementById('detailMaintenanceTechnician').value.trim();
+                const date = document.getElementById('detailMaintenanceDate').value;
+                const cost = document.getElementById('detailMaintenanceCost').value;
+                const description = [
+                    `Tipo: ${type}`,
+                    date ? `Fecha: ${date}` : null,
+                    technician ? `Técnico: ${technician}` : null,
+                    cost ? `Costo: $${cost}` : null
+                ].filter(Boolean).join(' · ');
+
+                const maintenanceResponse = await fetch(`/api/assets/${asset.id}/mantenimiento`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ description: description || 'Mantenimiento registrado desde expediente.' })
+                });
+
+                if (!maintenanceResponse.ok) {
+                    const error = await maintenanceResponse.json().catch(() => null);
+                    Swal.fire('Error', error?.error || 'No se pudo registrar el mantenimiento.', 'error');
+                    return;
+                }
+
+                Swal.fire('Registrado', 'Mantenimiento registrado correctamente.', 'success');
+                window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: `/Patrimonio/Detail/@Model`, force: true } }));
+            });
+
             const documentsRows = document.getElementById('detailDocumentsRows');
             documentsRows.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Sin documentos cargados.</td></tr>';
 
@@ -1410,15 +1430,16 @@
 
             const ctx = document.getElementById('depreciacionChart');
             if (ctx && window.Chart) {
+                if (window.sicpaiDetailDepChart) window.sicpaiDetailDepChart.destroy();
                 const chartValues = [
                     acquisitionValue,
-                    Math.max(0, acquisitionValue * 0.9),
-                    Math.max(0, acquisitionValue * 0.8),
-                    Math.max(0, acquisitionValue * 0.7),
+                    Math.max(0, acquisitionValue * (1 - depreciationRateDecimal)),
+                    Math.max(0, acquisitionValue * (1 - depreciationRateDecimal * 2)),
+                    Math.max(0, acquisitionValue * (1 - depreciationRateDecimal * 3)),
                     Math.max(0, residual)
                 ];
 
-                new Chart(ctx, {
+                window.sicpaiDetailDepChart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: ['Año 0', 'Año 1', 'Año 2', 'Año 3', 'Actual'],
