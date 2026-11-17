@@ -5,11 +5,14 @@
 
 .wrapper {
     display: flex;
+    min-height: 100vh;
 }
 
 .sidebar {
+    position: sticky;
+    top: 0;
     width: 280px;
-    min-height: 100vh;
+    height: 100vh;
     background: linear-gradient(180deg, #17324d, #1f4d73);
     color: white;
     padding: 20px;
@@ -43,6 +46,19 @@
     padding: 0;
 }
 
+.sidebar-section-title {
+    margin: 24px 12px 8px;
+    color: rgba(255,255,255,.58);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.sidebar-section-title:first-child {
+    margin-top: 0;
+}
+
     .sidebar-menu li {
         margin-bottom: 10px;
     }
@@ -65,6 +81,7 @@
 
 .main {
     flex: 1;
+    min-width: 0;
 }
 
 .topbar {
@@ -96,6 +113,8 @@
 
 .content {
     padding: 30px;
+    min-height: calc(100vh - 86px);
+    position: relative;
 }
 
 .kpi-card {
@@ -540,10 +559,10 @@
     }
 
 #globalLoader {
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: white;
-    z-index: 99999;
+    z-index: 20;
     display: flex;
     justify-content: center;
     align-items: center;

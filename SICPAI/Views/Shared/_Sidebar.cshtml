@@ -32,79 +32,103 @@
 
     <ul class="sidebar-menu">
 
+        <li class="sidebar-section-title">Inicio</li>
+
         <li class="@activeClass("/Home/Dashboard")">
-            <a href="/Home/Dashboard">
+            <a href="/Home/Dashboard" data-app-nav="true">
                 <i class="bi bi-grid-fill"></i>
                 Dashboard
             </a>
         </li>
 
-        <li class="@activeClass("/Operaciones/Inventarios")"><a href="/Operaciones/Inventarios"><i class="bi bi-clipboard-data-fill"></i> Inventarios físicos</a></li>
-
-        <li class="@activeClass("/Operaciones/Historial")">
-            <a href="/Operaciones/Historial">
-                <i class="bi bi-clock-history"></i>
-                Historial de movimientos
-            </a>
-        </li>
+        <li class="sidebar-section-title">Registro y control de bienes</li>
 
         <li class="@activeClass("/Patrimonio")">
-            <a href="/Patrimonio/Index">
+            <a href="/Patrimonio/Index" data-app-nav="true">
                 <i class="bi bi-pc-display"></i>
                 Bienes Patrimoniales
             </a>
         </li>
 
-        <li class="@activeClass("/Operaciones/Ubicaciones")">
-            <a href="/Operaciones/Ubicaciones">
-                <i class="bi bi-geo-alt-fill"></i>
-                Ubicaciones físicas
+        <li class="@activeClass("/Patrimonio/Create")">
+            <a href="/Patrimonio/Create" data-app-nav="true">
+                <i class="bi bi-plus-square-fill"></i>
+                Alta de nuevo bien
             </a>
         </li>
 
-        <li class="@activeClass("/Operaciones/Transferencias")">
-            <a href="/Operaciones/Transferencias">
-                <i class="bi bi-arrow-left-right"></i>
-                Transferencias
+        <li class="@activeClass("/Operaciones/Escaneo")">
+            <a href="/Operaciones/Escaneo" data-app-nav="true">
+                <i class="bi bi-upc-scan"></i>
+                Escaneo rápido
             </a>
         </li>
+
+        <li class="sidebar-section-title">Operación y asignación</li>
 
         <li class="@activeClass("/Operaciones/Responsables")">
-            <a href="/Operaciones/Responsables">
+            <a href="/Operaciones/Responsables" data-app-nav="true">
                 <i class="bi bi-people-fill"></i>
                 Responsables
             </a>
         </li>
 
         <li class="@activeClass("/Operaciones/Areas")">
-            <a href="/Operaciones/Areas">
+            <a href="/Operaciones/Areas" data-app-nav="true">
                 <i class="bi bi-diagram-3-fill"></i>
                 Áreas y Departamentos
             </a>
         </li>
 
+        <li class="@activeClass("/Operaciones/Ubicaciones")">
+            <a href="/Operaciones/Ubicaciones" data-app-nav="true">
+                <i class="bi bi-geo-alt-fill"></i>
+                Ubicaciones físicas
+            </a>
+        </li>
+
+        <li class="@activeClass("/Operaciones/Transferencias")">
+            <a href="/Operaciones/Transferencias" data-app-nav="true">
+                <i class="bi bi-arrow-left-right"></i>
+                Transferencias
+            </a>
+        </li>
+
+        <li class="@activeClass("/Operaciones/Historial")">
+            <a href="/Operaciones/Historial" data-app-nav="true">
+                <i class="bi bi-clock-history"></i>
+                Historial de movimientos
+            </a>
+        </li>
+
+        <li class="sidebar-section-title">Inventarios y auditoría</li>
+
+        <li class="@activeClass("/Operaciones/Inventarios")"><a href="/Operaciones/Inventarios" data-app-nav="true"><i class="bi bi-clipboard-data-fill"></i> Inventarios físicos</a></li>
+
         <li class="@activeClass("/Operaciones/Auditorias")">
-            <a href="/Operaciones/Auditorias">
+            <a href="/Operaciones/Auditorias" data-app-nav="true">
                 <i class="bi bi-clipboard-check-fill"></i>
                 Auditorías
             </a>
         </li>
 
+        <li class="sidebar-section-title">Reportes y análisis</li>
+
         <li class="@activeClass("/Reportes/Index")">
-            <a href="/Reportes/Index">
+            <a href="/Reportes/Index" data-app-nav="true">
                 <i class="bi bi-file-earmark-bar-graph-fill"></i>
                 Reportes
             </a>
         </li>
         <li class="@activeClass("/Reportes/Financiero")">
-            <a href="/Reportes/Financiero">
+            <a href="/Reportes/Financiero" data-app-nav="true">
                 <i class="bi bi-cash-coin"></i>
                 Panel Financiero
             </a>
         </li>
 
         <li class="@activeClass("/Reportes/Analytics")">
-            <a href="/Reportes/Analytics">
+            <a href="/Reportes/Analytics" data-app-nav="true">
                 <i class="bi bi-graph-up-arrow"></i>
                 Analytics
             </a>
@@ -112,28 +136,28 @@
 
 
         <li class="@activeClass("/Admin/Usuarios")">
-            <a href="/Admin/Usuarios">
+            <a href="/Admin/Usuarios" data-app-nav="true">
                 <i class="bi bi-person-badge-fill"></i>
                 Usuarios
             </a>
         </li>
 
         <li class="@activeClass("/Admin/Roles")">
-            <a href="/Admin/Roles">
+            <a href="/Admin/Roles" data-app-nav="true">
                 <i class="bi bi-shield-lock-fill"></i>
                 Roles y Permisos
             </a>
         </li>
 
         <li class="@activeClass("/Admin/Bitacora")">
-            <a href="/Admin/Bitacora">
+            <a href="/Admin/Bitacora" data-app-nav="true">
                 <i class="bi bi-clock-history"></i>
                 Bitácora
             </a>
         </li>
 
         <li class="@activeClass("/Admin/Configuracion")">
-            <a href="/Admin/Configuracion">
+            <a href="/Admin/Configuracion" data-app-nav="true">
                 <i class="bi bi-gear-fill"></i>
                 Configuración
             </a>

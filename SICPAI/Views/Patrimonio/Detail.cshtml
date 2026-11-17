@@ -1,4 +1,6 @@
-﻿@{
+﻿@model int
+
+@{
     ViewData["Title"] = "Expediente del Bien";
 }
 
@@ -15,22 +17,22 @@
 
             <div>
 
-                <h2 class="asset-title mb-1">
+                <h2 class="asset-title mb-1" id="detailAssetName">
                     Laptop Dell Latitude 5420
                 </h2>
 
                 <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                    <span class="badge bg-success px-3 py-2">
+                    <span class="badge bg-success px-3 py-2" id="detailAssetStatus">
                         Activo
                     </span>
 
                     <span class="text-muted">
-                        Código: <strong>EQ-000125</strong>
+                        Código: <strong id="detailAssetCode">EQ-000125</strong>
                     </span>
 
                     <span class="text-muted">
-                        Serie: <strong>DL-4455887</strong>
+                        Serie: <strong id="detailAssetSerial">DL-4455887</strong>
                     </span>
 
                 </div>
@@ -1499,6 +1501,22 @@
 
 @section Scripts{
     <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch(`/api/assets/@Model`);
+            if (!response.ok) {
+                window.location.href = '/Patrimonio/Index';
+                return;
+            }
+
+            const asset = await response.json();
+            document.getElementById('detailAssetName').textContent = asset.name || 'Bien patrimonial';
+            document.getElementById('detailAssetCode').textContent = asset.assetCode || '-';
+            document.getElementById('detailAssetSerial').textContent = asset.serialNumber || '-';
+            const status = document.getElementById('detailAssetStatus');
+            status.textContent = asset.status || '-';
+            status.className = `badge px-3 py-2 ${asset.status === 'Activo' ? 'bg-success' : 'bg-warning text-dark'}`;
+        });
+
         const ctx = document.getElementById('depreciacionChart');
 
         if (ctx) {

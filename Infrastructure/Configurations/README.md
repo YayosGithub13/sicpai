@@ -1,0 +1,1 @@
+Las configuraciones de entidades EF Core se extraerán desde AppDbContext en el siguiente paso de la refactorización.

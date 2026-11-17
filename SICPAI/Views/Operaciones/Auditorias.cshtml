@@ -4,7 +4,20 @@
 
 <div class="container-fluid">
 
-    <!-- KPIS -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">Auditorías institucionales</h2>
+            <p class="text-muted">Programación, verificación y conciliación patrimonial</p>
+
+        </div>
+
+        <button id="newAudit" class="btn btn-primary" type="button">
+            <i class="bi bi-plus-circle me-2"></i>Nueva auditoría
+        </button>
+
+    </div>
 
     <div class="row g-4 mb-4">
 
@@ -14,29 +27,14 @@
 
                 <div>
 
-                    <h6>Bienes Auditados</h6>
-                    <h2>8,452</h2>
+                    <h6>Auditorías</h6>
+                    <h2 id="auditTotal">0</h2>
 
                 </div>
 
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const response = await fetch('/api/auditorias');
-            if (!response.ok) return;
-            const audits = await response.json();
-            const table = document.querySelector('table');
-            if (!table || !audits.length) return;
-            const body = table.querySelector('tbody');
-            body.innerHTML = audits.map(a => `<tr><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.area?.name || 'Todas')}</td><td>${new Date(a.scheduledDate).toLocaleDateString('es-MX')}</td><td><span class="badge bg-primary">${escapeHtml(a.status)}</span></td><td><a class="btn btn-sm btn-light" href="/Operaciones/Auditorias?id=${a.id}"><i class="bi bi-eye"></i></a></td></tr>`).join('');
-        });
-        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
-    </script>
-}
+                <div class="kpi-icon blue">
 
-                <div class="kpi-icon green">
-
-                    <i class="bi bi-check-circle-fill"></i>
+                    <i class="bi bi-clipboard-check-fill"></i>
 
                 </div>
 
@@ -50,12 +48,33 @@
 
                 <div>
 
-                    <h6>Pendientes</h6>
-                    <h2>532</h2>
+                    <h6>Programadas</h6>
+                    <h2 id="auditScheduled">0</h2>
 
                 </div>
 
                 <div class="kpi-icon orange">
+
+                    <i class="bi bi-calendar-event"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="kpi-card">
+
+                <div>
+
+                    <h6>En proceso</h6>
+                    <h2 id="auditProgress">0</h2>
+
+                </div>
+
+                <div class="kpi-icon blue">
 
                     <i class="bi bi-hourglass-split"></i>
 
@@ -71,35 +90,14 @@
 
                 <div>
 
-                    <h6>Extraviados</h6>
-                    <h2>12</h2>
+                    <h6>Completadas</h6>
+                    <h2 id="auditCompleted">0</h2>
 
                 </div>
 
-                <div class="kpi-icon red">
+                <div class="kpi-icon green">
 
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-3">
-
-            <div class="kpi-card">
-
-                <div>
-
-                    <h6>Diferencias</h6>
-                    <h2>35</h2>
-
-                </div>
-
-                <div class="kpi-icon blue">
-
-                    <i class="bi bi-clipboard-data-fill"></i>
+                    <i class="bi bi-check-circle-fill"></i>
 
                 </div>
 
@@ -109,13 +107,29 @@
 
     </div>
 
-    <!-- TABLA -->
+    <div id="auditPanel" class="card-custom mb-4 d-none">
 
-    <div class="card-custom">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
 
-        <div class="card-header-custom">
+            <span id="auditPanelTitle">Detalle de auditoría</span>
 
-            Inventario de Auditoría
+            <div class="d-flex gap-2">
+
+                <button id="startAudit" class="btn btn-outline-primary btn-sm" type="button">Iniciar</button>
+                <button id="completeAudit" class="btn btn-success btn-sm" type="button">Completar</button>
+
+            </div>
+
+        </div>
+
+        <div class="p-3 border-bottom">
+
+            <div class="input-group">
+
+                <input id="auditAssetCode" class="form-control" placeholder="Código patrimonial o de barras">
+                <button id="addAuditAsset" class="btn btn-outline-primary" type="button">Agregar bien</button>
+
+            </div>
 
         </div>
 
@@ -127,65 +141,60 @@
 
                     <tr>
 
-                        <th>Código</th>
                         <th>Bien</th>
-                        <th>Estado físico</th>
-                        <th>Encontrado</th>
+                        <th>Código</th>
+                        <th>Resultado</th>
                         <th>Observaciones</th>
+                        <th>Acción</th>
 
                     </tr>
 
                 </thead>
 
-                <tbody>
+                <tbody id="auditAssetRows">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="card-custom">
+
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+
+            <span>Auditorías programadas</span>
+            <select id="auditStatusFilter" class="form-select form-select-sm" style="max-width:180px">
+                <option value="">Todas</option>
+                <option>Programada</option>
+                <option>En proceso</option>
+                <option>Completada</option>
+                <option>Cancelada</option>
+            </select>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
 
                     <tr>
 
-                        <td>EQ-000125</td>
-
-                        <td>Laptop Dell</td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                Bueno
-                            </span>
-                        </td>
-
-                        <td>
-
-                            <i class="bi bi-check-circle-fill text-success"></i>
-
-                        </td>
-
-                        <td>
-                            Sin incidencias
-                        </td>
+                        <th>Nombre</th>
+                        <th>Área</th>
+                        <th>Fecha programada</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
 
                     </tr>
 
-                    <tr>
+                </thead>
 
-                        <td>EQ-000532</td>
-
-                        <td>Impresora HP</td>
-
-                        <td>
-                            <span class="badge bg-warning text-dark">
-                                Regular
-                            </span>
-                        </td>
-
-                        <td>
-
-                            <i class="bi bi-exclamation-circle-fill text-warning"></i>
-
-                        </td>
-
-                        <td>
-                            Requiere mantenimiento
-                        </td>
-
-                    </tr>
+                <tbody id="auditRows">
 
                 </tbody>
 
@@ -196,3 +205,63 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            let activeAudit = null;
+            const safe = value => { const d = document.createElement('div'); d.textContent = value ?? ''; return d.innerHTML; };
+            const loadAudits = async () => {
+                const status = document.getElementById('auditStatusFilter').value;
+                const response = await fetch(`/api/auditorias${status ? `?status=${encodeURIComponent(status)}` : ''}`);
+                if (!response.ok) return;
+                const audits = await response.json();
+                document.getElementById('auditTotal').textContent = audits.length;
+                document.getElementById('auditScheduled').textContent = audits.filter(x => x.status === 'Programada').length;
+                document.getElementById('auditProgress').textContent = audits.filter(x => x.status === 'En proceso').length;
+                document.getElementById('auditCompleted').textContent = audits.filter(x => x.status === 'Completada').length;
+                document.getElementById('auditRows').innerHTML = audits.map(a => `<tr><td>${safe(a.name)}</td><td>${safe(a.area?.name || 'Todas')}</td><td>${new Date(a.scheduledDate).toLocaleDateString('es-MX')}</td><td><span class="badge ${a.status === 'Completada' ? 'bg-success' : a.status === 'En proceso' ? 'bg-primary' : 'bg-warning text-dark'}">${safe(a.status)}</span></td><td><button class="btn btn-sm btn-primary open-audit" data-id="${a.id}" type="button">Abrir</button></td></tr>`).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No hay auditorías registradas.</td></tr>';
+                document.querySelectorAll('.open-audit').forEach(button => button.addEventListener('click', () => loadAudit(button.dataset.id)));
+            };
+            const loadAudit = async id => {
+                const response = await fetch(`/api/auditorias/${id}/bienes`);
+                if (!response.ok) return;
+                activeAudit = { id: Number(id), assets: await response.json() };
+                document.getElementById('auditPanel').classList.remove('d-none');
+                document.getElementById('auditPanelTitle').textContent = `Auditoría #${id}`;
+                renderAssets();
+            };
+            const renderAssets = () => {
+                const rows = document.getElementById('auditAssetRows');
+                rows.innerHTML = activeAudit.assets.map(result => `<tr><td>${safe(result.asset?.name)}</td><td>${safe(result.asset?.assetCode)}</td><td><select class="form-select form-select-sm audit-result" data-asset="${result.assetId}"><option ${result.result === 'Pendiente' ? 'selected' : ''}>Pendiente</option><option ${result.result === 'Encontrado' ? 'selected' : ''}>Encontrado</option><option ${result.result === 'Faltante' ? 'selected' : ''}>Faltante</option><option ${result.result === 'Dañado' ? 'selected' : ''}>Dañado</option></select></td><td><input class="form-control form-control-sm audit-notes" data-asset="${result.assetId}" value="${safe(result.notes || '')}"></td><td><button class="btn btn-sm btn-primary verify-audit-asset" data-asset="${result.assetId}" type="button">Guardar</button></td></tr>`).join('') || '<tr><td colspan="5" class="text-center text-muted py-4">No hay bienes incluidos.</td></tr>';
+                document.querySelectorAll('.verify-audit-asset').forEach(button => button.addEventListener('click', () => verifyAsset(button.dataset.asset)));
+            };
+            const verifyAsset = async assetId => {
+                const result = document.querySelector(`.audit-result[data-asset="${assetId}"]`).value;
+                const notes = document.querySelector(`.audit-notes[data-asset="${assetId}"]`).value;
+                const response = await fetch(`/api/auditorias/${activeAudit.id}/bienes/${assetId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ result, notes }) });
+                if (response.ok) Swal.fire('Verificación guardada', 'El resultado fue registrado.', 'success'); else Swal.fire('Error', 'No se pudo guardar la verificación.', 'error');
+            };
+            document.getElementById('newAudit').addEventListener('click', async () => {
+                const result = await Swal.fire({ title: 'Nueva auditoría', html: '<input id="auditNameInput" class="swal2-input" placeholder="Nombre de la auditoría"><input id="auditDateInput" type="date" class="swal2-input"><textarea id="auditDescriptionInput" class="swal2-textarea" placeholder="Descripción"></textarea>', showCancelButton: true, confirmButtonText: 'Programar', preConfirm: () => ({ name: document.getElementById('auditNameInput').value.trim(), scheduledDate: document.getElementById('auditDateInput').value, description: document.getElementById('auditDescriptionInput').value.trim() }) });
+                if (!result.isConfirmed || !result.value.name || !result.value.scheduledDate) return;
+                const response = await fetch('/api/auditorias', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result.value) });
+                if (response.ok) { await Swal.fire('Auditoría programada', 'La auditoría fue registrada.', 'success'); loadAudits(); } else Swal.fire('Error', 'No se pudo programar la auditoría.', 'error');
+            });
+            document.getElementById('addAuditAsset').addEventListener('click', async () => {
+                if (!activeAudit) return;
+                const code = document.getElementById('auditAssetCode').value.trim();
+                const assetResponse = await fetch(`/api/assets/scan/${encodeURIComponent(code)}`);
+                if (!assetResponse.ok) { Swal.fire('Bien no encontrado', 'Verifique el código patrimonial.', 'warning'); return; }
+                const asset = await assetResponse.json();
+                const response = await fetch(`/api/auditorias/${activeAudit.id}/bienes`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ assetId: asset.id }) });
+                if (response.ok) { document.getElementById('auditAssetCode').value = ''; loadAudit(activeAudit.id); } else Swal.fire('No se pudo agregar', 'El bien puede estar duplicado en la auditoría.', 'warning');
+            });
+            const changeStatus = async status => { if (!activeAudit) return; const response = await fetch(`/api/auditorias/${activeAudit.id}/estado`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) }); if (response.ok) { await loadAudits(); loadAudit(activeAudit.id); } else Swal.fire('Error', 'No se pudo actualizar el estado.', 'error'); };
+            document.getElementById('startAudit').addEventListener('click', () => changeStatus('En proceso'));
+            document.getElementById('completeAudit').addEventListener('click', () => changeStatus('Completada'));
+            document.getElementById('auditStatusFilter').addEventListener('change', loadAudits);
+            loadAudits();
+        })();
+    </script>
+}

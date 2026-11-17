@@ -64,8 +64,9 @@
                         Código Patrimonial
                     </label>
 
-                    <input type="text"
-                           class="form-control"
+                <input type="text"
+                       id="assetSearch"
+                       class="form-control"
                            placeholder="Buscar código">
 
                 </div>
@@ -76,7 +77,7 @@
                         Responsable
                     </label>
 
-                    <select class="form-select">
+                <select class="form-select" id="assetAreaFilter">
 
                         <option>Todos</option>
                         <option>Juan Pérez</option>
@@ -92,7 +93,7 @@
                         Estado
                     </label>
 
-                    <select class="form-select">
+                <select class="form-select" id="assetStatusFilter">
 
                         <option>Todos</option>
                         <option>Activo</option>
@@ -148,8 +149,9 @@
                     </label>
 
                     <input type="text"
+                           id="assetSearch"
                            class="form-control"
-                           placeholder="Ej. EQ-000125">
+                           placeholder="Código o nombre del bien">
 
                 </div>
 
@@ -177,7 +179,7 @@
                         Área / Departamento
                     </label>
 
-                    <select class="form-select">
+                    <select class="form-select" id="assetAreaFilter">
 
                         <option>Todas</option>
                         <option>Tecnologías de la Información</option>
@@ -198,8 +200,6 @@
                     <select class="form-select">
 
                         <option>Todos</option>
-                        <option>Juan Pérez</option>
-                        <option>María López</option>
 
                     </select>
 
@@ -217,7 +217,7 @@
                         Estado del Bien
                     </label>
 
-                    <select class="form-select">
+                    <select class="form-select" id="assetStatusFilter">
 
                         <option>Todos</option>
                         <option>Activo</option>
@@ -254,14 +254,14 @@
 
                 <div class="col-lg-5 text-end">
 
-                    <button class="btn btn-outline-secondary me-2">
+                    <button class="btn btn-outline-secondary me-2" id="clearAssetFilters" type="button">
 
                         <i class="bi bi-arrow-clockwise"></i>
                         Limpiar
 
                     </button>
 
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" id="searchAssetsButton" type="button">
 
                         <i class="bi bi-search"></i>
                         Buscar
@@ -288,11 +288,11 @@
 
             <div class="d-flex gap-2">
 
-                <a class="btn btn-sm btn-outline-primary" href="/api/reportes/inventario/excel">
+                <a class="btn btn-sm btn-outline-primary" id="exportAssetsExcel" href="/api/reportes/inventario/excel">
                     Excel
                 </a>
 
-                <a class="btn btn-sm btn-outline-danger" href="/api/reportes/inventario/pdf">
+                <a class="btn btn-sm btn-outline-danger" id="exportAssetsPdf" href="/api/reportes/inventario/pdf">
                     PDF
                 </a>
 
@@ -322,18 +322,18 @@
                 </thead>
 
                 <tbody id="assetsTableBody">
-
                     <tr>
+                        <td colspan="8" class="text-center text-muted py-4">Cargando inventario...</td>
+                    </tr>
+                </tbody>
 
-                        <td>
+            </table>
 
-                            <div class="asset-info">
+        </div>
 
-                                <div class="asset-image">
+    </div>
 
-                                    <i class="bi bi-laptop"></i>
-
-                                </div>
+</div>
 
 @section Scripts {
     <script>
@@ -353,149 +353,29 @@
         });
         document.addEventListener('DOMContentLoaded', async () => {
             const body = document.getElementById('assetsTableBody');
-            const response = await fetch('/api/assets');
-            if (!response.ok) return;
-            const assets = await response.json();
-            if (!assets.length) { body.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No hay bienes registrados.</td></tr>'; return; }
-            body.innerHTML = assets.map(asset => `<tr><td><div class="asset-info"><div class="asset-image"><i class="bi bi-box-seam"></i></div><div><div class="fw-semibold">${escapeHtml(asset.name)}</div><small class="text-muted">${escapeHtml(asset.assetType || 'Activo')}</small></div></div></td><td>${escapeHtml(asset.assetCode)}</td><td>${escapeHtml(asset.serialNumber || '-')}</td><td>${escapeHtml(asset.area || '-')}</td><td>${escapeHtml(asset.responsible || '-')}</td><td><span class="badge ${asset.status === 'Activo' ? 'bg-success' : 'bg-warning text-dark'}">${escapeHtml(asset.status)}</span></td><td>${Number(asset.acquisitionValue || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td><td><a class="btn btn-sm btn-light" href="/Patrimonio/Detail?id=${asset.id}"><i class="bi bi-eye"></i></a></td></tr>`).join('');
+            const loadAssets = async () => {
+                const params = new URLSearchParams();
+                const search = document.getElementById('assetSearch').value.trim();
+                const area = document.getElementById('assetAreaFilter').value;
+                const status = document.getElementById('assetStatusFilter').value;
+                if (search) params.set('search', search);
+                if (area && area !== 'Todas') params.set('area', area);
+                if (status && status !== 'Todos') params.set('status', status);
+                const query = params.toString();
+                const response = await fetch(`/api/assets${query ? `?${query}` : ''}`);
+                if (!response.ok) return;
+                const assets = await response.json();
+                const reportQuery = query ? `?${query}` : '';
+                document.getElementById('exportAssetsExcel').href = `/api/reportes/inventario/excel${reportQuery}`;
+                document.getElementById('exportAssetsPdf').href = `/api/reportes/inventario/pdf${reportQuery}`;
+                if (!assets.length) { body.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No hay bienes registrados.</td></tr>'; return; }
+                body.innerHTML = assets.map(asset => `<tr><td><div class="asset-info"><div class="asset-image"><i class="bi bi-box-seam"></i></div><div><div class="fw-semibold">${escapeHtml(asset.name)}</div><small class="text-muted">${escapeHtml(asset.assetType || 'Activo')}</small></div></div></td><td>${escapeHtml(asset.assetCode)}</td><td>${escapeHtml(asset.serialNumber || '-')}</td><td>${escapeHtml(asset.area || '-')}</td><td>${escapeHtml(asset.responsible || '-')}</td><td><span class="badge ${asset.status === 'Activo' ? 'bg-success' : 'bg-warning text-dark'}">${escapeHtml(asset.status)}</span></td><td>${Number(asset.acquisitionValue || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td><td><a class="btn btn-sm btn-light" href="/Patrimonio/Detail?id=${asset.id}"><i class="bi bi-eye"></i></a></td></tr>`).join('');
+            };
+            document.getElementById('searchAssetsButton').addEventListener('click', loadAssets);
+            document.getElementById('clearAssetFilters').addEventListener('click', () => { document.getElementById('assetSearch').value = ''; document.getElementById('assetAreaFilter').value = 'Todas'; document.getElementById('assetStatusFilter').value = 'Todos'; loadAssets(); });
+            document.getElementById('assetSearch').addEventListener('keydown', event => { if (event.key === 'Enter') loadAssets(); });
+            await loadAssets();
         });
         function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
     </script>
 }
-
-                                <div>
-
-                                    <div class="fw-semibold">
-                                        Laptop Dell Latitude
-                                    </div>
-
-                                    <small class="text-muted">
-                                        Equipo de cómputo
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>EQ-000125</td>
-
-                        <td>DL-55221</td>
-
-                        <td>TI</td>
-
-                        <td>Juan Pérez</td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        </td>
-
-                        <td>$28,500</td>
-
-                        <td>
-
-                            <div class="d-flex gap-2">
-
-                                <a href="/Patrimonio/Detail"
-                                   class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-eye"></i>
-
-                                </a>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-pencil"></i>
-
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-
-                                    <i class="bi bi-arrow-left-right"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>
-
-                            <div class="asset-info">
-
-                                <div class="asset-image orange-bg">
-
-                                    <i class="bi bi-printer"></i>
-
-                                </div>
-
-                                <div>
-
-                                    <div class="fw-semibold">
-                                        Impresora HP
-                                    </div>
-
-                                    <small class="text-muted">
-                                        Impresora láser
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>EQ-000532</td>
-
-                        <td>HP-88852</td>
-
-                        <td>Administración</td>
-
-                        <td>María López</td>
-
-                        <td>
-                            <span class="badge bg-warning text-dark">
-                                Reparación
-                            </span>
-                        </td>
-
-                        <td>$12,400</td>
-
-                        <td>
-
-                            <div class="d-flex gap-2">
-
-                                <button class="btn btn-sm btn-light">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-
-                                <button class="btn btn-sm btn-light">
-                                    <i class="bi bi-arrow-left-right"></i>
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>

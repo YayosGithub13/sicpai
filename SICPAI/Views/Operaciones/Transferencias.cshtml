@@ -18,7 +18,7 @@
 
         </div>
 
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" id="newTransferButton" type="button">
 
             <i class="bi bi-plus-circle"></i>
             Nueva Transferencia
@@ -43,6 +43,11 @@
 
                 <div class="p-4">
 
+                    <div class="input-group mb-3">
+                        <input id="transferAssetCode" class="form-control" placeholder="Código patrimonial o de barras">
+                        <button id="loadTransferAsset" class="btn btn-outline-primary" type="button">Consultar</button>
+                    </div>
+
                     <div class="transfer-box">
 
                         <div class="transfer-icon">
@@ -53,12 +58,10 @@
 
                         <div>
 
-                            <h5 class="mb-1">
-                                Laptop Dell Latitude
-                            </h5>
+                            <h5 class="mb-1" id="currentAssetName">Sin activo seleccionado</h5>
 
                             <span class="text-muted">
-                                EQ-000125
+                                <span id="currentAssetCode">-</span>
                             </span>
 
                         </div>
@@ -73,7 +76,7 @@
 
                             <label>Área actual</label>
 
-                            <strong>Tecnologías</strong>
+                            <strong id="currentAssetArea">-</strong>
 
                         </div>
 
@@ -81,7 +84,7 @@
 
                             <label>Responsable actual</label>
 
-                            <strong>Juan Pérez</strong>
+                            <strong id="currentAssetResponsible">-</strong>
 
                         </div>
 
@@ -89,7 +92,7 @@
 
                             <label>Ubicación</label>
 
-                            <strong>Edificio A - Oficina 201</strong>
+                            <strong id="currentAssetLocation">-</strong>
 
                         </div>
 
@@ -121,10 +124,9 @@
                             Nueva Área
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" id="transferArea">
 
-                            <option>Finanzas</option>
-                            <option>Recursos Humanos</option>
+                            <option value="">Seleccionar área</option>
 
                         </select>
 
@@ -136,9 +138,9 @@
                             Nuevo Responsable
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" id="transferResponsible">
 
-                            <option>María López</option>
+                            <option value="">Seleccionar responsable</option>
 
                         </select>
 
@@ -150,7 +152,7 @@
                             Nueva Ubicación
                         </label>
 
-                        <input type="text"
+                        <input type="text" id="transferLocation"
                                class="form-control"
                                placeholder="Oficina destino">
 
@@ -162,12 +164,12 @@
                             Observaciones
                         </label>
 
-                        <textarea class="form-control"
+                        <textarea id="transferReason" class="form-control"
                                   rows="4"></textarea>
 
                     </div>
 
-                    <button class="btn btn-primary w-100">
+                    <button class="btn btn-primary w-100" id="submitTransfer" type="button">
 
                         Confirmar Transferencia
 
@@ -176,6 +178,65 @@
                 </div>
 
             </div>
+
+<div class="card-custom mt-4">
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+        <span>Solicitudes de transferencia</span>
+        <select id="transferStatus" class="form-select form-select-sm" style="max-width:180px">
+            <option value="">Todas</option>
+            <option value="Pendiente">Pendientes</option>
+            <option value="Aprobada">Aprobadas</option>
+            <option value="Rechazada">Rechazadas</option>
+        </select>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light"><tr><th>Activo</th><th>Origen</th><th>Destino</th><th>Solicitante</th><th>Fecha</th><th>Estado</th></tr></thead>
+            <tbody id="transferRows"></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            let selectedAsset = null;
+            const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+            const loadTransfers = async () => {
+                const status = document.getElementById('transferStatus').value;
+                const response = await fetch(`/api/transferencias${status ? `?status=${encodeURIComponent(status)}` : ''}`);
+                if (!response.ok) return;
+                const transfers = await response.json();
+                document.getElementById('transferRows').innerHTML = transfers.length ? transfers.map(item => `<tr><td><strong>${escapeHtml(item.asset?.assetCode)}</strong><br><small>${escapeHtml(item.asset?.name)}</small></td><td>${escapeHtml(item.fromArea || '-')}</td><td>${escapeHtml(item.toArea || '-')}</td><td>${escapeHtml(item.requestedByUser?.fullName || '-')}</td><td>${new Date(item.requestedAt).toLocaleString('es-MX')}</td><td><span class="badge ${item.status === 'Pendiente' ? 'bg-warning text-dark' : item.status === 'Aprobada' ? 'bg-success' : 'bg-secondary'}">${escapeHtml(item.status)}</span></td></tr>`).join('') : '<tr><td colspan="6" class="text-center text-muted py-4">No hay solicitudes de transferencia.</td></tr>';
+            };
+            document.getElementById('loadTransferAsset').addEventListener('click', async () => {
+                const code = document.getElementById('transferAssetCode').value.trim();
+                if (!code) return;
+                const response = await fetch(`/api/assets/scan/${encodeURIComponent(code)}`);
+                if (!response.ok) { selectedAsset = null; Swal.fire('Activo no encontrado', 'Verifique el código patrimonial o de barras.', 'warning'); return; }
+                selectedAsset = await response.json();
+                document.getElementById('currentAssetName').textContent = selectedAsset.name;
+                document.getElementById('currentAssetCode').textContent = selectedAsset.assetCode;
+                document.getElementById('currentAssetArea').textContent = selectedAsset.area || '-';
+                document.getElementById('currentAssetResponsible').textContent = selectedAsset.responsible || '-';
+                document.getElementById('currentAssetLocation').textContent = selectedAsset.location || '-';
+            });
+            document.getElementById('submitTransfer').addEventListener('click', async () => {
+                if (!selectedAsset) { Swal.fire('Seleccione un activo', 'Consulte primero el bien que desea transferir.', 'warning'); return; }
+                const payload = { assetId: selectedAsset.id, toArea: document.getElementById('transferArea').value, toResponsible: document.getElementById('transferResponsible').value, toLocation: document.getElementById('transferLocation').value.trim(), reason: document.getElementById('transferReason').value.trim() };
+                if (!payload.toArea || !payload.reason) { Swal.fire('Datos incompletos', 'El área destino y el motivo son obligatorios.', 'warning'); return; }
+                const response = await fetch('/api/transferencias', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) { Swal.fire('No se pudo solicitar', result.error || 'Ocurrió un error al guardar la solicitud.', 'error'); return; }
+                await Swal.fire('Solicitud registrada', 'La transferencia quedó pendiente de aprobación.', 'success');
+                document.getElementById('transferReason').value = '';
+                loadTransfers();
+            });
+            document.getElementById('transferStatus').addEventListener('change', loadTransfers);
+            loadTransfers();
+        })();
+    </script>
+}
 
         </div>
 

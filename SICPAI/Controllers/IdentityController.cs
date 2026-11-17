@@ -28,7 +28,7 @@ namespace SICPAI.Controllers
                 return RedirectToAction("Dashboard", "Home");
             }
 
-            return View(new LoginViewModel(returnUrl));
+            return View(new LoginViewModel(returnUrl) { RememberMe = true });
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace SICPAI.Controllers
                 return View(nameof(Login), viewModel);
             }
 
-            await SignInAsync(usuario);
+            await SignInAsync(usuario, viewModel.RememberMe);
 
             // If you need force-change-password behavior, add the property to User and handle here.
 
@@ -71,11 +71,19 @@ namespace SICPAI.Controllers
             return RedirectToAction(nameof(AuthController.Login), "Auth");
         }
 
-        private async Task SignInAsync(User usuario)
+        private async Task SignInAsync(User usuario, bool rememberMe)
         {
             var claims = ClaimsHelper.GetUserClaims(usuario);
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    AllowRefresh = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30)
+                });
         }
 
         // NOTE: Change password / reset flows depend on IUserService support.

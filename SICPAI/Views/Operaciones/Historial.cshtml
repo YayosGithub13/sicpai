@@ -15,28 +15,53 @@
         <div class="card-header-custom"><i class="bi bi-funnel me-2"></i>Filtros de consulta</div>
         <div class="p-4">
             <div class="row g-3 align-items-end">
-                <div class="col-lg-3"><label class="form-label">Código o activo</label><input class="form-control" placeholder="EQ-000125" /></div>
-                <div class="col-lg-2"><label class="form-label">Tipo de movimiento</label><select class="form-select"><option>Todos</option><option>Alta</option><option>Transferencia</option><option>Mantenimiento</option><option>Baja</option></select></div>
-                <div class="col-lg-2"><label class="form-label">Usuario</label><select class="form-select"><option>Todos</option><option>Admin System</option><option>Juan Pérez</option><option>María López</option></select></div>
-                <div class="col-lg-2"><label class="form-label">Desde</label><input type="date" class="form-control" /></div>
-                <div class="col-lg-2"><label class="form-label">Hasta</label><input type="date" class="form-control" /></div>
-                <div class="col-lg-1"><button class="btn btn-primary w-100" title="Buscar"><i class="bi bi-search"></i></button></div>
+                <div class="col-lg-3"><label class="form-label">Código o activo</label><input id="movementSearch" class="form-control" placeholder="Buscar por código o nombre" /></div>
+                <div class="col-lg-2"><label class="form-label">Tipo de movimiento</label><select id="movementType" class="form-select"><option>Todos</option><option>Alta</option><option>Transferencia</option><option>Mantenimiento</option><option>Baja</option></select></div>
+                <div class="col-lg-2"><label class="form-label">Usuario</label><select class="form-select" disabled><option>Todos</option></select></div>
+                <div class="col-lg-2"><label class="form-label">Desde</label><input id="movementFrom" type="date" class="form-control" /></div>
+                <div class="col-lg-2"><label class="form-label">Hasta</label><input id="movementTo" type="date" class="form-control" /></div>
+                <div class="col-lg-1"><button id="searchMovements" class="btn btn-primary w-100" type="button" title="Buscar"><i class="bi bi-search"></i></button></div>
             </div>
         </div>
     </div>
 
     <div class="card-custom">
-        <div class="card-header-custom d-flex justify-content-between align-items-center"><span>Eventos registrados</span><span class="badge bg-light text-primary">12,458 eventos</span></div>
+        <div class="card-header-custom d-flex justify-content-between align-items-center"><span>Eventos registrados</span><span id="movementTotal" class="badge bg-light text-primary">0 eventos</span></div>
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light"><tr><th>Fecha y hora</th><th>Activo</th><th>Movimiento</th><th>Origen / destino</th><th>Usuario</th><th>Resultado</th><th></th></tr></thead>
-                <tbody>
-                    <tr><td>27/05/2026 10:42</td><td><strong>EQ-00125</strong><br /><small class="text-muted">Laptop Dell Latitude</small></td><td><span class="badge bg-primary-subtle text-primary">Transferencia</span></td><td>Finanzas <i class="bi bi-arrow-right mx-1"></i> TI</td><td>Juan Pérez</td><td><span class="badge bg-success">Completado</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-eye"></i></button></td></tr>
-                    <tr><td>27/05/2026 09:18</td><td><strong>EQ-00452</strong><br /><small class="text-muted">Impresora HP LaserJet</small></td><td><span class="badge bg-warning-subtle text-warning-emphasis">Mantenimiento</span></td><td>—</td><td>María López</td><td><span class="badge bg-warning text-dark">Pendiente</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-eye"></i></button></td></tr>
-                    <tr><td>26/05/2026 16:05</td><td><strong>MO-00891</strong><br /><small class="text-muted">Escritorio ejecutivo</small></td><td><span class="badge bg-success-subtle text-success">Alta</span></td><td>Almacén <i class="bi bi-arrow-right mx-1"></i> Dirección</td><td>Admin System</td><td><span class="badge bg-success">Completado</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-eye"></i></button></td></tr>
-                </tbody>
+                <tbody id="movementRows"><tr><td colspan="7" class="text-center text-muted py-4">Cargando movimientos...</td></tr></tbody>
             </table>
         </div>
-        <div class="p-3 border-top d-flex justify-content-between align-items-center"><small class="text-muted">Mostrando 1 a 3 de 12,458 resultados</small><nav><ul class="pagination pagination-sm mb-0"><li class="page-item disabled"><a class="page-link">Anterior</a></li><li class="page-item active"><a class="page-link">1</a></li><li class="page-item"><a class="page-link">2</a></li><li class="page-item"><a class="page-link">Siguiente</a></li></ul></nav></div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const rows = document.getElementById('movementRows');
+            const total = document.getElementById('movementTotal');
+            const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+            const load = async () => {
+                const params = new URLSearchParams();
+                const search = document.getElementById('movementSearch').value.trim();
+                const type = document.getElementById('movementType').value;
+                const from = document.getElementById('movementFrom').value;
+                const to = document.getElementById('movementTo').value;
+                if (search) params.set('search', search);
+                if (type !== 'Todos') params.set('type', type);
+                if (from) params.set('from', from);
+                if (to) params.set('to', to);
+                const response = await fetch(`/api/assets/movements?${params}`);
+                if (!response.ok) return;
+                const data = await response.json();
+                total.textContent = `${data.total.toLocaleString('es-MX')} eventos`;
+                rows.innerHTML = data.items.length ? data.items.map(item => `<tr><td>${new Date(item.occurredAt).toLocaleString('es-MX')}</td><td><strong>${escapeHtml(item.asset.assetCode)}</strong><br><small class="text-muted">${escapeHtml(item.asset.name)}</small></td><td><span class="badge bg-primary-subtle text-primary">${escapeHtml(item.movementType)}</span></td><td>${escapeHtml(item.fromArea || '-')} <i class="bi bi-arrow-right mx-1"></i> ${escapeHtml(item.toArea || '-')}</td><td>${escapeHtml(item.user?.fullName || '-')}</td><td><span class="badge bg-success">Registrado</span></td><td><a class="btn btn-sm btn-light" href="/Patrimonio/Detail?id=${item.asset.assetId}"><i class="bi bi-eye"></i></a></td></tr>`).join('') : '<tr><td colspan="7" class="text-center text-muted py-4">No hay movimientos para los filtros seleccionados.</td></tr>';
+            };
+            document.getElementById('searchMovements').addEventListener('click', load);
+            document.getElementById('movementSearch').addEventListener('keydown', event => { if (event.key === 'Enter') load(); });
+            load();
+        })();
+    </script>
+}
+        <div class="p-3 border-top d-flex justify-content-between align-items-center"><small id="movementSummary" class="text-muted">Sin movimientos cargados</small></div>
     </div>
 </div>

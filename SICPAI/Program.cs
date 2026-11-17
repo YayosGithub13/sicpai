@@ -48,12 +48,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Auth/Login";
         options.AccessDeniedPath = "/Auth/AccesoDenegado";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
         options.SlidingExpiration = true;
-        options.Cookie.Name = "__Host-SicpaiAuth";
+        options.Cookie.Name = builder.Environment.IsDevelopment() ? "SicpaiAuth" : "__Host-SicpaiAuth";
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest
+            : CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.Path = "/";
+        options.Cookie.IsEssential = true;
     });
 builder.Services.AddAuthorization();
 builder.Services.AddRateLimiter(options =>

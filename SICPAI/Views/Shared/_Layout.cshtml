@@ -79,27 +79,6 @@
 </head>
 
 <body>
-    <!-- GLOBAL LOADER -->
-
-    <div id="globalLoader">
-
-        <div class="loader-content">
-
-            <div class="loader-logo">
-
-                SICPAI
-
-            </div>
-
-            <div class="loader-spinner"></div>
-
-            <p>
-                Cargando plataforma institucional...
-            </p>
-
-        </div>
-
-    </div>
     <div class="wrapper">
 
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -110,9 +89,31 @@
 
             @Html.Partial("_Navbar")
 
-            <main class="content px-4 py-4">
+            <main id="appContent" class="content px-4 py-4">
 
-                @RenderBody()
+                <div id="globalLoader">
+
+                    <div class="loader-content">
+
+                        <div class="loader-logo">
+
+                            SICPAI
+
+                        </div>
+
+                        <div class="loader-spinner"></div>
+
+                        <p>
+                            Cargando plataforma institucional...
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div id="appContentBody">
+                    @RenderBody()
+                </div>
 
             </main>
 
@@ -145,6 +146,27 @@
 
     <script src="~/js/sicpai.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+    @Html.AntiForgeryToken()
+    <script>
+        (() => {
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = (input, init = {}) => {
+                const method = (init.method || (input instanceof Request ? input.method : 'GET')).toUpperCase();
+                if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    if (token) {
+                        const headers = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+                        headers.set('RequestVerificationToken', token);
+                        init.headers = headers;
+                    }
+                }
+                return originalFetch(input, init);
+            };
+        })();
+    </script>
+
+    <div id="dynamicPageScripts">
+        @await RenderSectionAsync("Scripts", required: false)
+    </div>
 </body>
 </html>

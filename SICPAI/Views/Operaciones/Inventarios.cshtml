@@ -1,8 +1,56 @@
 @{ ViewData["Title"] = "Inventarios físicos"; }
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4"><div><h2 class="fw-bold">Inventarios físicos</h2><p class="text-muted">Conteo y conciliación institucional de bienes</p></div><button id="newInventory" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Nuevo inventario</button></div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h2 class="fw-bold">Inventarios físicos</h2><p class="text-muted">Conteo y conciliación institucional de bienes</p></div>
+        <button id="newInventory" class="btn btn-primary" type="button"><i class="bi bi-plus-circle me-2"></i>Nuevo inventario</button>
+    </div>
+    <div id="sessionPanel" class="card-custom mb-4 d-none">
+        <div class="card-header-custom d-flex justify-content-between align-items-center"><span id="sessionTitle">Detalle del inventario</span><button id="closeInventory" class="btn btn-outline-danger btn-sm" type="button">Cerrar inventario</button></div>
+        <div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>Bien</th><th>Código</th><th>Área</th><th>Resultado</th><th>Observaciones</th><th>Acción</th></tr></thead><tbody id="countRows"></tbody></table></div>
+    </div>
     <div class="card-custom"><div class="card-header-custom">Sesiones de inventario</div><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>Nombre</th><th>Estado</th><th>Inicio</th><th>Acciones</th></tr></thead><tbody id="inventoryRows"><tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr></tbody></table></div></div>
 </div>
-@section Scripts { <script>
-(async function(){ const rows=document.getElementById('inventoryRows'); const response=await fetch('/api/inventarios'); if(!response.ok)return; const items=await response.json(); rows.innerHTML=items.map(x=>`<tr><td>${safe(x.name)}</td><td><span class="badge ${x.status==='Abierto'?'bg-success':'bg-secondary'}">${safe(x.status)}</span></td><td>${new Date(x.startedAt).toLocaleString('es-MX')}</td><td><a class="btn btn-sm btn-primary" href="/Operaciones/Inventarios?id=${x.id}">Abrir</a></td></tr>`).join('')||'<tr><td colspan="4" class="text-center">No hay inventarios.</td></tr>'; document.getElementById('newInventory').onclick=async()=>{const result=await Swal.fire({title:'Nuevo inventario',input:'text',inputLabel:'Nombre',showCancelButton:true,confirmButtonText:'Crear'});if(result.isConfirmed){const saved=await fetch('/api/inventarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:result.value})});if(saved.ok)location.reload();}};})(); function safe(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML;}
-</script> }
+@section Scripts {
+<script>
+(() => {
+    let activeSession = null;
+    const safe = value => { const d = document.createElement('div'); d.textContent = value ?? ''; return d.innerHTML; };
+    const loadSessions = async () => {
+        const response = await fetch('/api/inventarios');
+        if (!response.ok) return;
+        const items = await response.json();
+        document.getElementById('inventoryRows').innerHTML = items.map(x => `<tr><td>${safe(x.name)}</td><td><span class="badge ${x.status === 'Abierto' ? 'bg-success' : 'bg-secondary'}">${safe(x.status)}</span></td><td>${new Date(x.startedAt).toLocaleString('es-MX')}</td><td><button class="btn btn-sm btn-primary open-inventory" data-id="${x.id}" type="button">Abrir</button></td></tr>`).join('') || '<tr><td colspan="4" class="text-center">No hay inventarios.</td></tr>';
+        document.querySelectorAll('.open-inventory').forEach(button => button.addEventListener('click', () => loadSession(button.dataset.id)));
+    };
+    const loadSession = async id => {
+        const response = await fetch(`/api/inventarios/${id}`);
+        if (!response.ok) return;
+        activeSession = await response.json();
+        document.getElementById('sessionPanel').classList.remove('d-none');
+        document.getElementById('sessionTitle').textContent = `${activeSession.name} · ${activeSession.status}`;
+        document.getElementById('closeInventory').classList.toggle('d-none', activeSession.status !== 'Abierto');
+        document.getElementById('countRows').innerHTML = activeSession.counts.map(count => `<tr><td>${safe(count.asset?.name)}</td><td>${safe(count.asset?.assetCode)}</td><td>${safe(count.asset?.area || '-')}</td><td><select class="form-select form-select-sm count-result" data-asset="${count.assetId}"><option ${count.result === 'Pendiente' ? 'selected' : ''}>Pendiente</option><option ${count.result === 'Encontrado' ? 'selected' : ''}>Encontrado</option><option ${count.result === 'Faltante' ? 'selected' : ''}>Faltante</option><option ${count.result === 'Dañado' ? 'selected' : ''}>Dañado</option></select></td><td><input class="form-control form-control-sm count-notes" data-asset="${count.assetId}" value="${safe(count.notes || '')}"></td><td><button class="btn btn-sm btn-primary save-count" data-asset="${count.assetId}" type="button">Guardar</button></td></tr>`).join('') || '<tr><td colspan="6" class="text-center">No hay bienes en esta sesión.</td></tr>';
+        document.querySelectorAll('.save-count').forEach(button => button.addEventListener('click', () => saveCount(button.dataset.asset)));
+    };
+    const saveCount = async assetId => {
+        const result = document.querySelector(`.count-result[data-asset="${assetId}"]`).value;
+        const notes = document.querySelector(`.count-notes[data-asset="${assetId}"]`).value;
+        const response = await fetch(`/api/inventarios/${activeSession.id}/conteo/${assetId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ result, notes }) });
+        if (response.ok) Swal.fire('Conteo guardado', 'El resultado fue registrado.', 'success'); else Swal.fire('Error', 'No se pudo guardar el conteo.', 'error');
+    };
+    document.getElementById('newInventory').addEventListener('click', async () => {
+        const result = await Swal.fire({ title: 'Nuevo inventario', input: 'text', inputLabel: 'Nombre', inputPlaceholder: 'Inventario anual 2026', showCancelButton: true, confirmButtonText: 'Crear', inputValidator: value => !value?.trim() ? 'El nombre es obligatorio.' : undefined });
+        if (!result.isConfirmed) return;
+        const response = await fetch('/api/inventarios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: result.value.trim() }) });
+        if (response.ok) { await Swal.fire('Inventario creado', 'La sesión fue creada con sus bienes.', 'success'); loadSessions(); } else Swal.fire('Error', 'No se pudo crear el inventario.', 'error');
+    });
+    document.getElementById('closeInventory').addEventListener('click', async () => {
+        const confirmation = await Swal.fire({ title: '¿Cerrar inventario?', text: 'Los bienes faltantes o dañados actualizarán su estado.', icon: 'warning', showCancelButton: true, confirmButtonText: 'Cerrar inventario' });
+        if (!activeSession || !confirmation.isConfirmed) return;
+        const response = await fetch(`/api/inventarios/${activeSession.id}/cerrar`, { method: 'PATCH' });
+        if (response.ok) { await Swal.fire('Inventario cerrado', 'La conciliación fue aplicada.', 'success'); loadSessions(); loadSession(activeSession.id); } else Swal.fire('Error', 'No se pudo cerrar el inventario.', 'error');
+    });
+    loadSessions();
+})();
+</script>
+}

@@ -24,7 +24,7 @@
                 Cancelar
             </button>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" id="saveAssetButton" type="button">
                 Guardar Bien
             </button>
 
@@ -112,7 +112,8 @@
 
                             <input type="text"
                                    class="form-control"
-                                   value="EQ-000125">
+                                   id="assetCode"
+                                   placeholder="EQ-000125">
 
                         </div>
 
@@ -132,12 +133,17 @@
                         </div>
 
                         <div class="col-lg-4">
+                            <label class="form-label" for="assetName">Nombre del Bien</label>
+                            <input type="text" class="form-control" id="assetName" placeholder="Laptop Dell Latitude 5420">
+                        </div>
+
+                        <div class="col-lg-4">
 
                             <label class="form-label">
                                 Estado
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" id="assetStatus">
 
                                 <option>Activo</option>
                                 <option>Reparación</option>
@@ -152,9 +158,7 @@
                                 Marca
                             </label>
 
-                            <input type="text"
-                                   class="form-control"
-                                   value="Dell">
+                            <input type="text" class="form-control" id="assetBrand" placeholder="Dell">
 
                         </div>
 
@@ -164,9 +168,7 @@
                                 Modelo
                             </label>
 
-                            <input type="text"
-                                   class="form-control"
-                                   value="Latitude 5420">
+                            <input type="text" class="form-control" id="assetModel" placeholder="Latitude 5420">
 
                         </div>
 
@@ -193,7 +195,8 @@
 
                             <input type="text"
                                    class="form-control"
-                                   value="EQ-000125">
+                                   id="assetCode"
+                                   placeholder="EQ-000125">
 
                         </div>
 
@@ -203,7 +206,7 @@
                                 Tipo de Activo
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" id="assetType">
 
                                 <option>Computadora</option>
                                 <option>Impresora</option>
@@ -216,12 +219,17 @@
                         </div>
 
                         <div class="col-lg-4">
+                            <label class="form-label" for="assetName">Nombre del Bien</label>
+                            <input type="text" class="form-control" id="assetName" placeholder="Laptop Dell Latitude 5420">
+                        </div>
+
+                        <div class="col-lg-4">
 
                             <label class="form-label">
                                 Estado del Bien
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" id="assetStatus">
 
                                 <option>Activo</option>
                                 <option>En reparación</option>
@@ -241,7 +249,8 @@
 
                             <input type="text"
                                    class="form-control"
-                                   value="Dell">
+                                   id="assetBrand"
+                                   placeholder="Dell">
 
                         </div>
 
@@ -253,7 +262,8 @@
 
                             <input type="text"
                                    class="form-control"
-                                   value="Latitude 5420">
+                                   id="assetModel"
+                                   placeholder="Latitude 5420">
 
                         </div>
 
@@ -263,9 +273,7 @@
                                 Número de Serie
                             </label>
 
-                            <input type="text"
-                                   class="form-control"
-                                   value="SN-4XH582114">
+                            <input type="text" class="form-control" id="assetSerialNumber" placeholder="Número de serie">
 
                         </div>
 
@@ -296,7 +304,7 @@
                                 Área
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" id="assetArea">
 
                                 <option>Tecnologías</option>
 
@@ -310,7 +318,7 @@
                                 Responsable
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" id="assetResponsible">
 
                                 <option>Juan Pérez</option>
 
@@ -400,6 +408,7 @@
                             </label>
 
                             <input type="text"
+                                   id="assetLocation"
                                    class="form-control"
                                    placeholder="Edificio A - Planta Alta - Oficina 205">
 
@@ -608,9 +617,10 @@
                                 Valor del Bien
                             </label>
 
-                            <input type="text"
+                            <input type="number"
+                                   id="assetValue"
                                    class="form-control"
-                                   value="$28,500.00">
+                                   min="0" step="0.01" placeholder="0.00">
 
                         </div>
 
@@ -620,10 +630,59 @@
                                 Fecha de Adquisición
                             </label>
 
-                            <input type="date"
-                                   class="form-control">
+                            <input type="date" id="assetAcquisitionDate" class="form-control">
 
                         </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const button = document.getElementById('saveAssetButton');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const value = id => document.getElementById(id)?.value?.trim() || null;
+
+            button?.addEventListener('click', async () => {
+                const payload = {
+                    assetCode: value('assetCode'),
+                    barcode: value('assetBarcode') || value('assetCode'),
+                    name: value('assetName'),
+                    assetType: value('assetType'),
+                    status: value('assetStatus') || 'Activo',
+                    physicalCondition: value('assetCondition') || 'Bueno',
+                    brand: value('assetBrand'),
+                    model: value('assetModel'),
+                    serialNumber: value('assetSerialNumber'),
+                    area: value('assetArea'),
+                    responsible: value('assetResponsible'),
+                    location: value('assetLocation'),
+                    acquisitionDate: value('assetAcquisitionDate'),
+                    acquisitionValue: Number(value('assetValue') || 0)
+                };
+
+                if (!payload.assetCode || !payload.name || !payload.assetType) {
+                    await Swal.fire('Datos incompletos', 'Código, nombre y tipo de activo son obligatorios.', 'warning');
+                    return;
+                }
+
+                button.disabled = true;
+                try {
+                    const response = await fetch('/api/assets', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token || '' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.error || result.title || 'No se pudo guardar el bien.');
+                    await Swal.fire('Bien registrado', 'El activo fue guardado correctamente.', 'success');
+                    window.location.href = `/Patrimonio/Detail?id=${result.id}`;
+                } catch (error) {
+                    await Swal.fire('No se pudo guardar', error.message, 'error');
+                    button.disabled = false;
+                }
+            });
+        })();
+    </script>
+}
 
                         <div class="col-lg-3">
 

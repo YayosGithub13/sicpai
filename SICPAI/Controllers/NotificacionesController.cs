@@ -1,7 +1,6 @@
-using Infrastructure.Data;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace SICPAI.Controllers;
@@ -11,27 +10,24 @@ namespace SICPAI.Controllers;
 [Route("api/notificaciones")]
 public class NotificacionesController : ControllerBase
 {
-    private readonly AppDbContext _db;
-    public NotificacionesController(AppDbContext db) => _db = db;
+    private readonly INotificationService _notificationService;
+    public NotificacionesController(INotificationService notificationService) => _notificationService = notificationService;
 
     [HttpGet]
     public async Task<IActionResult> List([FromQuery] bool unreadOnly = false)
     {
         var userId = CurrentUserId();
         if (!userId.HasValue) return Unauthorized();
-        var query = _db.Notifications.AsNoTracking().Where(n => n.UserId == userId.Value);
-        if (unreadOnly) query = query.Where(n => !n.Read);
-        return Ok(await query.OrderByDescending(n => n.CreatedAt).Take(50).ToListAsync());
+        return Ok(await _notificationService.ListAsync(userId.Value, unreadOnly, HttpContext.RequestAborted));
     }
 
     [HttpPatch("{id:long}/leer")]
     public async Task<IActionResult> MarkRead(long id)
     {
         var userId = CurrentUserId();
-        var notification = await _db.Notifications.FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
+        if (!userId.HasValue) return Unauthorized();
+        var notification = await _notificationService.MarkReadAsync(id, userId.Value, HttpContext.RequestAborted);
         if (notification == null) return NotFound();
-        notification.Read = true;
-        await _db.SaveChangesAsync();
         return Ok(notification);
     }
 
