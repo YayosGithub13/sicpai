@@ -22,13 +22,68 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const response = await fetch('/api/catalogos/areas'); if (!response.ok) return;
-            const areas = await response.json(); const table = document.querySelector('table'); if (!table) return;
-            const body = table.querySelector('tbody'); body.innerHTML = areas.map(area => `<tr><td>${escapeHtml(area.code)}</td><td>${escapeHtml(area.name)}</td><td>${escapeHtml(area.description || '-')}</td><td><span class="badge ${area.active ? 'bg-success' : 'bg-secondary'}">${area.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button></td></tr>`).join('');
-            const add = [...document.querySelectorAll('button')].find(button => button.textContent.includes('Nueva')); add?.addEventListener('click', async () => { const result = await Swal.fire({ title: 'Nueva área', html: '<input id="areaCode" class="swal2-input" placeholder="Código"><input id="areaName" class="swal2-input" placeholder="Nombre"><textarea id="areaDescription" class="swal2-textarea" placeholder="Descripción"></textarea>', showCancelButton: true, confirmButtonText: 'Guardar', preConfirm: () => ({ code: document.getElementById('areaCode').value, name: document.getElementById('areaName').value, description: document.getElementById('areaDescription').value }) }); if (result.isConfirmed) { const saved = await fetch('/api/catalogos/areas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result.value) }); Swal.fire(saved.ok ? 'Guardada' : 'Error', saved.ok ? 'Área creada.' : 'No se pudo crear.', saved.ok ? 'success' : 'error').then(() => location.reload()); } });
-        });
-        function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; }
+        (() => {
+            const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
+
+            const renderAreas = async () => {
+                const body = document.getElementById('areasRows');
+                if (!body) return;
+
+                const response = await fetch('/api/catalogos/areas');
+                if (!response.ok) return;
+
+                const areas = await response.json();
+                body.innerHTML = areas.length
+                    ? areas.map(area => `<tr><td><div class="area-inline"><div class="area-icon"><i class="bi bi-diagram-3-fill"></i></div><div><div class="fw-semibold">${escapeHtml(area.name)}</div><small class="text-muted">${escapeHtml(area.code)}</small></div></div></td><td>-</td><td>-</td><td>-</td><td><span class="badge ${area.active ? 'bg-success' : 'bg-secondary'}">${area.active ? 'Activa' : 'Inactiva'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Editar"><i class="bi bi-pencil"></i></button></td></tr>`).join('')
+                    : '<tr><td colspan="6" class="text-center text-muted py-4">No hay áreas registradas.</td></tr>';
+            };
+
+            const bindCreateArea = () => {
+                const saveButton = document.getElementById('saveAreaButton');
+                if (!saveButton) return;
+
+                saveButton.addEventListener('click', async () => {
+                    const payload = {
+                        code: document.getElementById('areaCode')?.value?.trim() ?? '',
+                        name: document.getElementById('areaName')?.value?.trim() ?? '',
+                        description: document.getElementById('areaDescription')?.value?.trim() ?? ''
+                    };
+
+                    if (!payload.code || !payload.name) {
+                        Swal.fire('Datos incompletos', 'Código y nombre son obligatorios.', 'warning');
+                        return;
+                    }
+
+                    const saved = await fetch('/api/catalogos/areas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!saved.ok) {
+                        Swal.fire('Error', 'No se pudo crear el área.', 'error');
+                        return;
+                    }
+
+                    const modalElement = document.getElementById('modalArea');
+                    const modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+                    modal?.hide();
+                    Swal.fire('Guardada', 'Área creada correctamente.', 'success');
+                    await renderAreas();
+                });
+            };
+
+            const init = async () => {
+                await renderAreas();
+                bindCreateArea();
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
+            }
+        })();
     </script>
 }
 
@@ -472,6 +527,7 @@
                         </label>
 
                         <input type="text"
+                               id="areaName"
                                class="form-control"
                                placeholder="Ingrese nombre">
 
@@ -483,7 +539,7 @@
                             Responsable
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" disabled>
 
                             <option>Seleccione</option>
 
@@ -498,7 +554,9 @@
                         </label>
 
                         <input type="text"
-                               class="form-control">
+                               id="areaCode"
+                               class="form-control"
+                               placeholder="Código institucional">
 
                     </div>
 
@@ -523,7 +581,8 @@
                             Descripción
                         </label>
 
-                        <textarea class="form-control"
+                        <textarea id="areaDescription"
+                                  class="form-control"
                                   rows="4"></textarea>
 
                     </div>
@@ -541,7 +600,7 @@
 
                 </button>
 
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="saveAreaButton" type="button">
 
                     Guardar Área
 

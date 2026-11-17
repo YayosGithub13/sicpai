@@ -18,17 +18,13 @@
 
         </div>
 
-        <button class="btn btn-primary">
-
+        <button class="btn btn-primary" id="saveDepreciationRatesButton" type="button">
             Guardar Cambios
-
         </button>
 
     </div>
 
     <div class="row g-4">
-
-        <!-- MENU -->
 
         <div class="col-lg-3">
 
@@ -37,33 +33,7 @@
                 <div class="list-group list-group-flush">
 
                     <a class="list-group-item list-group-item-action active">
-
-                        Generales
-
-                    </a>
-
-                    <a class="list-group-item list-group-item-action">
-
-                        Catálogos
-
-                    </a>
-
-                    <a class="list-group-item list-group-item-action">
-
-                        Seguridad
-
-                    </a>
-
-                    <a class="list-group-item list-group-item-action">
-
-                        Correos
-
-                    </a>
-
-                    <a class="list-group-item list-group-item-action">
-
-                        Respaldos
-
+                        Finanzas
                     </a>
 
                 </div>
@@ -72,81 +42,30 @@
 
         </div>
 
-        <!-- CONTENT -->
-
         <div class="col-lg-9">
 
             <div class="card-custom">
 
                 <div class="card-header-custom">
-
-                    Configuración Institucional
-
+                    Tasas de depreciación por tipo de activo
                 </div>
 
                 <div class="p-4">
+                    <p class="text-muted mb-4">Configura tasas entre 0 y 1 (ejemplo: 0.30 = 30%).</p>
 
-                    <div class="row g-4">
-
-                        <div class="col-lg-6">
-
-                            <label class="form-label">
-                                Nombre Institución
-                            </label>
-
-                            <input type="text"
-                                   class="form-control"
-                                   value="Universidad Institucional">
-
-                        </div>
-
-                        <div class="col-lg-6">
-
-                            <label class="form-label">
-                                Folio automático
-                            </label>
-
-                            <input type="text"
-                                   class="form-control"
-                                   value="EQ-">
-
-                        </div>
-
-                        <div class="col-lg-6">
-
-                            <label class="form-label">
-                                Correo SMTP
-                            </label>
-
-                            <input type="text"
-                                   class="form-control">
-
-                        </div>
-
-                        <div class="col-lg-6">
-
-                            <label class="form-label">
-                                Puerto
-                            </label>
-
-                            <input type="text"
-                                   class="form-control">
-
-                        </div>
-
-                        <div class="col-lg-12">
-
-                            <label class="form-label">
-                                Descripción institucional
-                            </label>
-
-                            <textarea class="form-control"
-                                      rows="4"></textarea>
-
-                        </div>
-
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tipo de activo</th>
+                                    <th style="width:220px">Tasa anual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="depreciationRatesRows">
+                                <tr><td colspan="2" class="text-center text-muted py-4">Cargando tasas...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
 
             </div>
@@ -156,3 +75,102 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const rows = document.getElementById('depreciationRatesRows');
+            const saveButton = document.getElementById('saveDepreciationRatesButton');
+
+            const escapeHtml = value => {
+                const div = document.createElement('div');
+                div.textContent = value ?? '';
+                return div.innerHTML;
+            };
+
+            const renderRows = rates => {
+                const entries = Object.entries(rates || {});
+                if (!entries.length) {
+                    rows.innerHTML = '<tr><td colspan="2" class="text-center text-muted py-4">No hay tasas configuradas.</td></tr>';
+                    return;
+                }
+
+                rows.innerHTML = entries
+                    .sort((a, b) => a[0].localeCompare(b[0], 'es'))
+                    .map(([key, value]) => `
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" data-rate-key value="${escapeHtml(key)}" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="1" step="0.01" class="form-control form-control-sm" data-rate-value value="${Number(value)}" />
+                            </td>
+                        </tr>`)
+                    .join('');
+            };
+
+            const loadRates = async () => {
+                const response = await fetch('/api/admin/finanzas/depreciacion');
+                if (!response.ok || !rows) return;
+                const rates = await response.json();
+                renderRows(rates);
+            };
+
+            const collectRates = () => {
+                const result = {};
+                const tableRows = rows.querySelectorAll('tr');
+                for (const row of tableRows) {
+                    const keyInput = row.querySelector('[data-rate-key]');
+                    const valueInput = row.querySelector('[data-rate-value]');
+                    if (!keyInput || !valueInput) continue;
+
+                    const key = keyInput.value.trim();
+                    const value = Number(valueInput.value);
+                    if (!key) continue;
+                    if (!Number.isFinite(value) || value < 0 || value > 1) {
+                        throw new Error(`La tasa para "${key}" debe estar entre 0 y 1.`);
+                    }
+                    result[key] = value;
+                }
+                return result;
+            };
+
+            const bindSave = () => {
+                if (!saveButton) return;
+                saveButton.addEventListener('click', async () => {
+                    try {
+                        const rates = collectRates();
+                        const response = await fetch('/api/admin/finanzas/depreciacion', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ rates })
+                        });
+
+                        if (!response.ok) {
+                            const error = await response.json().catch(() => null);
+                            Swal.fire('Error', error?.error || 'No se pudieron guardar las tasas.', 'error');
+                            return;
+                        }
+
+                        const saved = await response.json();
+                        renderRows(saved);
+                        Swal.fire('Guardado', 'Tasas de depreciación actualizadas.', 'success');
+                    } catch (error) {
+                        Swal.fire('Validación', error?.message || 'Verifica los datos ingresados.', 'warning');
+                    }
+                });
+            };
+
+            const init = async () => {
+                await loadRates();
+                bindSave();
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
+            }
+        })();
+    </script>
+}

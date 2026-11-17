@@ -27,6 +27,7 @@ namespace Infrastructure.Data
         public DbSet<InventoryCount> InventoryCounts { get; set; } = default!;
         public DbSet<AuditAssetResult> AuditAssetResults { get; set; } = default!;
         public DbSet<Notification> Notifications { get; set; } = default!;
+        public DbSet<FinancialSetting> FinancialSettings { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

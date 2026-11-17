@@ -17,23 +17,15 @@
 
             <div>
 
-                <h2 class="asset-title mb-1" id="detailAssetName">
-                    Laptop Dell Latitude 5420
-                </h2>
+                <h2 class="asset-title mb-1" id="detailAssetName">Cargando bien...</h2>
 
                 <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                    <span class="badge bg-success px-3 py-2" id="detailAssetStatus">
-                        Activo
-                    </span>
+                    <span class="badge bg-secondary px-3 py-2" id="detailAssetStatus">-</span>
 
-                    <span class="text-muted">
-                        Código: <strong id="detailAssetCode">EQ-000125</strong>
-                    </span>
+                    <span class="text-muted">Código: <strong id="detailAssetCode">-</strong></span>
 
-                    <span class="text-muted">
-                        Serie: <strong id="detailAssetSerial">DL-4455887</strong>
-                    </span>
+                    <span class="text-muted">Serie: <strong id="detailAssetSerial">-</strong></span>
 
                 </div>
 
@@ -74,8 +66,8 @@
 
                 <div class="text-center mt-3">
 
-                    <h5 class="mb-1">Dell Latitude 5420</h5>
-                    <small class="text-muted">Equipo de cómputo</small>
+                    <h5 class="mb-1" id="detailMiniName">-</h5>
+                    <small class="text-muted" id="detailMiniType">-</small>
 
                 </div>
 
@@ -86,27 +78,27 @@
 
                     <div class="mini-item">
                         <span>Área</span>
-                        <strong>TI</strong>
+                        <strong id="detailMiniArea">-</strong>
                     </div>
 
                     <div class="mini-item">
                         <span>Responsable</span>
-                        <strong>Juan Pérez</strong>
+                        <strong id="detailMiniResponsible">-</strong>
                     </div>
 
                     <div class="mini-item">
                         <span>Valor</span>
-                        <strong>$28,500</strong>
+                        <strong id="detailMiniValue">-</strong>
                     </div>
 
                     <div class="mini-item">
                         <span>Depreciación</span>
-                        <strong>34%</strong>
+                        <strong id="detailMiniDepreciation">-</strong>
                     </div>
 
                     <div class="mini-item">
                         <span>Garantía</span>
-                        <strong>Vigente</strong>
+                        <strong id="detailMiniWarranty">-</strong>
                     </div>
 
                 </div>
@@ -116,13 +108,9 @@
                 <!-- QR / BARRAS -->
                 <div class="text-center">
 
-                    <div class="qr-box mb-2">
-                        QR
-                    </div>
+                    <div class="qr-box mb-2" id="detailQrBox">QR</div>
 
-                    <div class="barcode-box">
-                        |||||||||||
-                    </div>
+                    <div class="barcode-box" id="detailBarcodeBox">-</div>
 
                 </div>
 
@@ -154,42 +142,42 @@
                 <div class="col-md-2">
                     <div class="kpi-card">
                         <span>Auditorías</span>
-                        <strong>12</strong>
+                        <strong id="kpiAudits">0</strong>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="kpi-card">
                         <span>Mantenimientos</span>
-                        <strong>8</strong>
+                        <strong id="kpiMaintenances">0</strong>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="kpi-card">
                         <span>Transferencias</span>
-                        <strong>5</strong>
+                        <strong id="kpiTransfers">0</strong>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="kpi-card">
                         <span>Documentos</span>
-                        <strong>16</strong>
+                        <strong id="kpiDocuments">0</strong>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="kpi-card">
                         <span>Fotos</span>
-                        <strong>7</strong>
+                        <strong id="kpiPhotos">0</strong>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="kpi-card highlight">
                         <span>Estado</span>
-                        <strong>Activo</strong>
+                        <strong id="kpiStatus">-</strong>
                     </div>
                 </div>
 
@@ -438,35 +426,35 @@
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Área / Departamento</label>
-                                    <h6>Tecnologías de la Información</h6>
+                                    <h6 id="detailTabArea">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Responsable</label>
-                                    <h6>Juan Pérez</h6>
+                                    <h6 id="detailTabResponsible">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Encargado de Resguardo</label>
-                                    <h6>Pedro Ramírez</h6>
+                                    <h6 id="detailTabCustodian">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-6">
                                 <div class="info-box">
                                     <label>Ubicación Física</label>
-                                    <h6>Edificio A - Planta Alta - Oficina 205</h6>
+                                    <h6 id="detailTabLocation">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-6">
                                 <div class="info-box">
                                     <label>Observaciones de Ubicación</label>
-                                    <h6>Sin incidencias reportadas</h6>
+                                    <h6 id="detailTabLocationNotes">-</h6>
                                 </div>
                             </div>
 
@@ -482,49 +470,49 @@
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Código Patrimonial</label>
-                                    <h6>EQ-000125</h6>
+                                    <h6 id="detailGeneralCode">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Número de Serie</label>
-                                    <h6>SN-4XH582114</h6>
+                                    <h6 id="detailGeneralSerial">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Estado del Bien</label>
-                                    <h6><span class="badge bg-success">Activo</span></h6>
+                                    <h6><span class="badge bg-secondary" id="detailGeneralStatus">-</span></h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Tipo de Activo</label>
-                                    <h6>Computadora</h6>
+                                    <h6 id="detailGeneralType">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Marca</label>
-                                    <h6>Dell</h6>
+                                    <h6 id="detailGeneralBrand">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Modelo</label>
-                                    <h6>Latitude 5420</h6>
+                                    <h6 id="detailGeneralModel">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="info-box">
                                     <label>Descripción</label>
-                                    <h6>Equipo asignado al área de TI para operación administrativa</h6>
+                                    <h6 id="detailGeneralDescription">-</h6>
                                 </div>
                             </div>
 
@@ -586,28 +574,28 @@
                                     <div class="col-lg-3">
                                         <div class="info-box">
                                             <label>Inicio</label>
-                                            <h6>15/01/2026</h6>
+                                            <h6 id="detailWarrantyStart">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-3">
                                         <div class="info-box">
                                             <label>Fin</label>
-                                            <h6>15/01/2029</h6>
+                                            <h6 id="detailWarrantyEnd">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-3">
                                         <div class="info-box">
                                             <label>Años de Garantía</label>
-                                            <h6>3 años</h6>
+                                            <h6 id="detailWarrantyYears">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-3">
                                         <div class="info-box">
                                             <label>Estado</label>
-                                            <h6><span class="badge bg-success">Vigente</span></h6>
+                                            <h6><span class="badge bg-secondary" id="detailWarrantyStatus">-</span></h6>
                                         </div>
                                     </div>
 
@@ -631,21 +619,21 @@
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Último mantenimiento</label>
-                                            <h6>03/06/2026</h6>
+                                            <h6 id="detailMaintenanceLast">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Próximo mantenimiento</label>
-                                            <h6>03/09/2026</h6>
+                                            <h6 id="detailMaintenanceNext">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Periodicidad</label>
-                                            <h6>Trimestral</h6>
+                                            <h6 id="detailMaintenancePeriodicity">-</h6>
                                         </div>
                                     </div>
 
@@ -669,21 +657,21 @@
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Código de Barras</label>
-                                            <h6>750001258888</h6>
+                                            <h6 id="detailTechBarcode">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Código QR</label>
-                                            <h6>QR-EQ-000125</h6>
+                                            <h6 id="detailTechQr">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>RFID</label>
-                                            <h6>RF-88991234</h6>
+                                            <h6 id="detailTechRfid">-</h6>
                                         </div>
                                     </div>
 
@@ -707,14 +695,14 @@
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Aseguradora</label>
-                                            <h6>AXA Seguros</h6>
+                                            <h6 id="detailInsuranceProvider">-</h6>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-4">
                                         <div class="info-box">
                                             <label>Número de Póliza</label>
-                                            <h6>AXA-2026-88921</h6>
+                                            <h6 id="detailInsurancePolicy">-</h6>
                                         </div>
                                     </div>
 
@@ -779,9 +767,7 @@
 
                             <div class="card-body">
 
-                                <h6>
-                                    Equipo en buenas condiciones. Uso exclusivo para tareas administrativas del área de TI.
-                                </h6>
+                                <h6 id="detailTechnicalNotes">Sin observaciones técnicas registradas.</h6>
 
                             </div>
 
@@ -796,49 +782,49 @@
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Valor del Bien</label>
-                                    <h6>$28,500.00</h6>
+                                    <h6 id="detailFinancialValue">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Fecha de Adquisición</label>
-                                    <h6>15/01/2026</h6>
+                                    <h6 id="detailFinancialAcquisitionDate">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>Cuenta Contable</label>
-                                    <h6>1241-01-001</h6>
+                                    <h6 id="detailFinancialAccount">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="info-box">
                                     <label>% Depreciación</label>
-                                    <h6>10%</h6>
+                                    <h6 id="detailFinancialDepreciationRate">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Método Depreciación</label>
-                                    <h6>Línea Recta</h6>
+                                    <h6 id="detailFinancialDepreciationMethod">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Valor Residual</label>
-                                    <h6>$0.00</h6>
+                                    <h6 id="detailFinancialResidualValue">-</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="info-box">
                                     <label>Depreciación Acumulada</label>
-                                    <h6>$8,200.00</h6>
+                                    <h6 id="detailFinancialAccumulatedDepreciation">-</h6>
                                 </div>
                             </div>
 
@@ -847,21 +833,19 @@
                                     <h6>Control de Depreciación</h6>
 
                                     <div class="progress" style="height:20px;">
-                                        <div class="progress-bar bg-warning" style="width:35%">
-                                            35%
+                                        <div class="progress-bar bg-warning" id="detailFinancialDepreciationBar" style="width:0%">
+                                            0%
                                         </div>
                                     </div>
 
-                                    <small class="text-muted mt-2 d-block">
-                                        Vida útil: 10 años · Uso: 3.5 años
-                                    </small>
+                                    <small class="text-muted mt-2 d-block" id="detailFinancialUsefulLife">Vida útil no calculada</small>
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="info-box">
                                     <label>Factura</label>
-                                    <h6>Factura adjunta (PDF)</h6>
+                                    <h6 id="detailFinancialInvoiceStatus">Sin factura asociada</h6>
                                 </div>
                             </div>
 
@@ -918,37 +902,7 @@
 
                                         </thead>
 
-                                        <tbody>
-
-                                            <tr>
-                                                <td><span class="badge bg-danger">PDF</span></td>
-                                                <td>Factura Dell Latitude</td>
-                                                <td>15/01/2026</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-light">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-light">
-                                                        <i class="bi bi-download"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><span class="badge bg-warning text-dark">IMG</span></td>
-                                                <td>Resguardo firmado</td>
-                                                <td>16/01/2026</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-light">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-light">
-                                                        <i class="bi bi-download"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                        </tbody>
+                                        <tbody id="detailDocumentsRows"><tr><td colspan="4" class="text-center text-muted py-3">Sin documentos cargados.</td></tr></tbody>
 
                                     </table>
 
@@ -998,56 +952,13 @@
 
                                         <h6 class="mb-0">Galería de Evidencias</h6>
 
-                                        <span class="badge bg-primary">7 fotos</span>
+                                        <span class="badge bg-primary" id="detailEvidenceCount">0 fotos</span>
 
                                     </div>
 
-                                    <div class="row g-3">
+                                    <div class="row g-3" id="detailEvidenceGallery">
 
-                                        <div class="col-md-4">
-
-                                            <div class="position-relative">
-
-                                                <img src="https://placehold.co/400x300"
-                                                     class="img-fluid rounded shadow-sm">
-
-                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
-                                                    Frente
-                                                </span>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-4">
-
-                                            <div class="position-relative">
-
-                                                <img src="https://placehold.co/400x300"
-                                                     class="img-fluid rounded shadow-sm">
-
-                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
-                                                    Serie
-                                                </span>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-4">
-
-                                            <div class="position-relative">
-
-                                                <img src="https://placehold.co/400x300"
-                                                     class="img-fluid rounded shadow-sm">
-
-                                                <span class="badge bg-dark position-absolute top-0 start-0 m-2">
-                                                    Estado
-                                                </span>
-
-                                            </div>
-
-                                        </div>
+                                        <div class="col-12 text-muted">Sin evidencias fotográficas registradas.</div>
 
                                     </div>
 
@@ -1076,39 +987,7 @@
 
                                 </thead>
 
-                                <tbody>
-
-                                    <tr>
-                                        <td><span class="badge bg-info">Foto</span></td>
-                                        <td>Estado físico general</td>
-                                        <td>10/08/2026</td>
-                                        <td>Juan Pérez</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-light">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-light">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><span class="badge bg-info">Foto</span></td>
-                                        <td>Número de serie</td>
-                                        <td>10/08/2026</td>
-                                        <td>Auditor Interno</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-light">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-light">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
+                                <tbody id="detailEvidenceRows"><tr><td colspan="5" class="text-center text-muted py-3">Sin evidencias registradas.</td></tr></tbody>
 
                             </table>
 
@@ -1124,28 +1003,28 @@
                             <div class="col-lg-3">
                                 <div class="card shadow-sm p-3 text-center">
                                     <h6 class="text-muted">Movimientos</h6>
-                                    <h3>5</h3>
+                                    <h3 id="detailHistMovements">0</h3>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="card shadow-sm p-3 text-center">
                                     <h6 class="text-muted">Auditorías</h6>
-                                    <h3>2</h3>
+                                    <h3 id="detailHistAudits">0</h3>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="card shadow-sm p-3 text-center">
                                     <h6 class="text-muted">Mantenimientos</h6>
-                                    <h3>2</h3>
+                                    <h3 id="detailHistMaintenances">0</h3>
                                 </div>
                             </div>
 
                             <div class="col-lg-3">
                                 <div class="card shadow-sm p-3 text-center">
                                     <h6 class="text-muted">Eventos</h6>
-                                    <h3>4</h3>
+                                    <h3 id="detailHistEvents">0</h3>
                                 </div>
                             </div>
 
@@ -1156,94 +1035,7 @@
 
                             <h6 class="mb-3">Línea de Tiempo del Activo</h6>
 
-                            <div class="timeline">
-
-                                <!-- ALTA -->
-                                <div class="d-flex mb-4">
-
-                                    <div class="me-3">
-                                        <span class="badge bg-primary">Alta</span>
-                                    </div>
-
-                                    <div>
-                                        <h6 class="mb-1">Registro inicial del activo</h6>
-                                        <small class="text-muted">15/01/2026 · Usuario: Sistema</small>
-                                        <p class="mb-0 text-muted">
-                                            Se registró el bien en el sistema patrimonial.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                                <!-- TRANSFERENCIA -->
-                                <div class="d-flex mb-4">
-
-                                    <div class="me-3">
-                                        <span class="badge bg-warning text-dark">Transferencia</span>
-                                    </div>
-
-                                    <div>
-                                        <h6 class="mb-1">Cambio de área</h6>
-                                        <small class="text-muted">27/05/2026 · Usuario: Juan Pérez</small>
-                                        <p class="mb-0 text-muted">
-                                            Transferido de Finanzas a Tecnologías de la Información.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                                <!-- MANTENIMIENTO -->
-                                <div class="d-flex mb-4">
-
-                                    <div class="me-3">
-                                        <span class="badge bg-info">Mantenimiento</span>
-                                    </div>
-
-                                    <div>
-                                        <h6 class="mb-1">Mantenimiento preventivo</h6>
-                                        <small class="text-muted">03/06/2026 · Técnico: López</small>
-                                        <p class="mb-0 text-muted">
-                                            Limpieza interna, actualización de sistema y revisión de hardware.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                                <!-- AUDITORÍA -->
-                                <div class="d-flex mb-4">
-
-                                    <div class="me-3">
-                                        <span class="badge bg-success">Auditoría</span>
-                                    </div>
-
-                                    <div>
-                                        <h6 class="mb-1">Auditoría conforme</h6>
-                                        <small class="text-muted">10/08/2026 · Auditor: Interno</small>
-                                        <p class="mb-0 text-muted">
-                                            El activo fue verificado físicamente sin observaciones.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                                <!-- ACTUALIZACIÓN -->
-                                <div class="d-flex">
-
-                                    <div class="me-3">
-                                        <span class="badge bg-secondary">Actualización</span>
-                                    </div>
-
-                                    <div>
-                                        <h6 class="mb-1">Actualización de información técnica</h6>
-                                        <small class="text-muted">20/08/2026 · Usuario: Admin</small>
-                                        <p class="mb-0 text-muted">
-                                            Se actualizaron datos de garantía y depreciación.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                            </div>
+                            <div class="timeline" id="detailTimeline"><div class="text-muted">Sin movimientos registrados.</div></div>
 
                         </div>
 
@@ -1442,16 +1234,7 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
-
-                                    <tr>
-                                        <td>27/05/2026</td>
-                                        <td>Finanzas</td>
-                                        <td>TI</td>
-                                        <td>Juan Pérez</td>
-                                    </tr>
-
-                                </tbody>
+                                <tbody id="detailTransfersRows"><tr><td colspan="4" class="text-center text-muted py-3">Sin transferencias registradas.</td></tr></tbody>
 
                             </table>
 
@@ -1465,25 +1248,7 @@
 
                             <h6>Registro de Actividad del Sistema</h6>
 
-                            <ul class="list-group list-group-flush">
-
-                                <li class="list-group-item">
-                                    [10/08/2026 10:45] Usuario Juan Pérez actualizó estado a "Activo"
-                                </li>
-
-                                <li class="list-group-item">
-                                    [03/06/2026 09:10] Se registró mantenimiento preventivo
-                                </li>
-
-                                <li class="list-group-item">
-                                    [27/05/2026 14:30] Transferencia a área TI
-                                </li>
-
-                                <li class="list-group-item">
-                                    [15/01/2026 08:00] Alta del activo registrada
-                                </li>
-
-                            </ul>
+                            <ul class="list-group list-group-flush" id="detailBitacoraRows"><li class="list-group-item text-muted">Sin actividad registrada.</li></ul>
 
                         </div>
 
@@ -1504,7 +1269,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch(`/api/assets/@Model`);
             if (!response.ok) {
-                window.location.href = '/Patrimonio/Index';
+                window.dispatchEvent(new CustomEvent('app:navigate', { detail: { url: '/Patrimonio/Index' } }));
                 return;
             }
 
@@ -1515,33 +1280,167 @@
             const status = document.getElementById('detailAssetStatus');
             status.textContent = asset.status || '-';
             status.className = `badge px-3 py-2 ${asset.status === 'Activo' ? 'bg-success' : 'bg-warning text-dark'}`;
-        });
 
-        const ctx = document.getElementById('depreciacionChart');
+            document.getElementById('detailMiniName').textContent = asset.name || '-';
+            document.getElementById('detailMiniType').textContent = asset.assetType || '-';
+            document.getElementById('detailMiniArea').textContent = asset.area || '-';
+            document.getElementById('detailMiniResponsible').textContent = asset.responsible || '-';
+            document.getElementById('detailMiniValue').textContent = Number(asset.acquisitionValue || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            const depreciation = asset.acquisitionValue > 0 && Number.isFinite(asset.acquisitionValue)
+                ? `${Math.max(0, Math.round(((asset.acquisitionValue - (asset.acquisitionValue * 0.7)) / asset.acquisitionValue) * 100))}%`
+                : '-';
+            document.getElementById('detailMiniDepreciation').textContent = depreciation;
+            document.getElementById('detailMiniWarranty').textContent = 'No disponible';
+            document.getElementById('detailBarcodeBox').textContent = asset.barcode || '-';
+            document.getElementById('detailQrBox').textContent = `QR-${asset.assetCode || '-'}`;
 
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Año 0', 'Año 1', 'Año 2', 'Año 3', 'Año 4'],
-                    datasets: [{
-                        label: 'Valor del Activo',
-                        data: [28500, 24000, 21000, 19000, 18000],
-                        borderColor: '#1f4d73',
-                        backgroundColor: 'rgba(31,77,115,0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
+            document.getElementById('detailTabArea').textContent = asset.area || '-';
+            document.getElementById('detailTabResponsible').textContent = asset.responsible || '-';
+            document.getElementById('detailTabCustodian').textContent = '-';
+            document.getElementById('detailTabLocation').textContent = asset.location || '-';
+            document.getElementById('detailTabLocationNotes').textContent = '-';
+
+            document.getElementById('detailGeneralCode').textContent = asset.assetCode || '-';
+            document.getElementById('detailGeneralSerial').textContent = asset.serialNumber || '-';
+            const generalStatus = document.getElementById('detailGeneralStatus');
+            generalStatus.textContent = asset.status || '-';
+            generalStatus.className = `badge ${asset.status === 'Activo' ? 'bg-success' : 'bg-warning text-dark'}`;
+            document.getElementById('detailGeneralType').textContent = asset.assetType || '-';
+            document.getElementById('detailGeneralBrand').textContent = asset.brand || '-';
+            document.getElementById('detailGeneralModel').textContent = asset.model || '-';
+            document.getElementById('detailGeneralDescription').textContent = asset.name ? `Activo registrado: ${asset.name}` : '-';
+
+            document.getElementById('detailTechBarcode').textContent = asset.barcode || '-';
+            document.getElementById('detailTechQr').textContent = `QR-${asset.assetCode || '-'}`;
+            document.getElementById('detailTechRfid').textContent = '-';
+
+            const acquisitionDate = asset.acquisitionDate ? new Date(asset.acquisitionDate) : null;
+            document.getElementById('detailWarrantyStart').textContent = acquisitionDate ? acquisitionDate.toLocaleDateString('es-MX') : '-';
+            if (acquisitionDate) {
+                const warrantyEnd = new Date(acquisitionDate);
+                warrantyEnd.setFullYear(warrantyEnd.getFullYear() + 3);
+                document.getElementById('detailWarrantyEnd').textContent = warrantyEnd.toLocaleDateString('es-MX');
+                document.getElementById('detailWarrantyYears').textContent = '3 años';
+                const warrantyStatus = document.getElementById('detailWarrantyStatus');
+                const vigente = warrantyEnd >= new Date();
+                warrantyStatus.textContent = vigente ? 'Vigente' : 'Vencida';
+                warrantyStatus.className = `badge ${vigente ? 'bg-success' : 'bg-secondary'}`;
+            } else {
+                document.getElementById('detailWarrantyEnd').textContent = '-';
+                document.getElementById('detailWarrantyYears').textContent = '-';
+                document.getElementById('detailWarrantyStatus').textContent = '-';
+            }
+
+            const maintenanceMovements = movements.filter(m => m.movementType === 'Mantenimiento').sort((a, b) => new Date(b.occurredAt) - new Date(a.occurredAt));
+            document.getElementById('detailMaintenanceLast').textContent = maintenanceMovements.length ? new Date(maintenanceMovements[0].occurredAt).toLocaleDateString('es-MX') : '-';
+            document.getElementById('detailMaintenanceNext').textContent = maintenanceMovements.length ? (() => {
+                const next = new Date(maintenanceMovements[0].occurredAt);
+                next.setMonth(next.getMonth() + 3);
+                return next.toLocaleDateString('es-MX');
+            })() : '-';
+            document.getElementById('detailMaintenancePeriodicity').textContent = maintenanceMovements.length ? 'Trimestral' : '-';
+
+            document.getElementById('detailInsuranceProvider').textContent = '-';
+            document.getElementById('detailInsurancePolicy').textContent = '-';
+            document.getElementById('detailInsuranceCoverage').textContent = '-';
+            document.getElementById('detailTechnicalNotes').textContent = asset.name ? `Activo ${asset.name} sin observaciones técnicas adicionales.` : 'Sin observaciones técnicas registradas.';
+
+            const acquisitionValue = Number(asset.acquisitionValue || 0);
+            document.getElementById('detailFinancialValue').textContent = acquisitionValue.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('detailFinancialAcquisitionDate').textContent = acquisitionDate ? acquisitionDate.toLocaleDateString('es-MX') : '-';
+            document.getElementById('detailFinancialAccount').textContent = '-';
+            const depreciationRate = acquisitionValue > 0 ? 10 : 0;
+            document.getElementById('detailFinancialDepreciationRate').textContent = depreciationRate ? `${depreciationRate}%` : '-';
+            document.getElementById('detailFinancialDepreciationMethod').textContent = depreciationRate ? 'Línea Recta' : '-';
+            const yearsUsed = acquisitionDate ? Math.max(0, (new Date() - acquisitionDate) / (1000 * 60 * 60 * 24 * 365.25)) : 0;
+            const accumulated = depreciationRate ? Math.min(acquisitionValue, acquisitionValue * ((depreciationRate / 100) * yearsUsed)) : 0;
+            const residual = Math.max(0, acquisitionValue - accumulated);
+            document.getElementById('detailFinancialResidualValue').textContent = residual.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('detailFinancialAccumulatedDepreciation').textContent = accumulated.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            const depreciationPercent = acquisitionValue > 0 ? Math.round((accumulated / acquisitionValue) * 100) : 0;
+            const depreciationBar = document.getElementById('detailFinancialDepreciationBar');
+            depreciationBar.style.width = `${depreciationPercent}%`;
+            depreciationBar.textContent = `${depreciationPercent}%`;
+            document.getElementById('detailFinancialUsefulLife').textContent = acquisitionDate ? `Vida útil estimada: 10 años · Uso: ${yearsUsed.toFixed(1)} años` : 'Vida útil no calculada';
+            document.getElementById('detailFinancialInvoiceStatus').textContent = 'Sin factura asociada';
+
+            const movements = Array.isArray(asset.movements) ? asset.movements : [];
+            document.getElementById('kpiAudits').textContent = '0';
+            document.getElementById('kpiMaintenances').textContent = movements.filter(m => m.movementType === 'Mantenimiento').length.toString();
+            document.getElementById('kpiTransfers').textContent = movements.filter(m => m.movementType === 'Transferencia').length.toString();
+            document.getElementById('kpiDocuments').textContent = '0';
+            document.getElementById('kpiPhotos').textContent = '0';
+            document.getElementById('kpiStatus').textContent = asset.status || '-';
+
+            document.getElementById('detailHistMovements').textContent = movements.length.toString();
+            document.getElementById('detailHistAudits').textContent = '0';
+            document.getElementById('detailHistMaintenances').textContent = movements.filter(m => m.movementType === 'Mantenimiento').length.toString();
+            document.getElementById('detailHistEvents').textContent = movements.length.toString();
+
+            const timeline = document.getElementById('detailTimeline');
+            timeline.innerHTML = movements.length
+                ? movements.map(item => {
+                    const typeClass = item.movementType === 'Transferencia' ? 'bg-warning text-dark'
+                        : item.movementType === 'Mantenimiento' ? 'bg-info'
+                        : item.movementType === 'Baja' ? 'bg-danger'
+                        : 'bg-primary';
+                    const by = item.performedBy ? ` · Usuario: ${item.performedBy}` : '';
+                    return `<div class="d-flex mb-3"><div class="me-3"><span class="badge ${typeClass}">${item.movementType || 'Evento'}</span></div><div><h6 class="mb-1">${item.description || 'Sin descripción'}</h6><small class="text-muted">${new Date(item.occurredAt).toLocaleString('es-MX')}${by}</small></div></div>`;
+                }).join('')
+                : '<div class="text-muted">Sin movimientos registrados.</div>';
+
+            const transfers = movements.filter(item => item.movementType === 'Transferencia');
+            const transferRows = document.getElementById('detailTransfersRows');
+            transferRows.innerHTML = transfers.length
+                ? transfers.map(item => `<tr><td>${new Date(item.occurredAt).toLocaleDateString('es-MX')}</td><td>${item.fromArea || '-'}</td><td>${item.toArea || '-'}</td><td>${item.performedBy || '-'}</td></tr>`).join('')
+                : '<tr><td colspan="4" class="text-center text-muted py-3">Sin transferencias registradas.</td></tr>';
+
+            const documentsRows = document.getElementById('detailDocumentsRows');
+            documentsRows.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Sin documentos cargados.</td></tr>';
+
+            document.getElementById('detailEvidenceCount').textContent = '0 fotos';
+            document.getElementById('detailEvidenceGallery').innerHTML = '<div class="col-12 text-muted">Sin evidencias fotográficas registradas.</div>';
+
+            const bitacora = document.getElementById('detailBitacoraRows');
+            bitacora.innerHTML = movements.length
+                ? movements.slice(0, 8).map(item => `<li class="list-group-item">[${new Date(item.occurredAt).toLocaleString('es-MX')}] ${item.movementType}: ${item.description || 'Sin descripción'}</li>`).join('')
+                : '<li class="list-group-item text-muted">Sin actividad registrada.</li>';
+
+            document.getElementById('detailEvidenceRows').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sin evidencias registradas.</td></tr>';
+
+            const ctx = document.getElementById('depreciacionChart');
+            if (ctx && window.Chart) {
+                const chartValues = [
+                    acquisitionValue,
+                    Math.max(0, acquisitionValue * 0.9),
+                    Math.max(0, acquisitionValue * 0.8),
+                    Math.max(0, acquisitionValue * 0.7),
+                    Math.max(0, residual)
+                ];
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Año 0', 'Año 1', 'Año 2', 'Año 3', 'Actual'],
+                        datasets: [{
+                            label: 'Valor del Activo',
+                            data: chartValues,
+                            borderColor: '#1f4d73',
+                            backgroundColor: 'rgba(31,77,115,0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     </script>
 }

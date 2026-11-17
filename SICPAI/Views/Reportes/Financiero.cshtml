@@ -36,7 +36,7 @@
 
                 <small>Valor Patrimonial</small>
 
-                <h2>$ 58,245,852</h2>
+                <h2 id="financialTotalValue">—</h2>
 
                 <span class="positive">
 
@@ -54,7 +54,7 @@
 
                 <small>Depreciación</small>
 
-                <h2>$ 2,850,000</h2>
+                <h2 id="financialDepreciation">—</h2>
 
                 <span class="negative">
 
@@ -72,7 +72,7 @@
 
                 <small>Bienes Activos</small>
 
-                <h2>—</h2>
+                <h2 id="financialActiveAssets">—</h2>
 
                 <span class="positive">
 
@@ -90,7 +90,7 @@
 
                 <small>En Reparación</small>
 
-                <h2>248</h2>
+                <h2 id="financialInRepairAssets">—</h2>
 
                 <span class="warning">
 
@@ -156,52 +156,122 @@
 @section Scripts {
 
     <script>
+        (() => {
+            const normalizeStatus = value => (value || '').toString().toLowerCase();
+            const yearsBetween = (fromDate, toDate) => {
+                const msPerYear = 1000 * 60 * 60 * 24 * 365.25;
+                return Math.max(0, (toDate.getTime() - fromDate.getTime()) / msPerYear);
+            };
+            const depreciationRateByType = @Html.Raw((string?)ViewData["DepreciationRatesJson"] ?? "{}");
+            const resolveAnnualRate = assetType => {
+                const normalizedType = (assetType || '').toString().toLowerCase();
+                for (const [key, rate] of Object.entries(depreciationRateByType)) {
+                    if (normalizedType.includes(key)) return rate;
+                }
+                return 0.10;
+            };
 
-        const ctx = document.getElementById('chartPatrimonio');
+            const init = async () => {
+                const [assetsResponse, movementsResponse] = await Promise.all([
+                    fetch('/api/assets'),
+                    fetch('/api/assets/movements?page=1&pageSize=1000')
+                ]);
 
-        new Chart(ctx, {
+                if (!assetsResponse.ok || !movementsResponse.ok) return;
 
-            type: 'line',
+                const assets = await assetsResponse.json();
+                const movementResult = await movementsResponse.json();
+                const movements = Array.isArray(movementResult?.items) ? movementResult.items : [];
 
-            data: {
+                const safeAssets = Array.isArray(assets) ? assets : [];
+                const totalValue = safeAssets.reduce((sum, item) => sum + Number(item.acquisitionValue || 0), 0);
+                const activeAssets = safeAssets.filter(item => normalizeStatus(item.status) === 'activo').length;
+                const inRepairAssets = safeAssets.filter(item => normalizeStatus(item.status).includes('repar')).length;
+                const now = new Date();
+                const depreciation = safeAssets.reduce((sum, item) => {
+                    const acquisitionValue = Number(item.acquisitionValue || 0);
+                    if (acquisitionValue <= 0 || !item.acquisitionDate) return sum;
 
-                labels: ['Ene','Feb','Mar','Abr','May','Jun'],
+                    const acquisitionDate = new Date(item.acquisitionDate);
+                    if (Number.isNaN(acquisitionDate.getTime())) return sum;
 
-                datasets: [{
+                    const usedYears = yearsBetween(acquisitionDate, now);
+                    const annualRate = resolveAnnualRate(item.assetType);
+                    const depreciated = Math.min(acquisitionValue, acquisitionValue * annualRate * usedYears);
+                    return sum + depreciated;
+                }, 0);
 
-                    label: 'Valor Patrimonial',
+                document.getElementById('financialTotalValue').textContent = totalValue.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+                document.getElementById('financialDepreciation').textContent = depreciation.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+                document.getElementById('financialActiveAssets').textContent = activeAssets.toLocaleString('es-MX');
+                document.getElementById('financialInRepairAssets').textContent = inRepairAssets.toLocaleString('es-MX');
 
-                    data: [12,19,14,25,22,31],
+                const monthLabels = [];
+                const monthValues = [];
 
-                    borderWidth: 3,
+                for (let i = 5; i >= 0; i--) {
+                    const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const monthKey = `${monthDate.getFullYear()}-${monthDate.getMonth()}`;
+                    const label = monthDate.toLocaleDateString('es-MX', { month: 'short' });
+                    monthLabels.push(label.charAt(0).toUpperCase() + label.slice(1));
 
-                    tension: .4
+                    const monthMovementCount = movements.filter(movement => {
+                        const occurred = movement?.occurredAt ? new Date(movement.occurredAt) : null;
+                        if (!occurred || Number.isNaN(occurred.getTime())) return false;
+                        return `${occurred.getFullYear()}-${occurred.getMonth()}` === monthKey;
+                    }).length;
 
-                }]
+                    monthValues.push(monthMovementCount);
+                }
 
+                const typeCount = {};
+                for (const asset of safeAssets) {
+                    const type = (asset.assetType || 'Sin tipo').toString();
+                    typeCount[type] = (typeCount[type] || 0) + 1;
+                }
+
+                const distributionLabels = Object.keys(typeCount);
+                const distributionValues = distributionLabels.map(label => typeCount[label]);
+
+                if (window.sicpaiFinancialLineChart) window.sicpaiFinancialLineChart.destroy();
+                if (window.sicpaiFinancialPieChart) window.sicpaiFinancialPieChart.destroy();
+
+                const ctx = document.getElementById('chartPatrimonio');
+                if (ctx) {
+                    window.sicpaiFinancialLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: monthLabels,
+                            datasets: [{
+                                label: 'Movimientos mensuales',
+                                data: monthValues,
+                                borderWidth: 3,
+                                tension: .4
+                            }]
+                        }
+                    });
+                }
+
+                const pie = document.getElementById('chartDistribucion');
+                if (pie) {
+                    window.sicpaiFinancialPieChart = new Chart(pie, {
+                        type: 'doughnut',
+                        data: {
+                            labels: distributionLabels.length ? distributionLabels : ['Sin datos'],
+                            datasets: [{
+                                data: distributionValues.length ? distributionValues : [1]
+                            }]
+                        }
+                    });
+                }
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
             }
-
-        });
-
-        const pie = document.getElementById('chartDistribucion');
-
-        new Chart(pie, {
-
-            type: 'doughnut',
-
-            data: {
-
-                labels: ['Computadoras','Vehículos','Mobiliario','Herramientas'],
-
-                datasets: [{
-
-                    data: [45,12,30,13]
-
-                }]
-
-            }
-
-        });
+        })();
 
     </script>
 

@@ -61,6 +61,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const navigateWithinApp = async (targetUrl, preserveSidebar = true, pushHistory = true) => {
+        if (!targetUrl) return;
+
+        const sidebarScroll = preserveSidebar ? sidebar.scrollTop : 0;
+        showLoader();
+
+        try {
+            const response = await fetch(targetUrl, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            if (!response.ok) {
+                hideLoader();
+                return;
+            }
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const nextBody = doc.getElementById('appContentBody');
+            const nextScripts = doc.getElementById('dynamicPageScripts');
+
+            if (!nextBody) {
+                hideLoader();
+                return;
+            }
+
+            content.innerHTML = nextBody.innerHTML;
+            destroyDynamicScripts();
+            executeDynamicScripts(nextScripts);
+
+            if (pushHistory) {
+                window.history.pushState({ appNav: true }, '', targetUrl);
+            }
+
+            setActiveLink(targetUrl);
+            if (preserveSidebar) sidebar.scrollTop = sidebarScroll;
+            hideLoader();
+        } catch {
+            hideLoader();
+        }
+    };
+
     const bindMenuNavigation = () => {
         document.querySelectorAll('.sidebar-menu a[data-app-nav="true"]').forEach(anchor => {
             if (anchor.dataset.navBound === 'true') return;
@@ -69,74 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
             anchor.addEventListener('click', async event => {
                 event.preventDefault();
                 const targetUrl = anchor.getAttribute('href');
-                if (!targetUrl) return;
-
-                const sidebarScroll = sidebar.scrollTop;
-                showLoader();
-
-                try {
-                    const response = await fetch(targetUrl, {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    });
-
-                    if (!response.ok) {
-                        hideLoader();
-                        return;
-                    }
-
-                    const html = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const nextBody = doc.getElementById('appContentBody');
-                    const nextScripts = doc.getElementById('dynamicPageScripts');
-
-                    if (!nextBody) {
-                        hideLoader();
-                        return;
-                    }
-
-                    content.innerHTML = nextBody.innerHTML;
-                    destroyDynamicScripts();
-                    executeDynamicScripts(nextScripts);
-
-                    window.history.pushState({ appNav: true }, '', targetUrl);
-                    setActiveLink(targetUrl);
-                    sidebar.scrollTop = sidebarScroll;
-                    hideLoader();
-                } catch {
-                    hideLoader();
-                }
+                await navigateWithinApp(targetUrl, true, true);
             });
         });
     };
 
+    window.addEventListener('app:navigate', async event => {
+        const targetUrl = event?.detail?.url;
+        if (!targetUrl) return;
+        await navigateWithinApp(targetUrl, true, true);
+    });
+
     window.addEventListener('popstate', async () => {
         const targetUrl = `${window.location.pathname}${window.location.search}`;
-        showLoader();
-
-        try {
-            const response = await fetch(targetUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-            if (!response.ok) {
-                hideLoader();
-                return;
-            }
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const nextBody = doc.getElementById('appContentBody');
-            const nextScripts = doc.getElementById('dynamicPageScripts');
-            if (!nextBody) {
-                hideLoader();
-                return;
-            }
-            content.innerHTML = nextBody.innerHTML;
-            destroyDynamicScripts();
-            executeDynamicScripts(nextScripts);
-            setActiveLink(targetUrl);
-            hideLoader();
-        } catch {
-            hideLoader();
-        }
+        await navigateWithinApp(targetUrl, true, false);
     });
 
     setActiveLink(window.location.pathname + window.location.search);

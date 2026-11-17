@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Authorization;
 using SICPAI.Security;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using SICPAI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 QuestPDF.Settings.License = LicenseType.Community;
@@ -68,6 +69,7 @@ builder.Services.AddRateLimiter(options =>
 });
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddScoped<IFinancialSettingsService, FinancialSettingsService>();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();

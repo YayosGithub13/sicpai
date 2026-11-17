@@ -159,147 +159,8 @@
 
                 </thead>
 
-                <tbody>
-
-                    <tr>
-
-                        <!-- RESPONSABLE -->
-                        <td>
-                            <div class="user-inline">
-
-                                <div class="user-avatar">JP</div>
-
-                                <div>
-                                    <div class="fw-semibold">Juan Pérez</div>
-                                    <small class="text-muted">juan@institucion.gob.mx</small>
-                                </div>
-
-                            </div>
-                        </td>
-
-                        <!-- ENCARGADO RESGUARDO -->
-                        <td>
-                            <div class="user-inline">
-
-                                <div class="user-avatar bg-secondary">AR</div>
-
-                                <div>
-                                    <div class="fw-semibold">Ana Ramírez</div>
-                                    <small class="text-muted">resguardo interno</small>
-                                </div>
-
-                            </div>
-                        </td>
-
-                        <td>TI</td>
-
-                        <td>Administrador de Sistemas</td>
-
-                        <td>125</td>
-
-                        <!-- UMA -->
-                        <td>
-                            <span class="fw-semibold">
-                                85 UMA
-                            </span>
-                        </td>
-
-                        <!-- CLASIFICACIÓN -->
-                        <td>
-                            <span class="badge bg-warning text-dark">
-                                Activo
-                            </span>
-
-                            <small class="text-muted d-block">
-                                Bien patrimonial (CG)
-                            </small>
-                        </td>
-
-                        <!-- ESTADO -->
-                        <td>
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        </td>
-
-                        <!-- ACCIONES -->
-                        <td>
-
-                            <button class="btn btn-sm btn-light">
-                                <i class="bi bi-eye"></i>
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                    <!-- EJEMPLO GASTO -->
-                    <tr>
-
-                        <td>
-                            <div class="user-inline">
-
-                                <div class="user-avatar">LM</div>
-
-                                <div>
-                                    <div class="fw-semibold">Luis Martínez</div>
-                                    <small class="text-muted">luis@institucion.gob.mx</small>
-                                </div>
-
-                            </div>
-                        </td>
-
-                        <td>
-                            <div class="user-inline">
-
-                                <div class="user-avatar bg-secondary">CR</div>
-
-                                <div>
-                                    <div class="fw-semibold">Carlos Reyes</div>
-                                    <small class="text-muted">resguardo</small>
-                                </div>
-
-                            </div>
-                        </td>
-
-                        <td>Administración</td>
-
-                        <td>Auxiliar</td>
-
-                        <td>8</td>
-
-                        <!-- UMA -->
-                        <td>
-                            <span class="fw-semibold">
-                                45 UMA
-                            </span>
-                        </td>
-
-                        <!-- CLASIFICACIÓN -->
-                        <td>
-                            <span class="badge bg-info text-dark">
-                                Gasto
-                            </span>
-
-                            <small class="text-muted d-block">
-                                No activo patrimonial
-                            </small>
-                        </td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        </td>
-
-                        <td>
-                            <button class="btn btn-sm btn-light">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                        </td>
-
-                    </tr>
-
+                <tbody id="responsablesRows">
+                    <tr><td colspan="9" class="text-center text-muted py-4">Cargando responsables...</td></tr>
                 </tbody>
 
             </table>
@@ -341,9 +202,7 @@
                     <div class="col-md-6">
                         <label class="form-label">Área</label>
                         <select class="form-select" id="area">
-                            <option>TI</option>
-                            <option>Finanzas</option>
-                            <option>Administración</option>
+                            <option value="">Seleccionar área</option>
                         </select>
                     </div>
 
@@ -407,13 +266,25 @@
 @section Scripts{
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const rows = document.querySelector('tbody');
+            const rows = document.getElementById('responsablesRows');
+            const areaSelect = document.getElementById('area');
             const escapeHtml = value => { const div = document.createElement('div'); div.textContent = value ?? ''; return div.innerHTML; };
             const initials = name => (name || '?').split(' ').filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
             const response = await fetch('/api/catalogos/responsables');
             if (!response.ok || !rows) return;
             const users = await response.json();
-            rows.innerHTML = users.length ? users.map(user => `<tr><td><div class="user-inline"><div class="user-avatar">${escapeHtml(initials(user.fullName))}</div><div><div class="fw-semibold">${escapeHtml(user.fullName)}</div><small class="text-muted">${escapeHtml(user.email)}</small></div></div></td><td>-</td><td>${escapeHtml(user.roles?.join(', ') || 'Responsable patrimonial')}</td><td>${user.assetCount}</td><td>${Number(user.assetValue || 0).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td><td><span class="badge bg-success-subtle text-success">${user.assetCount > 0 ? 'Con bienes asignados' : 'Sin bienes asignados'}</span></td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Consultar"><i class="bi bi-eye"></i></button></td></tr>`).join('') : '<tr><td colspan="9" class="text-center text-muted py-4">No hay responsables registrados.</td></tr>';
+
+            rows.innerHTML = users.length
+                ? users.map(user => `<tr><td><div class="user-inline"><div class="user-avatar">${escapeHtml(initials(user.fullName))}</div><div><div class="fw-semibold">${escapeHtml(user.fullName)}</div><small class="text-muted">${escapeHtml(user.email)}</small></div></div></td><td>-</td><td>-</td><td>${escapeHtml(user.roles?.join(', ') || 'Responsable patrimonial')}</td><td>${Number(user.assetCount || 0).toLocaleString('es-MX')}</td><td>-</td><td><span class="badge bg-success-subtle text-success">${user.assetCount > 0 ? 'Con bienes asignados' : 'Sin bienes asignados'}</span></td><td><span class="badge ${user.activeFlag ? 'bg-success' : 'bg-secondary'}">${user.activeFlag ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn btn-sm btn-light" type="button" title="Consultar"><i class="bi bi-eye"></i></button></td></tr>`).join('')
+                : '<tr><td colspan="9" class="text-center text-muted py-4">No hay responsables registrados.</td></tr>';
+
+            if (areaSelect) {
+                const areaResponse = await fetch('/api/catalogos/areas');
+                if (areaResponse.ok) {
+                    const areas = await areaResponse.json();
+                    areaSelect.innerHTML = '<option value="">Seleccionar área</option>' + areas.map(area => `<option value="${escapeHtml(area.code)}">${escapeHtml(area.name)}</option>`).join('');
+                }
+            }
         });
 
         function guardarResponsable() {
@@ -434,14 +305,7 @@
                 return;
             }
 
-            // Aquí llamarías tu API real
-            console.log("Responsable a guardar:", responsable);
-
-            // Simulación UI
-            alert("Responsable guardado correctamente");
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalResponsable'));
-            modal.hide();
+            Swal.fire('Pendiente de integración', 'El registro de responsables aún no está conectado a un endpoint de creación en backend.', 'info');
         }
     </script>
 }

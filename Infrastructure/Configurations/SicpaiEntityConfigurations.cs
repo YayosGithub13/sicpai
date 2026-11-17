@@ -14,6 +14,18 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         entity.HasIndex(e => e.UserName).IsUnique();
         entity.HasMany(e => e.UserRoles).WithOne(ur => ur.User).HasForeignKey(ur => ur.UserId);
     }
+
+public sealed class FinancialSettingConfiguration : IEntityTypeConfiguration<FinancialSetting>
+{
+    public void Configure(EntityTypeBuilder<FinancialSetting> entity)
+    {
+        entity.ToTable("FINANCIALSETTINGS");
+        entity.HasKey(e => e.Id);
+        entity.HasIndex(e => e.Key).IsUnique();
+        entity.Property(e => e.Key).HasMaxLength(120);
+        entity.Property(e => e.ValueDecimal).HasPrecision(9, 4);
+    }
+}
 }
 
 public sealed class RoleCatalogConfiguration : IEntityTypeConfiguration<RoleCatalog>

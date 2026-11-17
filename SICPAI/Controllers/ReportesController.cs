@@ -6,6 +6,8 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SICPAI.Security;
 using Application.Interfaces;
+using System.Text.Json;
+using SICPAI.Services;
 
 namespace SICPAI.Controllers
 {
@@ -13,10 +15,12 @@ namespace SICPAI.Controllers
     public class ReportesController : Controller
     {
         private readonly IReportAssetService _reportAssetService;
+        private readonly IFinancialSettingsService _financialSettingsService;
 
-        public ReportesController(IReportAssetService reportAssetService)
+        public ReportesController(IReportAssetService reportAssetService, IFinancialSettingsService financialSettingsService)
         {
             _reportAssetService = reportAssetService;
+            _financialSettingsService = financialSettingsService;
         }
 
         public IActionResult Index()
@@ -92,6 +96,7 @@ namespace SICPAI.Controllers
 
         public IActionResult Financiero()
         {
+            ViewData["DepreciationRatesJson"] = JsonSerializer.Serialize(_financialSettingsService.GetDepreciationRates());
             return View();
         }
 
@@ -99,5 +104,6 @@ namespace SICPAI.Controllers
         {
             return View();
         }
+
     }
 }

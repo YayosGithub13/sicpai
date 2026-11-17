@@ -20,8 +20,6 @@
 
     </div>
 
-    <!-- KPI GRID -->
-
     <div class="analytics-grid">
 
         <div class="analytics-widget large">
@@ -48,11 +46,7 @@
 
             </div>
 
-            <div class="metric-circle">
-
-                92%
-
-            </div>
+            <div class="metric-circle" id="analyticsAuditsRate">-</div>
 
         </div>
 
@@ -66,11 +60,7 @@
 
             </div>
 
-            <div class="metric-circle green">
-
-                87%
-
-            </div>
+            <div class="metric-circle green" id="analyticsEfficiencyRate">-</div>
 
         </div>
 
@@ -84,11 +74,7 @@
 
             </div>
 
-            <div class="metric-circle orange">
-
-                14
-
-            </div>
+            <div class="metric-circle orange" id="analyticsIncidentsCount">-</div>
 
         </div>
 
@@ -99,31 +85,66 @@
 @section Scripts {
 
     <script>
+        (() => {
+            const init = async () => {
+                const chartCanvas = document.getElementById('movimientosChart');
+                if (!chartCanvas) return;
 
-        const movimientos = document.getElementById('movimientosChart');
+                const [assetsResponse, movementsResponse] = await Promise.all([
+                    fetch('/api/assets'),
+                    fetch('/api/assets/movements?page=1&pageSize=500')
+                ]);
 
-        new Chart(movimientos, {
+                if (!assetsResponse.ok || !movementsResponse.ok) return;
 
-            type: 'bar',
+                const assets = await assetsResponse.json();
+                const movementResult = await movementsResponse.json();
+                const movements = Array.isArray(movementResult?.items) ? movementResult.items : [];
 
-            data: {
+                const counts = { altas: 0, bajas: 0, transferencias: 0, auditorias: 0 };
+                for (const movement of movements) {
+                    const type = (movement.movementType || '').toString().toLowerCase();
+                    if (type.includes('alta')) counts.altas += 1;
+                    else if (type.includes('baja')) counts.bajas += 1;
+                    else if (type.includes('transfer')) counts.transferencias += 1;
+                    else if (type.includes('audit')) counts.auditorias += 1;
+                }
 
-                labels: ['Altas','Bajas','Transferencias','Auditorías'],
+                if (window.sicpaiMovementsChart) {
+                    window.sicpaiMovementsChart.destroy();
+                }
 
-                datasets: [{
+                window.sicpaiMovementsChart = new Chart(chartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Altas', 'Bajas', 'Transferencias', 'Auditorías'],
+                        datasets: [{
+                            label: 'Operaciones',
+                            data: [counts.altas, counts.bajas, counts.transferencias, counts.auditorias],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
 
-                    label: 'Operaciones',
+                const totalAssets = Array.isArray(assets) ? assets.length : 0;
+                const activeAssets = Array.isArray(assets) ? assets.filter(a => (a.status || '').toString().toLowerCase() === 'activo').length : 0;
+                const incidents = Array.isArray(assets) ? assets.filter(a => (a.status || '').toString().toLowerCase().includes('repar') || (a.status || '').toString().toLowerCase().includes('baja')).length : 0;
+                const efficiency = totalAssets > 0 ? Math.round((activeAssets / totalAssets) * 100) : 0;
 
-                    data: [120,25,85,240],
+                const totalMovements = Math.max(1, movements.length);
+                const auditsRate = Math.round((counts.auditorias / totalMovements) * 100);
+                document.getElementById('analyticsAuditsRate').textContent = `${auditsRate}%`;
+                document.getElementById('analyticsEfficiencyRate').textContent = `${efficiency}%`;
+                document.getElementById('analyticsIncidentsCount').textContent = incidents.toString();
+            };
 
-                    borderWidth: 1
-
-                }]
-
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init, { once: true });
+            } else {
+                init();
             }
-
-        });
-
+        })();
     </script>
 
 }
